@@ -1,0 +1,36 @@
+{
+    "settings": {
+        "index": {
+            "number_of_shards": 1,
+            "number_of_replicas": 0
+        }
+    },
+    "mappings": {
+        "LogEvent": {
+            "_all": {
+                "enabled": false
+            },
+            "properties": {
+                "Date": {
+                    "type": "date",
+                    "format": "yyyy-MM-dd'T'HH:mm:ss.SSSSSSSZ||yyyy-MM-dd'T'HH:mm:ss.SSSSSSS'Z'||yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ||yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'||yyyy-MM-dd'T'HH:mm:ss'Z'||yyyy-MM-dd'T'HH:mm:ss||yyyy-MM-dd HH:mm:ss.SSSSSS||yyyy-MM-dd HH:mm:ss"
+                },
+                "Thread": {
+                    "type": "string"
+                },
+                "Level": {
+                    "type": "string"
+                },
+                "Logger": {
+                    "type": "integer"
+                },
+                "Message": {
+                    "type": "string"
+                },
+                "Exception": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
