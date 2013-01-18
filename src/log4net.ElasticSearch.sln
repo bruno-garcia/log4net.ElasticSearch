@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log4net.ElasticSearch", "log4net.ElasticSearch\log4net.ElasticSearch.csproj", "{22964CB0-8A39-41EA-807D-B5216D27DF70}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestHarness", "TestHarness\TestHarness.csproj", "{4A3945D1-6481-4EC0-A5DC-6DA6B4A31EE2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{22964CB0-8A39-41EA-807D-B5216D27DF70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22964CB0-8A39-41EA-807D-B5216D27DF70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22964CB0-8A39-41EA-807D-B5216D27DF70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22964CB0-8A39-41EA-807D-B5216D27DF70}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A3945D1-6481-4EC0-A5DC-6DA6B4A31EE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A3945D1-6481-4EC0-A5DC-6DA6B4A31EE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A3945D1-6481-4EC0-A5DC-6DA6B4A31EE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A3945D1-6481-4EC0-A5DC-6DA6B4A31EE2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

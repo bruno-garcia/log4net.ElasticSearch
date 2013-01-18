@@ -22,7 +22,7 @@
                     "type": "string"
                 },
                 "Logger": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "Message": {
                     "type": "string"
