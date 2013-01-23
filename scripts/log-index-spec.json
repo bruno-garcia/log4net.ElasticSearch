@@ -11,23 +11,56 @@
                 "enabled": false
             },
             "properties": {
-                "Date": {
+                "TimeStamp": {
                     "type": "date",
                     "format": "yyyy-MM-dd'T'HH:mm:ss.SSSSSSSZ||yyyy-MM-dd'T'HH:mm:ss.SSSSSSS'Z'||yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ||yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'||yyyy-MM-dd'T'HH:mm:ss'Z'||yyyy-MM-dd'T'HH:mm:ss||yyyy-MM-dd HH:mm:ss.SSSSSS||yyyy-MM-dd HH:mm:ss"
                 },
-                "Thread": {
+                "Message": {
+                    "type": "string"
+                },
+                "MessageObject": {
+                    "type": "string"
+                },
+                "Exception": {
+                    "type": "string"
+                },
+                "LoggerName": {
+                    "type": "string"
+                },
+                "Domain": {
+                    "type": "string"
+                },
+                "Identity": {
                     "type": "string"
                 },
                 "Level": {
                     "type": "string"
                 },
-                "Logger": {
+                "ClassName": {
                     "type": "string"
                 },
-                "Message": {
+                "FileName": {
                     "type": "string"
                 },
-                "Exception": {
+                "Name": {
+                    "type": "string"
+                },
+                "FullInfo": {
+                    "type": "string"
+                },
+                "MethodName": {
+                    "type": "string"
+                },
+                "Fix": {
+                    "type": "string"
+                },
+                "Properties": {
+                    "type": "string"
+                },
+                "UserName": {
+                    "type": "string"
+                },
+                "ThreadName": {
                     "type": "string"
                 }
             }

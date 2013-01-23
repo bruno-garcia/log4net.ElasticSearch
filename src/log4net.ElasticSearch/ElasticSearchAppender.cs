@@ -33,15 +33,40 @@ namespace log4net.ElasticSearch
         /// <param name="loggingEvent"></param>
         protected override void Append(Core.LoggingEvent loggingEvent)
         {
-            LogEvent logEvent = new LogEvent
-                {
-                    Date = loggingEvent.TimeStamp,
-                    Exception = loggingEvent.RenderedMessage,
-                    Level = loggingEvent.Level.ToString(),
-                    Logger = loggingEvent.LoggerName,
-                    Message = loggingEvent.RenderedMessage,
-                    Thread = loggingEvent.ThreadName
-                };
+            LogEvent logEvent = new LogEvent();
+            
+            if (logEvent == null)
+            {
+                throw new ArgumentNullException("logEvent");
+            }
+
+            logEvent.LoggerName = loggingEvent.LoggerName;
+            logEvent.Domain = loggingEvent.Domain;
+            logEvent.Identity = loggingEvent.Identity;
+            logEvent.ThreadName = loggingEvent.ThreadName;
+            logEvent.UserName = loggingEvent.UserName;
+            logEvent.MessageObject = loggingEvent.MessageObject;
+            logEvent.TimeStamp = loggingEvent.TimeStamp;
+            logEvent.Exception = loggingEvent.ExceptionObject;
+            logEvent.Message = loggingEvent.RenderedMessage;
+            logEvent.Fix = loggingEvent.Fix.ToString();
+
+            if (logEvent.Level != null)
+            {
+                logEvent.Level = loggingEvent.Level.ToString();
+            }
+
+            if (loggingEvent.LocationInformation != null)
+            {
+                logEvent.ClassName = loggingEvent.LocationInformation.ClassName;
+                logEvent.FileName = loggingEvent.LocationInformation.FileName;
+                logEvent.LineNumber = loggingEvent.LocationInformation.LineNumber;
+                logEvent.FullInfo = loggingEvent.LocationInformation.FullInfo;
+                logEvent.MethodName = loggingEvent.LocationInformation.MethodName;
+            }
+
+            // Raven doesn't serialize unknown types like log4net's PropertiesDictionary
+            logEvent.Properties = loggingEvent.Properties.GetKeys().ToDictionary(key => key, key => logEvent.Properties[key].ToString());
 
             var results = client.Index(logEvent);
             
