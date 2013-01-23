@@ -17,6 +17,8 @@ namespace log4net.ElasticSearch
         public string ElasticSearchServer { get; set; }
         public string ElasticSearchIndex { get; set; }
 
+        public string ConnectionString { get; set; }
+
         public ElasticSearchAppender()
         {
             ElasticSearchServer = "localhost";
@@ -26,6 +28,10 @@ namespace log4net.ElasticSearch
                           .SetDefaultIndex(ElasticSearchIndex);
 
             client = new ElasticClient(elasticSettings);
+
+
+
+            
         }
         /// <summary>
         /// Add a log event to the ElasticSearch Repo
@@ -33,6 +39,11 @@ namespace log4net.ElasticSearch
         /// <param name="loggingEvent"></param>
         protected override void Append(Core.LoggingEvent loggingEvent)
         {
+            string conn = ConnectionString;
+            var builder = new System.Data.Common.DbConnectionStringBuilder();
+            builder.ConnectionString = conn.Replace("{", "\"").Replace("}", "\"");
+            var keys = builder.Keys;
+
             LogEvent logEvent = new LogEvent();
             
             if (logEvent == null)
@@ -65,7 +76,6 @@ namespace log4net.ElasticSearch
                 logEvent.MethodName = loggingEvent.LocationInformation.MethodName;
             }
 
-            // Raven doesn't serialize unknown types like log4net's PropertiesDictionary
             logEvent.Properties = loggingEvent.Properties.GetKeys().ToDictionary(key => key, key => logEvent.Properties[key].ToString());
 
             var results = client.Index(logEvent);
