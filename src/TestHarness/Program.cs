@@ -14,7 +14,7 @@ namespace TestHarness
 
         static void Main(string[] args)
         {
-            _log.Info("omg this is a log!");
+            _log.Info("connection string");
             Console.ReadKey();
         }
 

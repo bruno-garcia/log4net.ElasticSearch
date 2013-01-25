@@ -5,14 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using Nest;
 using log4net.Appender;
+using log4net.Core;
 using log4net.ElasticSearch.Models;
 
 namespace log4net.ElasticSearch
 {
     public class ElasticSearchAppender : AppenderSkeleton
     {
-        private readonly ConnectionSettings elasticSettings;
-        private readonly ElasticClient client;
+        //private readonly ConnectionSettings elasticSettings;
+        private  ElasticClient client;
 
         public string ElasticSearchServer { get; set; }
         public string ElasticSearchIndex { get; set; }
@@ -24,14 +25,6 @@ namespace log4net.ElasticSearch
             ElasticSearchServer = "localhost";
             ElasticSearchIndex = "log";
 
-            elasticSettings = new ConnectionSettings(ElasticSearchServer, 9200)
-                          .SetDefaultIndex(ElasticSearchIndex);
-
-            client = new ElasticClient(elasticSettings);
-
-
-
-            
         }
         /// <summary>
         /// Add a log event to the ElasticSearch Repo
@@ -39,11 +32,16 @@ namespace log4net.ElasticSearch
         /// <param name="loggingEvent"></param>
         protected override void Append(Core.LoggingEvent loggingEvent)
         {
-            string conn = ConnectionString;
-            var builder = new System.Data.Common.DbConnectionStringBuilder();
-            builder.ConnectionString = conn.Replace("{", "\"").Replace("}", "\"");
-            var keys = builder.Keys;
+            if (string.IsNullOrEmpty(ConnectionString))
+            {
+                var exception = new InvalidOperationException("Connection string not present.");
+                ErrorHandler.Error("Connection string not included in appender.", exception, ErrorCode.GenericFailure);
 
+                return;
+            }
+
+            client = new ElasticClient(ConnectionBuilder.BuildElsticSearchConnection(ConnectionString));
+            
             LogEvent logEvent = new LogEvent();
             
             if (logEvent == null)

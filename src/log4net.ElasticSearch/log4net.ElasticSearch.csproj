@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConnectionBuilder.cs" />
     <Compile Include="ElasticSearchAppender.cs" />
     <Compile Include="Models\LogEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
