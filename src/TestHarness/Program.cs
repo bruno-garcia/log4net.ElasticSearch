@@ -14,7 +14,8 @@ namespace TestHarness
 
         static void Main(string[] args)
         {
-            _log.Info("connection string");
+            Console.WriteLine("app.config file.");
+            _log.Info("app.config file");
             Console.ReadKey();
         }
 

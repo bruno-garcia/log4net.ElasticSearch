@@ -50,13 +50,12 @@
   <ItemGroup>
     <None Include="App.config">
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="logConfiguration.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="logConfiguration.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\log4net.ElasticSearch\log4net.ElasticSearch.csproj">
