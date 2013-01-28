@@ -1,5 +1,0 @@
-Creating a custome log4net appender
-http://www.codeproject.com/Articles/406634/Creating-a-custom-log4net-appender
-
-Log4net tut
-http://www.codeproject.com/Articles/140911/log4net-Tutorial
