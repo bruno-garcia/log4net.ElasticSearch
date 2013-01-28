@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Nest;
 using log4net.Appender;
 using log4net.Core;
@@ -15,17 +12,8 @@ namespace log4net.ElasticSearch
         //private readonly ConnectionSettings elasticSettings;
         private  ElasticClient client;
 
-        public string ElasticSearchServer { get; set; }
-        public string ElasticSearchIndex { get; set; }
-
         public string ConnectionString { get; set; }
 
-        public ElasticSearchAppender()
-        {
-            ElasticSearchServer = "localhost";
-            ElasticSearchIndex = "log";
-
-        }
         /// <summary>
         /// Add a log event to the ElasticSearch Repo
         /// </summary>
@@ -76,8 +64,17 @@ namespace log4net.ElasticSearch
 
             logEvent.Properties = loggingEvent.Properties.GetKeys().ToDictionary(key => key, key => logEvent.Properties[key].ToString());
 
-            var results = client.Index(logEvent);
-            
+            if (client.IsValid)
+            {
+                var results = client.Index(logEvent);    
+            }
+            else
+            {
+                var exception = new InvalidOperationException("Connection to ElasticSearch is invalid.");
+                ErrorHandler.Error("Invalid connection to ElasticSearch", exception, ErrorCode.GenericFailure);
+
+                return;
+            }
         }
     }
 }

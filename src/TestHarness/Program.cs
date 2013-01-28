@@ -18,7 +18,5 @@ namespace TestHarness
             _log.Info("app.config file");
             Console.ReadKey();
         }
-
-        
     }
 }

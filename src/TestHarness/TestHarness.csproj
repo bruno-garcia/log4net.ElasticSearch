@@ -55,7 +55,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="logConfiguration.xml" />
+    <Content Include="logConfiguration.xml">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\log4net.ElasticSearch\log4net.ElasticSearch.csproj">
