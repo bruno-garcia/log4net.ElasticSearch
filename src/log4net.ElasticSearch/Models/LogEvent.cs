@@ -22,10 +22,10 @@ namespace log4net.ElasticSearch.Models
         public string Message { get; set; }
 
         [ElasticProperty(Name = "MessageObject")]
-        public object MessageObject { get; set; }
+        public string MessageObject { get; set; }
 
         [ElasticProperty(Name = "Exception")]
-        public object Exception { get; set; }
+        public string Exception { get; set; }
 
         [ElasticProperty(Name = "LoggerName")]
         public string LoggerName { get; set; }

@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log4net.ElasticSearch", "lo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestHarness", "TestHarness\TestHarness.csproj", "{4A3945D1-6481-4EC0-A5DC-6DA6B4A31EE2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log4net.ElasticSearch.Tests", "log4net.ElasticSearch.Tests\log4net.ElasticSearch.Tests.csproj", "{2F7D7AD4-2DA0-430A-9E90-9D0E398D590C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{4A3945D1-6481-4EC0-A5DC-6DA6B4A31EE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4A3945D1-6481-4EC0-A5DC-6DA6B4A31EE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4A3945D1-6481-4EC0-A5DC-6DA6B4A31EE2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F7D7AD4-2DA0-430A-9E90-9D0E398D590C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F7D7AD4-2DA0-430A-9E90-9D0E398D590C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F7D7AD4-2DA0-430A-9E90-9D0E398D590C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F7D7AD4-2DA0-430A-9E90-9D0E398D590C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

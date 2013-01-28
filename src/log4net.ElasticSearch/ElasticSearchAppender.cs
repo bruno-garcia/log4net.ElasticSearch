@@ -42,9 +42,9 @@ namespace log4net.ElasticSearch
             logEvent.Identity = loggingEvent.Identity;
             logEvent.ThreadName = loggingEvent.ThreadName;
             logEvent.UserName = loggingEvent.UserName;
-            logEvent.MessageObject = loggingEvent.MessageObject;
+            logEvent.MessageObject = loggingEvent.MessageObject.ToString();
             logEvent.TimeStamp = loggingEvent.TimeStamp;
-            logEvent.Exception = loggingEvent.ExceptionObject;
+            logEvent.Exception = loggingEvent.ExceptionObject.ToString();
             logEvent.Message = loggingEvent.RenderedMessage;
             logEvent.Fix = loggingEvent.Fix.ToString();
 
