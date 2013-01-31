@@ -15,4 +15,4 @@ Please see the [Getting Started](https://github.com/jptoto/log4net.ElasticSearch
 [MIT License](https://github.com/jptoto/log4net.ElasticSearch/blob/master/LICENSE)
 
 ### Thanks:
-Many thanks to [@mpdreamz](https://github.com/Mpdreamz) for his great work on the NEST library!
+Many thanks to [@mpdreamz](https://github.com/Mpdreamz) and the team for their great work on the NEST library!
