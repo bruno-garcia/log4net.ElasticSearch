@@ -11,5 +11,8 @@ log4net.ElasticSearch is a module for the [log4net](http://logging.apache.org/lo
 ### Usage:
 Please see the [Getting Started](https://github.com/jptoto/log4net.ElasticSearch/wiki/Getting-Started) Wiki page to begin logging errors to ElasticSearch!
 
+### License:
+[MIT License](https://github.com/jptoto/log4net.ElasticSearch/blob/master/LICENSE)
+
 ### Thanks:
 Many thanks to [@mpdreamz](https://github.com/Mpdreamz) for his great work on the NEST library!
