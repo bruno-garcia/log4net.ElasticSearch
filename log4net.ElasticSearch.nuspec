@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>log4net.ElasticSearch</id>
-    <version>0.2.0</version>
+    <version>0.3.0</version>
     <authors>JP Toto</authors>
     <owners>JP Toto</owners>
     <licenseUrl>https://github.com/jptoto/log4net.ElasticSearch/blob/master/LICENSE</licenseUrl>
