@@ -14,7 +14,7 @@
     <tags>log logging exception elasticsearch log4net</tags>
     <dependencies>
       <dependency id="log4net" version="1.2.11.0" />
-      <dependency id="NEST" version="0.19.16.0" />
+      <dependency id="NEST" version="0.9.16.0" />
     </dependencies>
   </metadata>
 </package>
