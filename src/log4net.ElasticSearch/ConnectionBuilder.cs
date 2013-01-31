@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Specialized;
 using Nest;
+using log4net.Core;
+
 
 namespace log4net.ElasticSearch
 {
@@ -13,16 +15,25 @@ namespace log4net.ElasticSearch
     {
         public static ConnectionSettings BuildElsticSearchConnection(string connectionString)
         {
-            var builder = new System.Data.Common.DbConnectionStringBuilder();
-            builder.ConnectionString = connectionString.Replace("{", "\"").Replace("}", "\"");
-            
-            StringDictionary lookup = new StringDictionary();
-            foreach (string key in builder.Keys)
+            try
             {
-                lookup[key] = Convert.ToString(builder[key]);
-            }
+                var builder = new System.Data.Common.DbConnectionStringBuilder();
+                builder.ConnectionString = connectionString.Replace("{", "\"").Replace("}", "\"");
 
-            return new ConnectionSettings(lookup["Server"], Convert.ToInt32(lookup["Port"])).SetDefaultIndex(lookup["Index"]);  
+                StringDictionary lookup = new StringDictionary();
+                foreach (string key in builder.Keys)
+                {
+                    lookup[key] = Convert.ToString(builder[key]);
+                }
+
+                return
+                    new ConnectionSettings(lookup["Server"], Convert.ToInt32(lookup["Port"])).SetDefaultIndex(
+                        lookup["Index"]);
+            }
+            catch
+            {
+                throw new InvalidOperationException("Not a valid connection string");
+            }
         }
     }
 }
