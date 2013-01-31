@@ -8,5 +8,8 @@ log4net.ElasticSearch is a module for the [log4net](http://logging.apache.org/lo
 * Easy installation and setup via [Nuget](https://nuget.org/packages/log4net.ElasticSearch/)
 * Uses the excellent [NEST](https://github.com/Mpdreamz/NEST) library which has great support for the newest ElasticSearch revisions
 
+### Usage:
+Please see the [Getting Started](https://github.com/jptoto/log4net.ElasticSearch/wiki/Getting-Started) Wiki page to begin logging errors to ElasticSearch!
+
 ### Thanks:
 Many thanks to [@mpdreamz](https://github.com/Mpdreamz) for his great work on the NEST library!
