@@ -4,33 +4,30 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{22964CB0-8A39-41EA-807D-B5216D27DF70}</ProjectGuid>
+    <ProjectGuid>{5C18DDF1-DDCD-4DA0-A985-E47DD0EF990C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>log4net.ElasticSearch</RootNamespace>
-    <AssemblyName>log4net.ElasticSearch</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <RootNamespace>log4net.ElasticSearch.Net40</RootNamespace>
+    <AssemblyName>log4net.ElasticSearch.Net40</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\bin\lib\net45\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NET40</DefineConstants>
+    <OutputPath>..\..\bin\lib\net40\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\bin\lib\net45\</OutputPath>
+    <OutputPath>..\..\bin\lib\net40\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net">
@@ -54,10 +51,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemblyVersionInfo.cs" />
-    <Compile Include="ConnectionBuilder.cs" />
-    <Compile Include="ElasticSearchAppender.cs" />
-    <Compile Include="Models\LogEvent.cs" />
+    <Compile Include="..\log4net.ElasticSearch\AssemblyVersionInfo.cs">
+      <Link>AssemblyVersionInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\log4net.ElasticSearch\ConnectionBuilder.cs">
+      <Link>ConnectionBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\log4net.ElasticSearch\ElasticSearchAppender.cs">
+      <Link>ElasticSearchAppender.cs</Link>
+    </Compile>
+    <Compile Include="..\log4net.ElasticSearch\Models\LogEvent.cs">
+      <Link>Models\LogEvent.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
