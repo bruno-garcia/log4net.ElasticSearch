@@ -5,6 +5,7 @@
     <version>0.4.0</version>
     <authors>JP Toto</authors>
     <owners>JP Toto</owners>
+    <iconUrl>http://nest.azurewebsites.net/images/nuget-icon.png</iconUrl>
     <licenseUrl>https://github.com/jptoto/log4net.ElasticSearch/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/jptoto/log4net.ElasticSearch</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
