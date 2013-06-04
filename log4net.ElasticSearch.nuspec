@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>log4net.ElasticSearch</id>
-    <version>0.5.0</version>
+    <version>0.7.0</version>
     <authors>JP Toto</authors>
     <owners>JP Toto</owners>
     <iconUrl>http://nest.azurewebsites.net/images/nuget-icon.png</iconUrl>
@@ -10,12 +10,17 @@
     <projectUrl>https://github.com/jptoto/log4net.ElasticSearch</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>log4net.ElasticSearch is a log4net adapter for easy logging of exceptions and messages to ElasticSearch indices.</description>
-    <releaseNotes>New logo to match other NEST projects.</releaseNotes>
+    <releaseNotes>Updated NEST and JSON.Net version and corrected new connection string format.</releaseNotes>
     <copyright>Copyright 2013</copyright>
     <tags>log logging exception elasticsearch log4net</tags>
     <dependencies>
       <dependency id="log4net" version="1.2.11.0" />
-      <dependency id="NEST" version="0.9.16.0" />
+      <dependency id="NEST" version="0.10.1.0" />
     </dependencies>
   </metadata>
+  <files>
+  <file src="lib\**\log4net.ElasticSearch*.dll" target="lib"/> 
+  <file src="lib\**\og4net.ElasticSearch*.pdb" target="lib"/> 
+  <file src="lib\**\og4net.ElasticSearch*.XML" target="lib"/> 
+  </files>
 </package>

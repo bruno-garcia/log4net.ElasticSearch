@@ -27,8 +27,8 @@ namespace log4net.ElasticSearch
                 }
 
                 return
-                    new ConnectionSettings(lookup["Server"], Convert.ToInt32(lookup["Port"])).SetDefaultIndex(
-                        lookup["Index"]);
+                    new ConnectionSettings(new Uri(string.Format("http://{0}:{1}", lookup["Server"], 
+                        Convert.ToInt32(lookup["Port"])))).SetDefaultIndex(lookup["Index"]);
             }
             catch
             {

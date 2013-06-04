@@ -1,4 +1,5 @@
-﻿using Nest;
+﻿using System;
+using Nest;
 using log4net.ElasticSearch.Models;
 
 namespace log4net.ElasticSearch.Tests
@@ -10,7 +11,7 @@ namespace log4net.ElasticSearch.Tests
 
         public ElasticSearchTestSetup()
         {
-            elasticSettings = new ConnectionSettings("127.0.0.1.", 9200)
+            elasticSettings = new ConnectionSettings(new Uri("http://127.0.0.1:9200") )
                 .SetDefaultIndex("log_test");
             
             client = new ElasticClient(elasticSettings);
