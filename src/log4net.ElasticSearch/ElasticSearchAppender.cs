@@ -48,9 +48,9 @@ namespace log4net.ElasticSearch
             logEvent.Message = loggingEvent.RenderedMessage;
             logEvent.Fix = loggingEvent.Fix.ToString();
 
-            if (logEvent.Level != null)
+            if (loggingEvent.Level != null)
             {
-                logEvent.Level = loggingEvent.Level.ToString();
+                logEvent.Level = loggingEvent.Level.DisplayName;
             }
 
             if (loggingEvent.LocationInformation != null)
