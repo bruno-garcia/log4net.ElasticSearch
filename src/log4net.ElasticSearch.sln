@@ -7,6 +7,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log4net.ElasticSearch.Tests
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log4net.ElasticSearch.Net40", "log4net.ElasticSearch.Net40\log4net.ElasticSearch.Net40.csproj", "{5C18DDF1-DDCD-4DA0-A985-E47DD0EF990C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{462F257B-5EDE-4409-9982-AFA7B17BDFF8}"
+	ProjectSection(SolutionItems) = preProject
+		..\log4net.ElasticSearch.nuspec = ..\log4net.ElasticSearch.nuspec
+		..\pack-nuget.bat = ..\pack-nuget.bat
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
