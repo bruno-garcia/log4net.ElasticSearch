@@ -66,7 +66,7 @@ namespace log4net.ElasticSearch
 
             if (client.IsValid)
             {
-                var results = client.Index(logEvent);    
+                client.IndexAsync(logEvent);    
             }
             else
             {
