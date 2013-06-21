@@ -6,6 +6,8 @@ namespace log4net.ElasticSearch.Tests
 {
     public class ElasticSearchAppenderTests : ElasticSearchTestSetup, IDisposable
     {
+        private static readonly ILog _log = LogManager.GetLogger(typeof(ElasticSearchAppenderTests));
+
         public ElasticSearchAppenderTests()
         {
             SetupTestIndex();
@@ -48,6 +50,18 @@ namespace log4net.ElasticSearch.Tests
             var searchResults = client.Search<LogEvent>(s => s.Query(q => q.Term(x => x.Exception, "readingtest")));
 
             Assert.Equal(1, Convert.ToInt32(searchResults.Hits.Total));
+        }
+
+        [Fact]
+        public void Can_create_an_event_from_log4net()
+        {
+            _log.Info("loggingtest");
+            client.Refresh();
+
+            var searchResults = client.Search<LogEvent>(s => s.Query(q => q.Term(x => x.Message, "loggingtest")));
+
+            Assert.Equal(1, Convert.ToInt32(searchResults.Hits.Total));
+            
         }
 
         public void Dispose()
