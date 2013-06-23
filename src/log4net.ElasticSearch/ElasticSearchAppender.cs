@@ -47,6 +47,7 @@ namespace log4net.ElasticSearch
             logEvent.Exception = loggingEvent.ExceptionObject == null ? "" : loggingEvent.MessageObject.ToString();
             logEvent.Message = loggingEvent.RenderedMessage;
             logEvent.Fix = loggingEvent.Fix.ToString();
+            logEvent.HostName = Environment.MachineName;
 
             if (loggingEvent.Level != null)
             {

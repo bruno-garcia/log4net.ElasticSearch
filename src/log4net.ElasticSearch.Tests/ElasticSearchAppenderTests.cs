@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Xunit;
 using log4net.ElasticSearch.Models;
 
@@ -45,7 +46,7 @@ namespace log4net.ElasticSearch.Tests
             };
 
             client.Index(logEvent);
-            client.Refresh();
+            client.Flush();
 
             var searchResults = client.Search<LogEvent>(s => s.Query(q => q.Term(x => x.Exception, "readingtest")));
 
@@ -56,7 +57,7 @@ namespace log4net.ElasticSearch.Tests
         public void Can_create_an_event_from_log4net()
         {
             _log.Info("loggingtest");
-            client.Refresh();
+            client.Flush();
 
             var searchResults = client.Search<LogEvent>(s => s.Query(q => q.Term(x => x.Message, "loggingtest")));
 

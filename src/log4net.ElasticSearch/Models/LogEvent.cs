@@ -66,6 +66,9 @@ namespace log4net.ElasticSearch.Models
         [ElasticProperty(Name = "ThreadName")]
         public string ThreadName { get; set; }
 
+        [ElasticProperty(Name = "HostName")]
+        public string HostName { get; set; }
+
         /// <summary>
         /// We'll generate an _id for ElasticSearch so it's a predictable format
         /// </summary>
