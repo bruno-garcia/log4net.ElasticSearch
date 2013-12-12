@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using Xunit;
 using log4net.ElasticSearch.Models;
@@ -17,7 +18,7 @@ namespace log4net.ElasticSearch.Tests
         [Fact]
         public void Can_insert_record()
         {
-            var logEvent = new LogEvent
+            var logEvent = new 
                 {
                     ClassName = "IntegrationTestClass",
                     Domain = "TestDomain",
@@ -37,9 +38,28 @@ namespace log4net.ElasticSearch.Tests
         }
 
         [Fact]
+        public void Can_read_properties()
+        {
+            GlobalContext.Properties["globalDynamicProperty"] = "global";
+            ThreadContext.Properties["threadDynamicProperty"] = "thread";
+            LogicalThreadContext.Properties["logicalThreadDynamicProperty"] = "local thread";
+            _log.Info("loggingtest");
+
+            Thread.Sleep(1500);
+
+            var searchResults = client.Search(s => s.Query(q => q.Term("message", "loggingtest")));
+
+            Assert.Equal(1, Convert.ToInt32(searchResults.Hits.Total));
+            var firstEntry = searchResults.Documents.First();
+            Assert.Equal("global", firstEntry.globalDynamicProperty.ToString());
+            Assert.Equal("thread", firstEntry.threadDynamicProperty.ToString());
+            Assert.Equal("local thread", firstEntry.logicalThreadDynamicProperty.ToString());
+        }
+
+        [Fact]
         public void Can_read_inserted_record()
         {
-            var logEvent = new LogEvent
+            var logEvent = new 
             {
                 ClassName = "IntegrationTestClass",
                 Exception = "ReadingTest"
@@ -48,7 +68,7 @@ namespace log4net.ElasticSearch.Tests
             client.Index(logEvent);
             client.Refresh();
 
-            var searchResults = client.Search<LogEvent>(s => s.Query(q => q.Term(x => x.Exception, "readingtest")));
+            var searchResults = client.Search(s => s.Query(q => q.Term("exception", "readingtest")));
 
             Assert.Equal(1, Convert.ToInt32(searchResults.Hits.Total));
         }
@@ -59,7 +79,7 @@ namespace log4net.ElasticSearch.Tests
             _log.Info("loggingtest");
             Thread.Sleep(2000);
 
-            var searchResults = client.Search<LogEvent>(s => s.Query(q => q.Term(x => x.Message, "loggingtest")));
+            var searchResults = client.Search(s => s.Query(q => q.Term("message", "loggingtest")));
 
             Assert.Equal(1, Convert.ToInt32(searchResults.Hits.Total));
             

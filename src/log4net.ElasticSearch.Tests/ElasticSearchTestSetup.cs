@@ -11,7 +11,7 @@ namespace log4net.ElasticSearch.Tests
 
         public ElasticSearchTestSetup()
         {
-            elasticSettings = new ConnectionSettings(new Uri("http://127.0.0.1:9200") )
+            elasticSettings = new ConnectionSettings(new Uri("http://BEKK-TOMASJANS:9200"))
                 .SetDefaultIndex("log_test");
             
             client = new ElasticClient(elasticSettings);
@@ -19,10 +19,10 @@ namespace log4net.ElasticSearch.Tests
 
         public void SetupTestIndex()
         {
+            client.DeleteIndex("log_test");
             client.CreateIndex("log_test", c => c
                                                     .NumberOfReplicas(0)
-                                                    .NumberOfShards(1)
-                                                    .AddMapping<LogEvent>(m => m.MapFromAttributes()));
+                                                    .NumberOfShards(1));
         }
 
         public void DeleteTestIndex()

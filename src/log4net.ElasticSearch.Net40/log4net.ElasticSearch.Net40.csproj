@@ -60,13 +60,19 @@
     <Compile Include="..\log4net.ElasticSearch\ElasticSearchAppender.cs">
       <Link>ElasticSearchAppender.cs</Link>
     </Compile>
-    <Compile Include="..\log4net.ElasticSearch\Models\LogEvent.cs">
-      <Link>Models\LogEvent.cs</Link>
+    <Compile Include="..\log4net.ElasticSearch\Models\UniqueIdGenerator.cs">
+      <Link>Models\UniqueIdGenerator.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\log4net.ElasticSearch.Extensions\log4net.ElasticSearch.Extensions.csproj">
+      <Project>{b3fd2b12-3844-4634-991a-a372c5aa5df2}</Project>
+      <Name>log4net.ElasticSearch.Extensions</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

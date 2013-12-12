@@ -1,9 +1,11 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
+using System.Dynamic;
+using log4net.ElasticSearch.Extensions;
+using log4net.ElasticSearch.Models;
 using Nest;
 using log4net.Appender;
 using log4net.Core;
-using log4net.ElasticSearch.Models;
 
 namespace log4net.ElasticSearch
 {
@@ -27,16 +29,27 @@ namespace log4net.ElasticSearch
 
                 return;
             }
-
-            client = new ElasticClient(ConnectionBuilder.BuildElsticSearchConnection(ConnectionString));
-            
-            LogEvent logEvent = new LogEvent();
-            
-            if (logEvent == null)
+            var settings = ConnectionBuilder.BuildElsticSearchConnection(ConnectionString);
+            client = new ElasticClient(settings);
+            var logEvent = CreateLogEvent(loggingEvent);
+            try
             {
-                throw new ArgumentNullException("logEvent");
+                client.IndexAsync(logEvent);
             }
+            catch (InvalidOperationException ex)
+            {
+                ErrorHandler.Error("Invalid connection to ElasticSearch", ex, ErrorCode.GenericFailure);
+            }
+        }
 
+        private static dynamic CreateLogEvent(LoggingEvent loggingEvent)
+        {
+            if (loggingEvent == null)
+            {
+                throw new ArgumentNullException("loggingEvent");
+            }
+            dynamic logEvent = new ExpandoObject();
+            logEvent.Id = new UniqueIdGenerator().GenerateUniqueId();
             logEvent.LoggerName = loggingEvent.LoggerName;
             logEvent.Domain = loggingEvent.Domain;
             logEvent.Identity = loggingEvent.Identity;
@@ -63,16 +76,13 @@ namespace log4net.ElasticSearch
                 logEvent.MethodName = loggingEvent.LocationInformation.MethodName;
             }
 
-            logEvent.Properties = loggingEvent.Properties.GetKeys().ToDictionary(key => key, key => logEvent.Properties[key].ToString());
-
-            try 
+            var properties = loggingEvent.GetProperties();
+            var expandoDict = logEvent as IDictionary<string, Object>;
+            foreach (var propertyKey in properties.GetKeys())
             {
-                client.IndexAsync(logEvent);    
+                expandoDict.Add(propertyKey, properties[propertyKey].ToString());
             }
-            catch (InvalidOperationException ex)
-            {
-                ErrorHandler.Error("Invalid connection to ElasticSearch", ex, ErrorCode.GenericFailure);
-            }
+            return logEvent;
         }
     }
 }
