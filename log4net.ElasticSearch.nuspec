@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>log4net.ElasticSearch</id>
-    <version>0.9.4</version>
+    <version>0.9.5</version>
     <authors>JP Toto</authors>
     <owners>JP Toto</owners>
     <iconUrl>http://nest.azurewebsites.net/images/nuget-icon.png</iconUrl>
@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/jptoto/log4net.ElasticSearch</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>log4net.ElasticSearch is a log4net adapter for easy logging of exceptions and messages to ElasticSearch indices.</description>
-    <releaseNotes>Removed failing deprecated method</releaseNotes>
+    <releaseNotes>Removed failing deprecated method, pull reqs</releaseNotes>
     <copyright>Copyright 2013</copyright>
     <tags>log logging exception elasticsearch log4net</tags>
     <dependencies>
