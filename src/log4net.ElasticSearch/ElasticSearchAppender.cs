@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
-using log4net.ElasticSearch.Extensions;
 using log4net.ElasticSearch.Models;
 using Nest;
 using log4net.Appender;

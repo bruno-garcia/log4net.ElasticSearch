@@ -7,63 +7,60 @@
     },
     "mappings": {
         "LogEvent": {
-            "_all": {
-                "enabled": false
-            },
             "properties": {
-                "TimeStamp": {
+                "timeStamp": {
                     "type": "date",
                     "format": "dateOptionalTime"
                 },
-                "Message": {
+                "message": {
                     "type": "string"
                 },
-                "MessageObject": {
+                "messageObject": {
                     "type": "string"
                 },
-                "Exception": {
+                "exception": {
                     "type": "string"
                 },
-                "LoggerName": {
+                "loggerName": {
                     "type": "string"
                 },
-                "Domain": {
+                "domain": {
                     "type": "string"
                 },
-                "Identity": {
+                "identity": {
                     "type": "string"
                 },
-                "Level": {
+                "level": {
                     "type": "string"
                 },
-                "ClassName": {
+                "className": {
                     "type": "string"
                 },
-                "FileName": {
+                "fileName": {
                     "type": "string"
                 },
-                "Name": {
+                "name": {
                     "type": "string"
                 },
-                "FullInfo": {
+                "fullInfo": {
                     "type": "string"
                 },
-                "MethodName": {
+                "methodName": {
                     "type": "string"
                 },
-                "Fix": {
+                "fix": {
                     "type": "string"
                 },
-                "Properties": {
+                "properties": {
                     "type": "string"
                 },
-                "UserName": {
+                "userName": {
                     "type": "string"
                 },
-                "ThreadName": {
+                "threadName": {
                     "type": "string"
                 },
-                "HostName": {
+                "hostName": {
                     "type": "string"
                 }
             }

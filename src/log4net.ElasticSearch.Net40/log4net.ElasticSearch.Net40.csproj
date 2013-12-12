@@ -68,12 +68,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\log4net.ElasticSearch.Extensions\log4net.ElasticSearch.Extensions.csproj">
-      <Project>{b3fd2b12-3844-4634-991a-a372c5aa5df2}</Project>
-      <Name>log4net.ElasticSearch.Extensions</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
