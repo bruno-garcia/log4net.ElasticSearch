@@ -65,16 +65,13 @@ namespace log4net.ElasticSearch
 
             logEvent.Properties = loggingEvent.Properties.GetKeys().ToDictionary(key => key, key => logEvent.Properties[key].ToString());
 
-            if (client.IsValid)
+            try 
             {
                 client.IndexAsync(logEvent);    
             }
-            else
+            catch (InvalidOperationException ex)
             {
-                var exception = new InvalidOperationException("Connection to ElasticSearch is invalid.");
-                ErrorHandler.Error("Invalid connection to ElasticSearch", exception, ErrorCode.GenericFailure);
-
-                return;
+                ErrorHandler.Error("Invalid connection to ElasticSearch", ex, ErrorCode.GenericFailure);
             }
         }
     }
