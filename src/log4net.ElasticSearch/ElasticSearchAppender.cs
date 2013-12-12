@@ -33,7 +33,7 @@ namespace log4net.ElasticSearch
             var logEvent = CreateLogEvent(loggingEvent);
             try
             {
-                client.IndexAsync(logEvent);
+                client.IndexAsync(logEvent, settings.DefaultIndex, "LogEvent");
             }
             catch (InvalidOperationException ex)
             {
