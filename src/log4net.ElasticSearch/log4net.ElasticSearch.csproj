@@ -57,7 +57,7 @@
     <Compile Include="AssemblyVersionInfo.cs" />
     <Compile Include="ConnectionBuilder.cs" />
     <Compile Include="ElasticSearchAppender.cs" />
-    <Compile Include="Models\LogEvent.cs" />
+    <Compile Include="Models\UniqueIdGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -60,8 +60,8 @@
     <Compile Include="..\log4net.ElasticSearch\ElasticSearchAppender.cs">
       <Link>ElasticSearchAppender.cs</Link>
     </Compile>
-    <Compile Include="..\log4net.ElasticSearch\Models\LogEvent.cs">
-      <Link>Models\LogEvent.cs</Link>
+    <Compile Include="..\log4net.ElasticSearch\Models\UniqueIdGenerator.cs">
+      <Link>Models\UniqueIdGenerator.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
