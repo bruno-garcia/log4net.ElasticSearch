@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading;
 using Xunit;
-using log4net.ElasticSearch.Models;
 
 namespace log4net.ElasticSearch.Tests
 {
@@ -34,7 +33,7 @@ namespace log4net.ElasticSearch.Tests
 
             var results = client.Index(logEvent);
 
-            Assert.Equal(results.OK, true);
+            Assert.NotNull(results.Id);
         }
 
         [Fact]

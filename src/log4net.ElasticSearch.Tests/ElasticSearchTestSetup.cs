@@ -11,7 +11,7 @@ namespace log4net.ElasticSearch.Tests
 
         public ElasticSearchTestSetup()
         {
-            elasticSettings = new ConnectionSettings(new Uri("http://BEKK-TOMASJANS:9200"))
+            elasticSettings = new ConnectionSettings(new Uri("http://127.0.0.1:9200"))
                 .SetDefaultIndex("log_test");
             
             client = new ElasticClient(elasticSettings);
