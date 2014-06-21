@@ -1,6 +1,5 @@
 ﻿using System;
 using Nest;
-using log4net.ElasticSearch.Models;
 
 namespace log4net.ElasticSearch.Tests
 {
