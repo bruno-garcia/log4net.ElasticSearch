@@ -11,7 +11,7 @@ namespace log4net.ElasticSearch.Tests
 
         public ElasticSearchAppenderTests()
         {
-            SetupTestIndex();
+            
         }
 
         [Fact]
