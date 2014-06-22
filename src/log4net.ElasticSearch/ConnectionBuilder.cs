@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Specialized;
 using Nest;
-using log4net.Core;
-
 
 namespace log4net.ElasticSearch
 {
@@ -20,15 +18,22 @@ namespace log4net.ElasticSearch
                 var builder = new System.Data.Common.DbConnectionStringBuilder();
                 builder.ConnectionString = connectionString.Replace("{", "\"").Replace("}", "\"");
 
-                StringDictionary lookup = new StringDictionary();
+                var lookup = new StringDictionary();
                 foreach (string key in builder.Keys)
                 {
                     lookup[key] = Convert.ToString(builder[key]);
                 }
 
+                var index = lookup["Index"];
+
+                // If the user asked for rolling logs, setup the index by day
+                if (!string.IsNullOrEmpty(lookup["rolling"]))
+                    if (lookup["rolling"] == "true")
+                        index = string.Format("{0}-{1}", index, DateTime.Now.ToString("yyyy-MM-dd"));
+
                 return
                     new ConnectionSettings(new Uri(string.Format("http://{0}:{1}", lookup["Server"], 
-                        Convert.ToInt32(lookup["Port"])))).SetDefaultIndex(lookup["Index"]);
+                        Convert.ToInt32(lookup["Port"])))).SetDefaultIndex(index);
             }
             catch
             {

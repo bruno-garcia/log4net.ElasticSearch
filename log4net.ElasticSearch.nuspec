@@ -2,7 +2,7 @@
 <package >
     <metadata>
         <id>log4net.ElasticSearch</id>
-        <version>1.0.0</version>
+        <version>1.1</version>
         <authors>JP Toto</authors>
         <owners>JP Toto</owners>
         <iconUrl>http://nest.azurewebsites.net/images/nuget-icon.png</iconUrl>
@@ -10,7 +10,7 @@
         <projectUrl>https://github.com/jptoto/log4net.ElasticSearch</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>log4net.Elasticsearch is a log4net adapter for easy logging of exceptions and messages to Elasticsearch indices.</description>
-        <releaseNotes>Version 1.0 release.</releaseNotes>
+        <releaseNotes>Added 'rolling' boolean to connection string. Adding 'rolling=true' will cause new log indexes to be created daily</releaseNotes>
         <copyright>Copyright 2014</copyright>
         <tags>log logging exception elasticsearch log4net</tags>
         <dependencies>
