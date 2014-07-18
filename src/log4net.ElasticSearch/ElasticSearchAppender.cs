@@ -10,10 +10,30 @@ namespace log4net.ElasticSearch
 {
     public class ElasticSearchAppender : AppenderSkeleton
     {
-        //private readonly ConnectionSettings elasticSettings;
-        private  ElasticClient client;
+        private  ElasticClient _client;
+        private ConnectionSettings _settings;
 
         public string ConnectionString { get; set; }
+
+        public override void ActivateOptions()
+        {
+            if (string.IsNullOrEmpty(ConnectionString))
+            {
+                var exception = new InvalidOperationException("Connection string not present.");
+                ErrorHandler.Error("Connection string not included in appender.", exception, ErrorCode.GenericFailure);
+
+                _client = null;
+                return;
+            }
+
+            _settings = ConnectionBuilder.BuildElsticSearchConnection(ConnectionString);
+            _client = new ElasticClient(_settings);
+        }
+
+        protected override void OnClose()
+        {
+            _client.Flush();
+        }
 
         /// <summary>
         /// Add a log event to the ElasticSearch Repo
@@ -21,19 +41,15 @@ namespace log4net.ElasticSearch
         /// <param name="loggingEvent"></param>
         protected override void Append(Core.LoggingEvent loggingEvent)
         {
-            if (string.IsNullOrEmpty(ConnectionString))
+            if (_client == null || loggingEvent == null)
             {
-                var exception = new InvalidOperationException("Connection string not present.");
-                ErrorHandler.Error("Connection string not included in appender.", exception, ErrorCode.GenericFailure);
-
                 return;
             }
-            var settings = ConnectionBuilder.BuildElsticSearchConnection(ConnectionString);
-            client = new ElasticClient(settings);
+
             var logEvent = CreateLogEvent(loggingEvent);
             try
             {
-                client.IndexAsync(logEvent, settings.DefaultIndex, "LogEvent");
+                _client.IndexAsync(logEvent, _settings.DefaultIndex, "LogEvent");
             }
             catch (InvalidOperationException ex)
             {
