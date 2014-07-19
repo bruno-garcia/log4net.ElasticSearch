@@ -5,6 +5,8 @@ namespace log4net.ElasticSearch.Models
 {
     public class UniqueIdGenerator
     {
+        public static UniqueIdGenerator Instance = new UniqueIdGenerator();
+
         /// <summary>
         /// We'll generate an _id for ElasticSearch so it's a predictable format
         /// </summary>
