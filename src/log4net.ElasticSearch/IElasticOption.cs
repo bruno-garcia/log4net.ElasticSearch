@@ -1,21 +1,33 @@
+using log4net.Core;
+using Nest;
+using Newtonsoft.Json.Linq;
+
 namespace log4net.ElasticSearch
 {
-    public interface IElasticOption
+    public interface IElasticOption : IOptionHandler
     {
-        void LoadConfiguration();
-        void PrepareEvent();
+        void PrepareConfiguration(ElasticClient client);
+        void PrepareEvent(JObject loggingEvent);
     }
 
     class AddValue : IElasticOption
     {
-        public void LoadConfiguration()
+        public string Name { get; set; }
+        public string Value { get; set; }
+
+        public void PrepareConfiguration(ElasticClient client)
         {
-            throw new System.NotImplementedException();
+            
         }
 
-        public void PrepareEvent()
+        public void PrepareEvent(JObject loggingEvent)
         {
-            throw new System.NotImplementedException();
+            loggingEvent[Name] = Value;
+        }
+
+        public void ActivateOptions()
+        {
+            
         }
     }
 }
