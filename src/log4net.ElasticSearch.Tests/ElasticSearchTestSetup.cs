@@ -5,25 +5,24 @@ namespace log4net.ElasticSearch.Tests
 {
     public class ElasticSearchTestSetup
     {
-        private readonly ConnectionSettings elasticSettings;
-        public readonly ElasticClient client;
-        private string testIndex;
+        public readonly ElasticClient Client;
+        protected readonly string _testIndex;
 
         public ElasticSearchTestSetup()
         {
-            testIndex = string.Format("{0}-{1}", "log_test", DateTime.Now.ToString("yyyy-MM-dd"));
+            _testIndex = string.Format("{0}-{1}", "log_test", DateTime.Now.ToString("yyyy-MM-dd"));
 
-            elasticSettings = new ConnectionSettings(new Uri("http://127.0.0.1:9200"))
-                .SetDefaultIndex(testIndex);
+            ConnectionSettings elasticSettings = new ConnectionSettings(new Uri("http://127.0.0.1:9200"))
+                .SetDefaultIndex(_testIndex);
             
-            client = new ElasticClient(elasticSettings);
+            Client = new ElasticClient(elasticSettings);
 
-            client.DeleteIndex(testIndex);
+            Client.DeleteIndex(_testIndex);
         }
 
         public void DeleteTestIndex()
         {
-            client.DeleteIndex(testIndex);
+            Client.DeleteIndex(_testIndex);
         }
     }
 }
