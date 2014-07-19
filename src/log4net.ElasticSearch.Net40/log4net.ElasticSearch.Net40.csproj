@@ -62,8 +62,11 @@
     <Compile Include="..\log4net.ElasticSearch\ElasticSearchAppender.cs">
       <Link>ElasticSearchAppender.cs</Link>
     </Compile>
-    <Compile Include="..\log4net.ElasticSearch\IElasticOptions.cs">
-      <Link>IElasticOptions.cs</Link>
+    <Compile Include="..\log4net.ElasticSearch\IElasticOption.cs">
+      <Link>IElasticOption.cs</Link>
+    </Compile>
+    <Compile Include="..\log4net.ElasticSearch\TemplateInfo.cs">
+      <Link>TemplateInfo.cs</Link>
     </Compile>
     <Compile Include="..\log4net.ElasticSearch\Models\UniqueIdGenerator.cs">
       <Link>Models\UniqueIdGenerator.cs</Link>

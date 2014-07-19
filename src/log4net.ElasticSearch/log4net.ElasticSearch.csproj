@@ -55,9 +55,10 @@
     <Compile Include="AssemblyVersionInfo.cs" />
     <Compile Include="ConnectionBuilder.cs" />
     <Compile Include="ElasticSearchAppender.cs" />
-    <Compile Include="IElasticOptions.cs" />
+    <Compile Include="IElasticOption.cs" />
     <Compile Include="Models\UniqueIdGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TemplateInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

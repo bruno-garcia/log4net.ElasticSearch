@@ -1,5 +1,3 @@
-using System.Security.Cryptography.X509Certificates;
-
 namespace log4net.ElasticSearch
 {
     public interface IElasticOption
