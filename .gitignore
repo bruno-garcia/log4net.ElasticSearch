@@ -110,3 +110,5 @@ packages/*
 
 # Exceptions
 !tools/xunit/*
+!packages/repositories.config
+
