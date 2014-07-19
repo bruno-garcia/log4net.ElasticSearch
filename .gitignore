@@ -106,9 +106,9 @@ UpgradeLog*.XML
 
 # Nuget file(s)
 *.nupkg
-packages/*/
+src/packages/
 
 # Exceptions
 !tools/xunit/*
-!packages/repositories.config
+!src/packages/repositories.config
 
