@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log4net.ElasticSearch", "lo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log4net.ElasticSearch.Tests", "log4net.ElasticSearch.Tests\log4net.ElasticSearch.Tests.csproj", "{2F7D7AD4-2DA0-430A-9E90-9D0E398D590C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log4net.ElasticSearch.Net40", "log4net.ElasticSearch.Net40\log4net.ElasticSearch.Net40.csproj", "{5C18DDF1-DDCD-4DA0-A985-E47DD0EF990C}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{462F257B-5EDE-4409-9982-AFA7B17BDFF8}"
 	ProjectSection(SolutionItems) = preProject
 		..\log4net.ElasticSearch.nuspec = ..\log4net.ElasticSearch.nuspec
@@ -36,10 +34,6 @@ Global
 		{2F7D7AD4-2DA0-430A-9E90-9D0E398D590C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2F7D7AD4-2DA0-430A-9E90-9D0E398D590C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2F7D7AD4-2DA0-430A-9E90-9D0E398D590C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5C18DDF1-DDCD-4DA0-A985-E47DD0EF990C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5C18DDF1-DDCD-4DA0-A985-E47DD0EF990C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5C18DDF1-DDCD-4DA0-A985-E47DD0EF990C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5C18DDF1-DDCD-4DA0-A985-E47DD0EF990C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
