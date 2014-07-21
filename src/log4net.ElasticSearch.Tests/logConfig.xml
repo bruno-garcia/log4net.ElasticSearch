@@ -19,6 +19,10 @@
               <Key>@type</Key>
               <Value>Special</Value>
             </Add>
+            <Add>
+              <Key>SmartValue</Key>
+              <Value>the type is %{@type}</Value>
+            </Add>
             <Filter type="log4net.ElasticSearch.Filters.RenameKeyFilter, log4net.ElasticSearch">
               <Key>None</Key>
               <RenameTo>Nony</RenameTo>

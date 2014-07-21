@@ -6,8 +6,18 @@ namespace log4net.ElasticSearch.Filters
 {
     public class AddValueFilter : IElasticAppenderFilter
     {
-        public string Key { get; set; }
-        public string Value { get; set; }
+        private SmartFormatter _key;
+        private SmartFormatter _value;
+
+        public string Key
+        {
+            set { _key = value; }
+        }
+
+        public string Value
+        {
+            set { _value = value; }
+        }
 
         public void PrepareConfiguration(ElasticClient client)
         {
@@ -16,7 +26,7 @@ namespace log4net.ElasticSearch.Filters
 
         public void PrepareEvent(JObject logEvent, ElasticClient client)
         {
-            logEvent.AddOrSet(Key, Value);
+            logEvent.AddOrSet(_key.Format(logEvent), _value.Format(logEvent));
         }
     }
 }

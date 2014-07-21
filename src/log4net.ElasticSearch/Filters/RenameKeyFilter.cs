@@ -6,10 +6,20 @@ namespace log4net.ElasticSearch.Filters
 {
     public class RenameKeyFilter : IElasticAppenderFilter
     {
+        private SmartFormatter _key;
+        private SmartFormatter _renameTo;
         private const string RenameFailed = "RenameFailed";
 
-        public string Key { get; set; }
-        public string RenameTo { get; set; }
+        public string Key
+        {
+            set { _key = value; }
+        }
+
+        public string RenameTo
+        {
+            set { _renameTo = value; }
+        }
+
         public bool OverrideExisting { get; set; }
 
         public RenameKeyFilter()
@@ -25,16 +35,18 @@ namespace log4net.ElasticSearch.Filters
         public void PrepareEvent(JObject logEvent, ElasticClient client)
         {
             JToken token;
-            if (logEvent.TryGetValue(Key, out token))
+            if (logEvent.TryGetValue(_key.Format(logEvent), out token))
             {
-                if (!OverrideExisting && logEvent.HasKey(RenameTo))
+                var renameTo = _renameTo.Format(logEvent);
+
+                if (!OverrideExisting && logEvent.HasKey(renameTo))
                 {
                     logEvent.AddTag(RenameFailed);
                     return;
                 }
 
                 token.Remove();
-                logEvent[RenameTo] = token;
+                logEvent[renameTo] = token;
             }
         }
     }
