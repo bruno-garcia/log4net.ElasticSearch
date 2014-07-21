@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
+using System.Text;
+using System.Text.RegularExpressions;
 using log4net.ElasticSearch.Models;
 using Nest;
 using log4net.Appender;
@@ -13,31 +15,43 @@ namespace log4net.ElasticSearch
     public class ElasticSearchAppender : AppenderSkeleton
     {
         private ElasticClient _client;
+        private SmartFormatter _indexNameFormatter;
+        private SmartFormatter _indexTypeFormatter;
+        public static readonly string TagsKeyName = "@Tags";
 
         public string Server { get; set; }
-        public string Ip { get; set; }
-        public string IndexName { get; set; }
-        public string IndexType { get; set; }
-        public bool IsIndexAsync { get; set; }
+        public string Port { get; set; }
+        public bool IndexAsync { get; set; }
         TemplateInfo Template { get; set; }
+        public ElasticAppenderFilters ElasticFilters { get; set; }
 
-        public List<IElasticOption> ElasticOptions { get; set; }
+        public string IndexName
+        {
+            get { return _indexNameFormatter.Raw; }
+            set { _indexNameFormatter = new SmartFormatter(value.ToLower()); }
+        }
+
+        public string IndexType
+        {
+            get { return _indexTypeFormatter.Raw; }
+            set { _indexTypeFormatter = new SmartFormatter(value); }
+        }
 
         public ElasticSearchAppender()
         {
             Server = "localhost";
-            Ip = "9200";
-            IndexName = "log_test";
+            Port = "9200";
+            IndexName = "LogEvent-%{+yyyy-MM-dd}";
             IndexType = "LogEvent";
-            IsIndexAsync = false;
+            IndexAsync = false;
             Template = null;
 
-            ElasticOptions = new List<IElasticOption>();
+            ElasticFilters = new ElasticAppenderFilters();
         }
 
         public override void ActivateOptions()
         {
-            var connectionSettings = new ConnectionSettings(new Uri(string.Format("http://{0}:{1}", Server, Ip)));
+            var connectionSettings = new ConnectionSettings(new Uri(string.Format("http://{0}:{1}", Server, Port)));
             _client = new ElasticClient(connectionSettings);
 
             if (Template != null && Template.IsValid)
@@ -45,15 +59,7 @@ namespace log4net.ElasticSearch
                 _client.PutTemplateRaw(Template.Name, File.ReadAllText(Template.FileName));
             }
 
-            foreach (var option in ElasticOptions)
-            {
-                option.PrepareConfiguration(_client);
-            }
-        }
-
-        public void AddElasticOption(IElasticOption newOption)
-        {
-            ElasticOptions.Add(newOption);
+            ElasticFilters.PrepareConfiguration(_client);
         }
 
         protected override void OnClose()
@@ -76,10 +82,7 @@ namespace log4net.ElasticSearch
             }
 
             var logEvent = CreateLogEvent(loggingEvent);
-            foreach (var option in ElasticOptions)
-            {
-                option.PrepareEvent(logEvent);
-            }
+            ElasticFilters.PrepareEvent(logEvent, _client);
 
             try
             {
@@ -91,18 +94,29 @@ namespace log4net.ElasticSearch
             }
         }
 
-        private void DoIndex<T>(T logEvent) where T : class
+        private void DoIndex(JObject logEvent)
         {
-            _client.Index(logEvent, IndexName, IndexType);
+            var indexName = _indexNameFormatter.Format(logEvent);
+            var indexType = _indexTypeFormatter.Format(logEvent);
+
+            if (IndexAsync)
+            {
+                _client.IndexAsync(logEvent, indexName, indexType);
+            }
+            else
+            {
+                _client.Index(logEvent, indexName, indexType);
+            }
         }
 
-        private JObject CreateLogEvent(LoggingEvent loggingEvent)
+        private static JObject CreateLogEvent(LoggingEvent loggingEvent)
         {
             if (loggingEvent == null)
             {
                 throw new ArgumentNullException("loggingEvent");
             }
-            JObject logEvent = new JObject();
+
+            var logEvent = new JObject();
             
             logEvent["Id"] = UniqueIdGenerator.Instance.GenerateUniqueId();
             logEvent["LoggerName"] = loggingEvent.LoggerName;
@@ -132,10 +146,9 @@ namespace log4net.ElasticSearch
             }
 
             var properties = loggingEvent.GetProperties();
-            var expandoDict = logEvent as IDictionary<string, Object>;
             foreach (var propertyKey in properties.GetKeys())
             {
-                expandoDict.Add(propertyKey, properties[propertyKey].ToString());
+                logEvent.Add(propertyKey, properties[propertyKey].ToString());
             }
             return logEvent;
         }

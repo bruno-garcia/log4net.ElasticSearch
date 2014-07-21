@@ -11,7 +11,7 @@ namespace log4net.ElasticSearch.Tests
         public static void Main()
         {
             ILog logger = LogManager.GetLogger(typeof (ElasticSearchAppender));
-            
+            logger.Info("test");
         }
     }
 }

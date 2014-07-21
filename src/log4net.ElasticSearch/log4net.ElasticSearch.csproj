@@ -54,12 +54,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Filters\AddValueFilter.cs" />
     <Compile Include="AssemblyVersionInfo.cs" />
-    <Compile Include="ConnectionBuilder.cs" />
     <Compile Include="ElasticSearchAppender.cs" />
-    <Compile Include="IElasticOption.cs" />
+    <Compile Include="ElasticAppenderFilters.cs" />
+    <Compile Include="IElasticAppenderFilter.cs" />
+    <Compile Include="Models\SmartFormatter.cs" />
+    <Compile Include="Models\LoggingEventExtensions.cs" />
     <Compile Include="Models\UniqueIdGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Filters\RemoveKeyFilter.cs" />
+    <Compile Include="Filters\RenameKeyFilter.cs" />
     <Compile Include="TemplateInfo.cs" />
   </ItemGroup>
   <ItemGroup>
