@@ -15,8 +15,8 @@ namespace log4net.ElasticSearch
     public class ElasticSearchAppender : AppenderSkeleton
     {
         private ElasticClient _client;
-        private SmartFormatter _indexNameFormatter;
-        private SmartFormatter _indexTypeFormatter;
+        private SmartFormatter _indexName;
+        private SmartFormatter _indexType;
         public static readonly string TagsKeyName = "@Tags";
 
         public string Server { get; set; }
@@ -27,14 +27,12 @@ namespace log4net.ElasticSearch
 
         public string IndexName
         {
-            get { return _indexNameFormatter.Raw; }
-            set { _indexNameFormatter = new SmartFormatter(value.ToLower()); }
+            set { _indexName = value.ToLower(); }
         }
 
         public string IndexType
         {
-            get { return _indexTypeFormatter.Raw; }
-            set { _indexTypeFormatter = new SmartFormatter(value); }
+            set { _indexType = value; }
         }
 
         public ElasticSearchAppender()
@@ -96,8 +94,8 @@ namespace log4net.ElasticSearch
 
         private void DoIndex(JObject logEvent)
         {
-            var indexName = _indexNameFormatter.Format(logEvent);
-            var indexType = _indexTypeFormatter.Format(logEvent);
+            var indexName = _indexName.Format(logEvent);
+            var indexType = _indexType.Format(logEvent);
 
             if (IndexAsync)
             {

@@ -26,7 +26,7 @@ namespace log4net.ElasticSearch.Models
 
         public string Format(JObject logEvent)
         {
-            if (_dontBother)
+            if (_dontBother || logEvent.HasKey(_rawFormat))
             {
                 return _rawFormat;
             }
@@ -52,6 +52,16 @@ namespace log4net.ElasticSearch.Models
             }
 
             return sb.ToString();
+        }
+
+        public static implicit operator string(SmartFormatter f)
+        {
+            return f == null ? null : f.Raw;
+        }
+
+        public static implicit operator SmartFormatter(string s)
+        {
+            return new SmartFormatter(s);
         }
     }
 }
