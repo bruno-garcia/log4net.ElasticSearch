@@ -1,40 +1,75 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.IO;
+using System.Text;
+using System.Text.RegularExpressions;
 using log4net.ElasticSearch.Models;
 using Nest;
 using log4net.Appender;
 using log4net.Core;
+using Newtonsoft.Json.Linq;
 
 namespace log4net.ElasticSearch
 {
     public class ElasticSearchAppender : AppenderSkeleton
     {
-        private  ElasticClient _client;
-        private ConnectionSettings _settings;
+        private ElasticClient _client;
+        private SmartFormatter _indexNameFormatter;
+        private SmartFormatter _indexTypeFormatter;
+        public static readonly string TagsKeyName = "@Tags";
 
-        public string ConnectionString { get; set; }
+        public string Server { get; set; }
+        public string Port { get; set; }
+        public bool IndexAsync { get; set; }
+        TemplateInfo Template { get; set; }
+        public ElasticAppenderFilters ElasticFilters { get; set; }
+
+        public string IndexName
+        {
+            get { return _indexNameFormatter.Raw; }
+            set { _indexNameFormatter = new SmartFormatter(value.ToLower()); }
+        }
+
+        public string IndexType
+        {
+            get { return _indexTypeFormatter.Raw; }
+            set { _indexTypeFormatter = new SmartFormatter(value); }
+        }
+
+        public ElasticSearchAppender()
+        {
+            Server = "localhost";
+            Port = "9200";
+            IndexName = "LogEvent-%{+yyyy-MM-dd}";
+            IndexType = "LogEvent";
+            IndexAsync = false;
+            Template = null;
+
+            ElasticFilters = new ElasticAppenderFilters();
+        }
 
         public override void ActivateOptions()
         {
-            if (string.IsNullOrEmpty(ConnectionString))
-            {
-                var exception = new InvalidOperationException("Connection string not present.");
-                ErrorHandler.Error("Connection string not included in appender.", exception, ErrorCode.GenericFailure);
+            var connectionSettings = new ConnectionSettings(new Uri(string.Format("http://{0}:{1}", Server, Port)));
+            _client = new ElasticClient(connectionSettings);
 
-                _client = null;
-                return;
+            if (Template != null && Template.IsValid)
+            {
+                _client.PutTemplateRaw(Template.Name, File.ReadAllText(Template.FileName));
             }
 
-            _settings = ConnectionBuilder.BuildElsticSearchConnection(ConnectionString);
-            _client = new ElasticClient(_settings);
+            ElasticFilters.PrepareConfiguration(_client);
         }
 
         protected override void OnClose()
         {
-            _client.Flush();
-        }
+            if (_client == null) return;
 
+            _client.Flush();
+            _client = null;
+        }
+        
         /// <summary>
         /// Add a log event to the ElasticSearch Repo
         /// </summary>
@@ -47,9 +82,11 @@ namespace log4net.ElasticSearch
             }
 
             var logEvent = CreateLogEvent(loggingEvent);
+            ElasticFilters.PrepareEvent(logEvent, _client);
+
             try
             {
-                _client.IndexAsync(logEvent, _settings.DefaultIndex, "LogEvent");
+                DoIndex(logEvent);
             }
             catch (InvalidOperationException ex)
             {
@@ -57,45 +94,61 @@ namespace log4net.ElasticSearch
             }
         }
 
-        private static dynamic CreateLogEvent(LoggingEvent loggingEvent)
+        private void DoIndex(JObject logEvent)
+        {
+            var indexName = _indexNameFormatter.Format(logEvent);
+            var indexType = _indexTypeFormatter.Format(logEvent);
+
+            if (IndexAsync)
+            {
+                _client.IndexAsync(logEvent, indexName, indexType);
+            }
+            else
+            {
+                _client.Index(logEvent, indexName, indexType);
+            }
+        }
+
+        private static JObject CreateLogEvent(LoggingEvent loggingEvent)
         {
             if (loggingEvent == null)
             {
                 throw new ArgumentNullException("loggingEvent");
             }
-            dynamic logEvent = new ExpandoObject();
-            logEvent.Id = new UniqueIdGenerator().GenerateUniqueId();
-            logEvent.LoggerName = loggingEvent.LoggerName;
-            logEvent.Domain = loggingEvent.Domain;
-            logEvent.Identity = loggingEvent.Identity;
-            logEvent.ThreadName = loggingEvent.ThreadName;
-            logEvent.UserName = loggingEvent.UserName;
-            logEvent.MessageObject = loggingEvent.MessageObject == null ? "" : loggingEvent.MessageObject.ToString();
-            logEvent.TimeStamp = loggingEvent.TimeStamp;
-            logEvent.Exception = loggingEvent.ExceptionObject == null ? "" : loggingEvent.ExceptionObject.ToString();
-            logEvent.Message = loggingEvent.RenderedMessage;
-            logEvent.Fix = loggingEvent.Fix.ToString();
-            logEvent.HostName = Environment.MachineName;
+
+            var logEvent = new JObject();
+            
+            logEvent["Id"] = UniqueIdGenerator.Instance.GenerateUniqueId();
+            logEvent["LoggerName"] = loggingEvent.LoggerName;
+            logEvent["Domain"] = loggingEvent.Domain;
+            logEvent["Identity"] = loggingEvent.Identity;
+            logEvent["ThreadName"] = loggingEvent.ThreadName;
+            logEvent["UserName"] = loggingEvent.UserName;
+            logEvent["MessageObject"] = loggingEvent.MessageObject == null ? "" : loggingEvent.MessageObject.ToString();
+            logEvent["TimeStamp"] = loggingEvent.TimeStamp;
+            logEvent["Exception"] = loggingEvent.ExceptionObject == null ? "" : loggingEvent.ExceptionObject.ToString();
+            logEvent["Message"] = loggingEvent.RenderedMessage;
+            logEvent["Fix"] = loggingEvent.Fix.ToString();
+            logEvent["HostName"] = Environment.MachineName;
 
             if (loggingEvent.Level != null)
             {
-                logEvent.Level = loggingEvent.Level.DisplayName;
+                logEvent["Level"] = loggingEvent.Level.DisplayName;
             }
 
             if (loggingEvent.LocationInformation != null)
             {
-                logEvent.ClassName = loggingEvent.LocationInformation.ClassName;
-                logEvent.FileName = loggingEvent.LocationInformation.FileName;
-                logEvent.LineNumber = loggingEvent.LocationInformation.LineNumber;
-                logEvent.FullInfo = loggingEvent.LocationInformation.FullInfo;
-                logEvent.MethodName = loggingEvent.LocationInformation.MethodName;
+                logEvent["ClassName"] = loggingEvent.LocationInformation.ClassName;
+                logEvent["FileName"] = loggingEvent.LocationInformation.FileName;
+                logEvent["LineNumber"] = loggingEvent.LocationInformation.LineNumber;
+                logEvent["FullInfo"] = loggingEvent.LocationInformation.FullInfo;
+                logEvent["MethodName"] = loggingEvent.LocationInformation.MethodName;
             }
 
             var properties = loggingEvent.GetProperties();
-            var expandoDict = logEvent as IDictionary<string, Object>;
             foreach (var propertyKey in properties.GetKeys())
             {
-                expandoDict.Add(propertyKey, properties[propertyKey].ToString());
+                logEvent.Add(propertyKey, properties[propertyKey].ToString());
             }
             return logEvent;
         }

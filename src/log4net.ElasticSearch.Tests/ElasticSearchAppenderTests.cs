@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections;
+using System.IO;
 using System.Linq;
 using System.Threading;
+using Nest;
 using Xunit;
 
 namespace log4net.ElasticSearch.Tests
@@ -22,7 +25,7 @@ namespace log4net.ElasticSearch.Tests
                     ClassName = "IntegrationTestClass",
                     Domain = "TestDomain",
                     Exception = "This is a test exception",
-                    FileName = "c:\test\file.txt",
+                    FileName = "c:\\test\\file.txt",
                     Fix = "none",
                     FullInfo = "A whole bunch of error info dump",
                     Identity = "localhost\\user",
@@ -31,7 +34,7 @@ namespace log4net.ElasticSearch.Tests
                     TimeStamp = DateTime.Now
                 };
 
-            var results = client.Index(logEvent);
+            var results = Client.Index(logEvent, _testIndex, "type1");
 
             Assert.NotNull(results.Id);
         }
@@ -46,7 +49,7 @@ namespace log4net.ElasticSearch.Tests
 
             Thread.Sleep(1500);
 
-            var searchResults = client.Search(s => s.Query(q => q.Term("message", "loggingtest")));
+            var searchResults = Client.Search(s => s.Query(q => q.Term("message", "loggingtest")));
 
             Assert.Equal(1, Convert.ToInt32(searchResults.Hits.Total));
             var firstEntry = searchResults.Documents.First();
@@ -64,10 +67,10 @@ namespace log4net.ElasticSearch.Tests
                 Exception = "ReadingTest"
             };
 
-            client.Index(logEvent);
-            client.Refresh();
+            Client.Index(logEvent);
+            Client.Refresh();
 
-            var searchResults = client.Search(s => s.Query(q => q.Term("exception", "readingtest")));
+            var searchResults = Client.Search(s => s.Query(q => q.Term("exception", "readingtest")));
 
             Assert.Equal(1, Convert.ToInt32(searchResults.Hits.Total));
         }
@@ -78,11 +81,21 @@ namespace log4net.ElasticSearch.Tests
             _log.Info("loggingtest");
             Thread.Sleep(2000);
 
-            var searchResults = client.Search(s => s.Query(q => q.Term("message", "loggingtest")));
+            var searchResults = Client.Search(s => s.Query(q => q.Term("message", "loggingtest")));
 
             Assert.Equal(1, Convert.ToInt32(searchResults.Hits.Total));
             
         }
+
+        //[Fact]
+        //public void Can_update_logger_configuration()
+        //{
+        //    while (true)
+        //    {
+        //        _log.Info("log");
+        //        Thread.Sleep(2000);
+        //    }
+        //}
 
         public void Dispose()
         {
