@@ -14,6 +14,9 @@
           <Server>localhost</Server>
           <Port>9200</Port>
           <IndexType>LogEvent-%{@type}</IndexType>
+          <Bulksize>5000</Bulksize>
+          <BulkIdleTimeout>4</BulkIdleTimeout>
+          <IndexAsync>False</IndexAsync>
           <ElasticFilters>
             <Add>
               <Key>@type</Key>

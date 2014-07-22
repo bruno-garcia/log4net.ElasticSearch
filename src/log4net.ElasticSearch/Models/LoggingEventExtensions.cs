@@ -4,6 +4,8 @@ namespace log4net.ElasticSearch.Models
 {
     public static class LoggingEventExtensions
     {
+        public static readonly string TagsKeyName = "@Tags";
+
         public static void AddOrSet(this JObject jObject, string key, JToken value)
         {
             JToken token;
@@ -30,7 +32,7 @@ namespace log4net.ElasticSearch.Models
 
         public static void AddTag(this JObject jObject, string tag)
         {
-            jObject.AddOrSet(ElasticSearchAppender.TagsKeyName, tag);
+            jObject.AddOrSet(TagsKeyName, tag);
         }
     }
 }

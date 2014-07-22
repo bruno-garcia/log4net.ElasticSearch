@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json.Linq;
@@ -40,7 +41,7 @@ namespace log4net.ElasticSearch.Models
                 // "+" means dateTime format
                 if (innerMatch.StartsWith("+"))
                 {
-                    sb.Replace(wholeMatch, DateTime.Now.ToString(innerMatch.Substring(1)));
+                    sb.Replace(wholeMatch, DateTime.Now.ToString(innerMatch.Substring(1), CultureInfo.InvariantCulture));
                     continue;
                 }
 

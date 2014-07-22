@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 using log4net.ElasticSearch.Models;
+using log4net.Util;
 using Nest;
 using log4net.Appender;
 using log4net.Core;
@@ -13,17 +15,23 @@ namespace log4net.ElasticSearch
         private ElasticClient _client;
         private SmartFormatter _indexName;
         private SmartFormatter _indexType;
-        public static readonly string TagsKeyName = "@Tags";
+
+        private readonly object _bulkSync;
+        private int _currentBulkSize;
+        private BulkDescriptor _bulkDescriptor;
+        private readonly Timer _timer;
 
         public string Server { get; set; }
         public string Port { get; set; }
         public bool IndexAsync { get; set; }
-        TemplateInfo Template { get; set; }
+        public int BulkSize { get; set; }
+        public int BulkIdleTimeout { get; set; }
+        public TemplateInfo Template { get; set; }
         public ElasticAppenderFilters ElasticFilters { get; set; }
 
         public string IndexName
         {
-            set { _indexName = value.ToLower(); }
+            set { _indexName = value; }
         }
 
         public string IndexType
@@ -38,9 +46,14 @@ namespace log4net.ElasticSearch
             IndexName = "LogEvent-%{+yyyy-MM-dd}";
             IndexType = "LogEvent";
             IndexAsync = false;
-            //BulkSize = 100;
-            //BulkTimeout = 
+            BulkSize = 100;
+            BulkIdleTimeout = 2;
             Template = null;
+
+            _bulkSync = new object();
+            _currentBulkSize = 0;
+            _bulkDescriptor = new BulkDescriptor();
+            _timer = new Timer(TimerElapsed, "timer", -1, -1);
 
             ElasticFilters = new ElasticAppenderFilters();
         }
@@ -49,28 +62,36 @@ namespace log4net.ElasticSearch
         {
             var connectionSettings = new ConnectionSettings(new Uri(string.Format("http://{0}:{1}", Server, Port)));
             _client = new ElasticClient(connectionSettings);
-
+            
             if (Template != null && Template.IsValid)
             {
                 _client.PutTemplateRaw(Template.Name, File.ReadAllText(Template.FileName));
             }
 
             ElasticFilters.PrepareConfiguration(_client);
+
+            StartTimer();
         }
 
+        private void StartTimer()
+        {
+            _timer.Change(TimeSpan.FromSeconds(BulkIdleTimeout), TimeSpan.FromMilliseconds(-1));
+        }
+
+        /// <summary>
+        /// On case of error or when the appender is closed on configuration change.
+        /// </summary>
         protected override void OnClose()
         {
-            if (_client == null) return;
-
-            _client.Flush();
-            _client = null;
+            _timer.Change(-1, -1);
+            DoIndexNow();
         }
         
         /// <summary>
         /// Add a log event to the ElasticSearch Repo
         /// </summary>
         /// <param name="loggingEvent"></param>
-        protected override void Append(Core.LoggingEvent loggingEvent)
+        protected override void Append(LoggingEvent loggingEvent)
         {
             if (_client == null || loggingEvent == null)
             {
@@ -78,30 +99,73 @@ namespace log4net.ElasticSearch
             }
 
             var logEvent = CreateLogEvent(loggingEvent);
-            ElasticFilters.PrepareEvent(logEvent, _client);
+            PrepareAndAddToBulk(logEvent);
 
-            try
+            if (Interlocked.Increment(ref _currentBulkSize) >= BulkSize)
             {
-                DoIndex(logEvent);
-            }
-            catch (InvalidOperationException ex)
-            {
-                ErrorHandler.Error("Invalid connection to ElasticSearch", ex, ErrorCode.GenericFailure);
+                DoIndexNow();
             }
         }
 
-        private void DoIndex(JObject logEvent)
+        /// <summary>
+        /// Prepare the event and add it to the BulkDescriptor.
+        /// </summary>
+        /// <param name="logEvent"></param>
+        private void PrepareAndAddToBulk(JObject logEvent)
         {
-            var indexName = _indexName.Format(logEvent);
+            ElasticFilters.PrepareEvent(logEvent, _client);
+
+            var indexName = _indexName.Format(logEvent).ToLower();
             var indexType = _indexType.Format(logEvent);
 
-            if (IndexAsync)
+            lock (_bulkSync)
             {
-                _client.IndexAsync(logEvent, indexName, indexType);
+                _bulkDescriptor.Index<JObject>(descriptor =>
+                {
+                    descriptor.Object(logEvent);
+                    descriptor.Index(indexName);
+                    descriptor.Type(indexType);
+                    return descriptor;
+                });
             }
-            else
+        }
+
+        public void TimerElapsed(object state)
+        {
+            DoIndexNow();
+            StartTimer();
+        }
+        private void DoIndexNow()
+        {
+            if (_currentBulkSize == 0)
+                return;
+
+            BulkDescriptor bulk;
+            lock (_bulkSync)
             {
-                _client.Index(logEvent, indexName, indexType);
+                if (_currentBulkSize == 0)
+                    return;
+
+                bulk = _bulkDescriptor;
+                _bulkDescriptor = new BulkDescriptor();
+                _currentBulkSize = 0;
+            }
+
+            try
+            {
+                if (IndexAsync)
+                {
+                    _client.BulkAsync(bulk);
+                }
+                else
+                {
+                    _client.Bulk(bulk);
+                }
+            }
+            catch (Exception ex)
+            {
+                LogLog.Error(GetType(), "Invalid connection to ElasticSearch", ex);
+                throw;
             }
         }
 
