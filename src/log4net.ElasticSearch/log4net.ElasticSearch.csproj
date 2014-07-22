@@ -58,6 +58,7 @@
     <Compile Include="AssemblyVersionInfo.cs" />
     <Compile Include="ElasticSearchAppender.cs" />
     <Compile Include="ElasticAppenderFilters.cs" />
+    <Compile Include="Filters\FilterValidator.cs" />
     <Compile Include="IElasticAppenderFilter.cs" />
     <Compile Include="Models\SmartFormatter.cs" />
     <Compile Include="Models\LoggingEventExtensions.cs" />
