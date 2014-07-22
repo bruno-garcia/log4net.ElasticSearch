@@ -11,17 +11,19 @@ namespace log4net.ElasticSearch.Filters
 
         public string Key
         {
+            get { return _key; }
             set { _key = value; }
         }
 
         public string Value
         {
+            get { return _value; }
             set { _value = value; }
         }
 
         public void PrepareConfiguration(ElasticClient client)
         {
-
+            // TODO: validate?
         }
 
         public void PrepareEvent(JObject logEvent, ElasticClient client)

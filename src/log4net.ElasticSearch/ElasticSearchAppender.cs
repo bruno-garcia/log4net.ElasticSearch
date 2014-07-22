@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Dynamic;
 using System.IO;
-using System.Text;
-using System.Text.RegularExpressions;
 using log4net.ElasticSearch.Models;
 using Nest;
 using log4net.Appender;
@@ -42,6 +38,8 @@ namespace log4net.ElasticSearch
             IndexName = "LogEvent-%{+yyyy-MM-dd}";
             IndexType = "LogEvent";
             IndexAsync = false;
+            //BulkSize = 100;
+            //BulkTimeout = 
             Template = null;
 
             ElasticFilters = new ElasticAppenderFilters();

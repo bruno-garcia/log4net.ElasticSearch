@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using log4net.Core;
 using log4net.ElasticSearch.Filters;
@@ -6,14 +7,9 @@ using Newtonsoft.Json.Linq;
 
 namespace log4net.ElasticSearch
 {
-    public class ElasticAppenderFilters : IElasticAppenderFilter, IOptionHandler
+    public class ElasticAppenderFilters : IElasticAppenderFilter
     {
         private readonly List<IElasticAppenderFilter> _filters = new List<IElasticAppenderFilter>();
-
-        public void ActivateOptions()
-        {
-            // todo: validate filters
-        }
 
         public void PrepareConfiguration(ElasticClient client)
         {

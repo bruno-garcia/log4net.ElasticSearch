@@ -29,7 +29,7 @@ namespace log4net.ElasticSearch.Filters
 
         public void PrepareConfiguration(ElasticClient client)
         {
-
+            // TODO: validate?
         }
 
         public void PrepareEvent(JObject logEvent, ElasticClient client)
