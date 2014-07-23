@@ -21,12 +21,14 @@ namespace log4net.ElasticSearch
         private BulkDescriptor _bulkDescriptor;
         private readonly Timer _timer;
 
+        public int BulkSize { get; set; }
+        public int BulkIdleTimeout { get; set; }
+        public int TimeoutToWaitForTimer { get; set; }
+
+        // elastic configuration
         public string Server { get; set; }
         public string Port { get; set; }
         public bool IndexAsync { get; set; }
-        public int BulkSize { get; set; }
-        public int BulkIdleTimeout { get; set; }
-        public int TimeoutToStopThread { get; set; }
         public int MaxAsyncConnections { get; set; }
         public TemplateInfo Template { get; set; }
         public ElasticAppenderFilters ElasticFilters { get; set; }
@@ -47,11 +49,11 @@ namespace log4net.ElasticSearch
             Port = "9200";
             IndexName = "LogEvent-%{+yyyy-MM-dd}";
             IndexType = "LogEvent";
-            IndexAsync = false;
-            BulkSize = 1000;
-            BulkIdleTimeout = 2000;
-            TimeoutToStopThread = 5000;
-            MaxAsyncConnections = 15;
+            IndexAsync = true;
+            BulkSize = 2000;
+            BulkIdleTimeout = 10;
+            TimeoutToWaitForTimer = 5000;
+            MaxAsyncConnections = 10;
             Template = null;
 
             _bulkSync = new object();
@@ -75,12 +77,13 @@ namespace log4net.ElasticSearch
 
             ElasticFilters.PrepareConfiguration(_client);
 
-            StartTimer();
+            RestartTimer();
         }
 
-        private void StartTimer()
+        private void RestartTimer()
         {
-            _timer.Change(BulkIdleTimeout, BulkIdleTimeout);
+            var timeout = TimeSpan.FromSeconds(BulkIdleTimeout);
+            _timer.Change(timeout, timeout);
         }
 
         /// <summary>
@@ -88,12 +91,12 @@ namespace log4net.ElasticSearch
         /// </summary>
         protected override void OnClose()
         {
-            _timer.Change(0, -1);
+            DoIndexNow();
 
             // let the timer finish its job
             WaitHandle notifyObj = new AutoResetEvent(false);
             _timer.Dispose(notifyObj);
-            notifyObj.WaitOne(TimeoutToStopThread);
+            notifyObj.WaitOne(TimeoutToWaitForTimer);
         }
         
         /// <summary>
