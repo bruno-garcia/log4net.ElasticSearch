@@ -27,7 +27,7 @@ namespace log4net.ElasticSearch.Tests
         {
             log4net.ThreadContext.Properties["taskNumber"] = t;
             var sw = Stopwatch.StartNew();
-            for (int i = 0; i < 10000; i++)
+            for (int i = 0; i < 10; i++)
             {
                 Logger.InfoFormat("test #{0}", i);
                 //Thread.Sleep(1);

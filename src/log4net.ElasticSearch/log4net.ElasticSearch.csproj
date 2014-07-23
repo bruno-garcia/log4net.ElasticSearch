@@ -60,6 +60,7 @@
     <Compile Include="ElasticAppenderFilters.cs" />
     <Compile Include="Filters\FilterValidator.cs" />
     <Compile Include="IElasticAppenderFilter.cs" />
+    <Compile Include="Models\FixFlagsExtensions.cs" />
     <Compile Include="Models\SmartFormatter.cs" />
     <Compile Include="Models\LoggingEventExtensions.cs" />
     <Compile Include="Models\UniqueIdGenerator.cs" />

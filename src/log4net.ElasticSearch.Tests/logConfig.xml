@@ -11,9 +11,10 @@
           <Server>localhost</Server>
           <Port>9200</Port>
           <IndexType>LogEvent-%{taskNumber}</IndexType>
-          <!--<Bulksize>1000</Bulksize>
-          <BulkIdleTimeout>10</BulkIdleTimeout>-->
+          <Bulksize>2000</Bulksize>
+          <BulkIdleTimeout>-1</BulkIdleTimeout>
           <IndexAsync>False</IndexAsync>
+          <FixedFields>Partial,LocationInfo</FixedFields>
           <ElasticFilters>
             <Add>
               <Key>@type</Key>

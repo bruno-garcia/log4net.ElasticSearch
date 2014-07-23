@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using log4net.ElasticSearch.Models;
 using log4net.Util;
@@ -21,6 +23,8 @@ namespace log4net.ElasticSearch
         private BulkDescriptor _bulkDescriptor;
         private readonly Timer _timer;
 
+        public FixFlags FixedFields { get; set; }
+
         public int BulkSize { get; set; }
         public int BulkIdleTimeout { get; set; }
         public int TimeoutToWaitForTimer { get; set; }
@@ -32,7 +36,7 @@ namespace log4net.ElasticSearch
         public int MaxAsyncConnections { get; set; }
         public TemplateInfo Template { get; set; }
         public ElasticAppenderFilters ElasticFilters { get; set; }
-
+        
         public string IndexName
         {
             set { _indexName = value; }
@@ -45,21 +49,23 @@ namespace log4net.ElasticSearch
 
         public ElasticSearchAppender()
         {
+            FixedFields = FixFlags.Partial;
+
+            _currentBulkSize = 0;
+            BulkSize = 2000;
+            BulkIdleTimeout = 10;
+            TimeoutToWaitForTimer = 5000;
+            _bulkSync = new object();
+            _bulkDescriptor = new BulkDescriptor();
+            _timer = new Timer(TimerElapsed, "timer", -1, -1);
+
             Server = "localhost";
             Port = "9200";
             IndexName = "LogEvent-%{+yyyy-MM-dd}";
             IndexType = "LogEvent";
             IndexAsync = true;
-            BulkSize = 2000;
-            BulkIdleTimeout = 10;
-            TimeoutToWaitForTimer = 5000;
             MaxAsyncConnections = 10;
             Template = null;
-
-            _bulkSync = new object();
-            _currentBulkSize = 0;
-            _bulkDescriptor = new BulkDescriptor();
-            _timer = new Timer(TimerElapsed, "timer", -1, -1);
 
             ElasticFilters = new ElasticAppenderFilters();
         }
@@ -82,7 +88,7 @@ namespace log4net.ElasticSearch
 
         private void RestartTimer()
         {
-            var timeout = TimeSpan.FromSeconds(BulkIdleTimeout);
+            var timeout = TimeSpan.FromMilliseconds(BulkIdleTimeout);
             _timer.Change(timeout, timeout);
         }
 
@@ -181,7 +187,7 @@ namespace log4net.ElasticSearch
             }
         }
 
-        private static JObject CreateLogEvent(LoggingEvent loggingEvent)
+        private JObject CreateLogEvent(LoggingEvent loggingEvent)
         {
             if (loggingEvent == null)
             {
@@ -192,15 +198,14 @@ namespace log4net.ElasticSearch
             
             logEvent["Id"] = UniqueIdGenerator.Instance.GenerateUniqueId();
             logEvent["LoggerName"] = loggingEvent.LoggerName;
-            logEvent["Domain"] = loggingEvent.Domain;
-            logEvent["Identity"] = loggingEvent.Identity;
             logEvent["ThreadName"] = loggingEvent.ThreadName;
-            logEvent["UserName"] = loggingEvent.UserName;
+            logEvent["Domain"] = loggingEvent.Domain;
+
             logEvent["MessageObject"] = loggingEvent.MessageObject == null ? "" : loggingEvent.MessageObject.ToString();
             logEvent["TimeStamp"] = loggingEvent.TimeStamp;
             logEvent["Exception"] = loggingEvent.ExceptionObject == null ? "" : loggingEvent.ExceptionObject.ToString();
             logEvent["Message"] = loggingEvent.RenderedMessage;
-            logEvent["Fix"] = loggingEvent.Fix.ToString();
+            //logEvent["Fix"] = loggingEvent.Fix.ToString(); // We need this?
             logEvent["HostName"] = Environment.MachineName;
 
             if (loggingEvent.Level != null)
@@ -208,13 +213,24 @@ namespace log4net.ElasticSearch
                 logEvent["Level"] = loggingEvent.Level.DisplayName;
             }
 
-            if (loggingEvent.LocationInformation != null)
+            if (FixedFields.IsSwitched(FixFlags.Identity))
             {
-                logEvent["ClassName"] = loggingEvent.LocationInformation.ClassName;
-                logEvent["FileName"] = loggingEvent.LocationInformation.FileName;
-                logEvent["LineNumber"] = loggingEvent.LocationInformation.LineNumber;
-                logEvent["FullInfo"] = loggingEvent.LocationInformation.FullInfo;
-                logEvent["MethodName"] = loggingEvent.LocationInformation.MethodName;
+                logEvent["Identity"] = loggingEvent.Identity;
+            }
+
+            if (FixedFields.IsSwitched(FixFlags.UserName))
+            {
+                logEvent["UserName"] = loggingEvent.UserName;
+            }
+
+            if (FixedFields.IsSwitched(FixFlags.LocationInfo) && loggingEvent.LocationInformation != null)
+            {
+                var locationInfo = logEvent["LocationInformation"] = new JObject();
+                locationInfo["ClassName"] = loggingEvent.LocationInformation.ClassName;
+                locationInfo["FileName"] = loggingEvent.LocationInformation.FileName;
+                locationInfo["LineNumber"] = loggingEvent.LocationInformation.LineNumber;
+                locationInfo["FullInfo"] = loggingEvent.LocationInformation.FullInfo;
+                locationInfo["MethodName"] = loggingEvent.LocationInformation.MethodName;
             }
 
             var properties = loggingEvent.GetProperties();
