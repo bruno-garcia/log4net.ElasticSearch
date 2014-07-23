@@ -26,6 +26,8 @@ namespace log4net.ElasticSearch
         public bool IndexAsync { get; set; }
         public int BulkSize { get; set; }
         public int BulkIdleTimeout { get; set; }
+        public int TimeoutToStopThread { get; set; }
+        public int MaxAsyncConnections { get; set; }
         public TemplateInfo Template { get; set; }
         public ElasticAppenderFilters ElasticFilters { get; set; }
 
@@ -46,8 +48,10 @@ namespace log4net.ElasticSearch
             IndexName = "LogEvent-%{+yyyy-MM-dd}";
             IndexType = "LogEvent";
             IndexAsync = false;
-            BulkSize = 100;
-            BulkIdleTimeout = 2;
+            BulkSize = 1000;
+            BulkIdleTimeout = 2000;
+            TimeoutToStopThread = 5000;
+            MaxAsyncConnections = 15;
             Template = null;
 
             _bulkSync = new object();
@@ -61,6 +65,7 @@ namespace log4net.ElasticSearch
         public override void ActivateOptions()
         {
             var connectionSettings = new ConnectionSettings(new Uri(string.Format("http://{0}:{1}", Server, Port)));
+            connectionSettings.SetMaximumAsyncConnections(MaxAsyncConnections);
             _client = new ElasticClient(connectionSettings);
             
             if (Template != null && Template.IsValid)
@@ -75,7 +80,7 @@ namespace log4net.ElasticSearch
 
         private void StartTimer()
         {
-            _timer.Change(TimeSpan.FromSeconds(BulkIdleTimeout), TimeSpan.FromMilliseconds(-1));
+            _timer.Change(BulkIdleTimeout, BulkIdleTimeout);
         }
 
         /// <summary>
@@ -83,8 +88,12 @@ namespace log4net.ElasticSearch
         /// </summary>
         protected override void OnClose()
         {
-            _timer.Change(-1, -1);
-            DoIndexNow();
+            _timer.Change(0, -1);
+
+            // let the timer finish its job
+            WaitHandle notifyObj = new AutoResetEvent(false);
+            _timer.Dispose(notifyObj);
+            notifyObj.WaitOne(TimeoutToStopThread);
         }
         
         /// <summary>
@@ -101,7 +110,7 @@ namespace log4net.ElasticSearch
             var logEvent = CreateLogEvent(loggingEvent);
             PrepareAndAddToBulk(logEvent);
 
-            if (Interlocked.Increment(ref _currentBulkSize) >= BulkSize)
+            if (Interlocked.Increment(ref _currentBulkSize) >= BulkSize && BulkSize > 0)
             {
                 DoIndexNow();
             }
@@ -119,7 +128,7 @@ namespace log4net.ElasticSearch
             var indexType = _indexType.Format(logEvent);
 
             lock (_bulkSync)
-            {
+            { 
                 _bulkDescriptor.Index<JObject>(descriptor =>
                 {
                     descriptor.Object(logEvent);
@@ -133,8 +142,8 @@ namespace log4net.ElasticSearch
         public void TimerElapsed(object state)
         {
             DoIndexNow();
-            StartTimer();
         }
+
         private void DoIndexNow()
         {
             if (_currentBulkSize == 0)
