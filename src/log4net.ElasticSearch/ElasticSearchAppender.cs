@@ -36,7 +36,7 @@ namespace log4net.ElasticSearch
         public int MaxAsyncConnections { get; set; }
         public TemplateInfo Template { get; set; }
         public ElasticAppenderFilters ElasticFilters { get; set; }
-        
+
         public string IndexName
         {
             set { _indexName = value; }
@@ -75,7 +75,7 @@ namespace log4net.ElasticSearch
             var connectionSettings = new ConnectionSettings(new Uri(string.Format("http://{0}:{1}", Server, Port)));
             connectionSettings.SetMaximumAsyncConnections(MaxAsyncConnections);
             _client = new ElasticClient(connectionSettings);
-            
+
             if (Template != null && Template.IsValid)
             {
                 _client.PutTemplateRaw(Template.Name, File.ReadAllText(Template.FileName));
@@ -130,7 +130,7 @@ namespace log4net.ElasticSearch
         /// </summary>
         /// <param name="logEvent"></param>
         private void PrepareAndAddToBulk(JObject logEvent)
-        {
+            {
             ElasticFilters.PrepareEvent(logEvent, _client);
 
             var indexName = _indexName.Format(logEvent).ToLower();
@@ -139,7 +139,7 @@ namespace log4net.ElasticSearch
             lock (_bulkSync)
             { 
                 _bulkDescriptor.Index<JObject>(descriptor =>
-                {
+            {
                     descriptor.Object(logEvent);
                     descriptor.Index(indexName);
                     descriptor.Type(indexType);
@@ -151,7 +151,7 @@ namespace log4net.ElasticSearch
         public void TimerElapsed(object state)
         {
             DoIndexNow();
-        }
+            }
 
         private void DoIndexNow()
         {
@@ -167,16 +167,16 @@ namespace log4net.ElasticSearch
                 bulk = _bulkDescriptor;
                 _bulkDescriptor = new BulkDescriptor();
                 _currentBulkSize = 0;
-            }
+        }
 
             try
+        {
+            if (IndexAsync)
             {
-                if (IndexAsync)
-                {
                     _client.BulkAsync(bulk);
-                }
-                else
-                {
+            }
+            else
+            {
                     _client.Bulk(bulk);
                 }
             }
