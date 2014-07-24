@@ -104,7 +104,7 @@ namespace log4net.ElasticSearch
             _timer.Dispose(notifyObj);
             notifyObj.WaitOne(TimeoutToWaitForTimer);
         }
-        
+
         /// <summary>
         /// Add a log event to the ElasticSearch Repo
         /// </summary>
@@ -130,16 +130,16 @@ namespace log4net.ElasticSearch
         /// </summary>
         /// <param name="logEvent"></param>
         private void PrepareAndAddToBulk(JObject logEvent)
-            {
+        {
             ElasticFilters.PrepareEvent(logEvent, _client);
 
             var indexName = _indexName.Format(logEvent).ToLower();
             var indexType = _indexType.Format(logEvent);
 
             lock (_bulkSync)
-            { 
-                _bulkDescriptor.Index<JObject>(descriptor =>
             {
+                _bulkDescriptor.Index<JObject>(descriptor =>
+                {
                     descriptor.Object(logEvent);
                     descriptor.Index(indexName);
                     descriptor.Type(indexType);
@@ -151,7 +151,7 @@ namespace log4net.ElasticSearch
         public void TimerElapsed(object state)
         {
             DoIndexNow();
-            }
+        }
 
         private void DoIndexNow()
         {
@@ -167,16 +167,16 @@ namespace log4net.ElasticSearch
                 bulk = _bulkDescriptor;
                 _bulkDescriptor = new BulkDescriptor();
                 _currentBulkSize = 0;
-        }
+            }
 
             try
-        {
-            if (IndexAsync)
             {
+                if (IndexAsync)
+                {
                     _client.BulkAsync(bulk);
-            }
-            else
-            {
+                }
+                else
+                {
                     _client.Bulk(bulk);
                 }
             }
@@ -195,7 +195,7 @@ namespace log4net.ElasticSearch
             }
 
             var logEvent = new JObject();
-            
+
             logEvent["Id"] = UniqueIdGenerator.Instance.GenerateUniqueId();
             logEvent["LoggerName"] = loggingEvent.LoggerName;
             logEvent["ThreadName"] = loggingEvent.ThreadName;
