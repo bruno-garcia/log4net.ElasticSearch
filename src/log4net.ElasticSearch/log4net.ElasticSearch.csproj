@@ -64,7 +64,9 @@
     <Compile Include="Filters\ScannerFilter.cs" />
     <Compile Include="IElasticAppenderFilter.cs" />
     <Compile Include="Models\FixFlagsExtensions.cs" />
-    <Compile Include="Models\SmartFormatter.cs" />
+    <Compile Include="SmartFormatter\ISmartFormatterProcessor.cs" />
+    <Compile Include="SmartFormatter\LogEventProcessor.cs" />
+    <Compile Include="SmartFormatter\SmartFormatter.cs" />
     <Compile Include="Models\LoggingEventExtensions.cs" />
     <Compile Include="Models\UniqueIdGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

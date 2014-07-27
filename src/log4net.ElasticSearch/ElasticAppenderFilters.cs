@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using log4net.Core;
 using log4net.ElasticSearch.Filters;
 using Nest;
 using Newtonsoft.Json.Linq;
@@ -33,18 +31,30 @@ namespace log4net.ElasticSearch
         }
 
         #region Helpers for common filters
-        
+
         // note: the functions are private but the log4net XmlConfigurator can find them
 
         private void AddAdd(AddValueFilter filter)
         {
             AddFilter(filter);
         }
+
         private void AddRemove(RemoveKeyFilter filter)
         {
             AddFilter(filter);
         }
+
         private void AddRename(RenameKeyFilter filter)
+        {
+            AddFilter(filter);
+        }
+
+        private void AddKv(KvFilter filter)
+        {
+            AddFilter(filter);
+        }
+
+        private void AddGrok(GrokFilter filter)
         {
             AddFilter(filter);
         }

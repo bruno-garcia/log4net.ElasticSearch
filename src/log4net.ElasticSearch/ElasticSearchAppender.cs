@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading;
 using log4net.ElasticSearch.Models;
+using log4net.ElasticSearch.SmartFormatter;
 using log4net.Util;
 using Nest;
 using log4net.Appender;

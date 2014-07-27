@@ -1,4 +1,5 @@
 using log4net.ElasticSearch.Models;
+using log4net.ElasticSearch.SmartFormatter;
 using Nest;
 using Newtonsoft.Json.Linq;
 
