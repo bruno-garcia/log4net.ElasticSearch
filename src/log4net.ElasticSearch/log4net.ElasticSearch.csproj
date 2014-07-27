@@ -63,6 +63,8 @@
     <Compile Include="Filters\KvFilter.cs" />
     <Compile Include="Filters\ScannerFilter.cs" />
     <Compile Include="IElasticAppenderFilter.cs" />
+    <Compile Include="InnerExceptions\ErrorSettingTemplateException.cs" />
+    <Compile Include="InnerExceptions\InvalidFilterConfigException.cs" />
     <Compile Include="Models\FixFlagsExtensions.cs" />
     <Compile Include="SmartFormatter\ISmartFormatterProcessor.cs" />
     <Compile Include="SmartFormatter\LogEventProcessor.cs" />

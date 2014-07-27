@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using log4net.ElasticSearch.InnerExceptions;
 using Nest;
 using Newtonsoft.Json.Linq;
 
@@ -28,18 +29,6 @@ namespace log4net.ElasticSearch.Filters
                 throw new InvalidFilterConfigException(
                     string.Format("The properties ({0}) of {1} must be set.", properties, GetType().Name));
             }
-        }
-    }
-
-    public class InvalidFilterConfigException : Exception
-    {
-        public InvalidFilterConfigException()
-        {
-        }
-
-        public InvalidFilterConfigException(string message)
-            : base(message)
-        {
         }
     }
 }

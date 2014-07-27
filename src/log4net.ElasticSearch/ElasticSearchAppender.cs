@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading;
+using log4net.ElasticSearch.InnerExceptions;
 using log4net.ElasticSearch.Models;
 using log4net.ElasticSearch.SmartFormatter;
 using log4net.Util;
@@ -77,7 +78,11 @@ namespace log4net.ElasticSearch
 
             if (Template != null && Template.IsValid)
             {
-                _client.PutTemplateRaw(Template.Name, File.ReadAllText(Template.FileName));
+                var res = _client.PutTemplateRaw(Template.Name, File.ReadAllText(Template.FileName));
+                if (!res.Acknowledged)
+                {
+                    throw new ErrorSettingTemplateException(res.ConnectionStatus);
+                }
             }
 
             ElasticFilters.PrepareConfiguration(_client);

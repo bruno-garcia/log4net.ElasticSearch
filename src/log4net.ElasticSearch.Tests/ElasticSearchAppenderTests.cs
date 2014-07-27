@@ -29,7 +29,6 @@ namespace log4net.ElasticSearch.Tests
         public void FixtureTearDown()
         {
             Client.DeleteIndex(TestIndex);
-            Client.DeleteIndex("log-tests");
         }
 
         [SetUp]
@@ -55,7 +54,7 @@ namespace log4net.ElasticSearch.Tests
                     TimeStamp = DateTime.Now
                 };
 
-            var results = Client.Index(logEvent, "log-tests", "anonymous");
+            var results = Client.Index(logEvent, null, "anonymous");
 
             Assert.NotNull(results.Id);
         }
@@ -69,7 +68,7 @@ namespace log4net.ElasticSearch.Tests
                 Exception = "ReadingTest"
             };
 
-            Client.Index(logEvent, "log-tests", "anonymous");
+            Client.Index(logEvent, null, "anonymous");
             Client.Refresh();
             var searchResults = Client.Search(s => s.Take(1));
             Assert.AreEqual(1, searchResults.Hits.Total);

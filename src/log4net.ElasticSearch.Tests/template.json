@@ -1,0 +1,21 @@
+﻿{
+    "template" : "*",
+    "settings" : {
+        "number_of_shards" : 1
+    },
+    "mappings" : {
+        "LogEvent" : {
+            "_source" : { "enabled" : true },
+			"properties" : {
+				"Message" : {
+					"type":"string",
+					"index": "analyzed"
+				},
+				"HostName":{
+					"type":"string",
+					"index":"not_analyzed"
+				}
+			}
+        }
+    }
+}
