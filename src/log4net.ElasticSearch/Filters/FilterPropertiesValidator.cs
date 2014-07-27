@@ -7,8 +7,12 @@ namespace log4net.ElasticSearch.Filters
 {
     public abstract class FilterPropertiesValidator : IElasticAppenderFilter
     {
-        public abstract void PrepareConfiguration(ElasticClient client);
         public abstract void PrepareEvent(JObject logEvent, ElasticClient client);
+
+        public virtual void PrepareConfiguration(ElasticClient client)
+        {
+            Validate();
+        }
 
         public void Validate()
         {
@@ -38,5 +42,4 @@ namespace log4net.ElasticSearch.Filters
         {
         }
     }
-
 }

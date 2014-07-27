@@ -58,7 +58,10 @@
     <Compile Include="AssemblyVersionInfo.cs" />
     <Compile Include="ElasticSearchAppender.cs" />
     <Compile Include="ElasticAppenderFilters.cs" />
-    <Compile Include="Filters\FilterValidator.cs" />
+    <Compile Include="Filters\FilterPropertiesValidator.cs" />
+    <Compile Include="Filters\GrokFilter.cs" />
+    <Compile Include="Filters\KvFilter.cs" />
+    <Compile Include="Filters\ScannerFilter.cs" />
     <Compile Include="IElasticAppenderFilter.cs" />
     <Compile Include="Models\FixFlagsExtensions.cs" />
     <Compile Include="Models\SmartFormatter.cs" />

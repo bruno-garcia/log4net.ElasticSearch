@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using log4net.ElasticSearch.Models;
 using log4net.Util;
@@ -15,8 +13,8 @@ namespace log4net.ElasticSearch
     public class ElasticSearchAppender : AppenderSkeleton
     {
         private ElasticClient _client;
-        private SmartFormatter _indexName;
-        private SmartFormatter _indexType;
+        private SmartFormatter<LogEventProcessor> _indexName;
+        private SmartFormatter<LogEventProcessor> _indexType;
 
         private readonly object _bulkSync;
         private int _currentBulkSize;
@@ -197,15 +195,15 @@ namespace log4net.ElasticSearch
             var logEvent = new JObject();
 
             logEvent["Id"] = UniqueIdGenerator.Instance.GenerateUniqueId();
+            logEvent["TimeStamp"] = loggingEvent.TimeStamp;
             logEvent["LoggerName"] = loggingEvent.LoggerName;
             logEvent["ThreadName"] = loggingEvent.ThreadName;
-            logEvent["Domain"] = loggingEvent.Domain;
 
             logEvent["MessageObject"] = loggingEvent.MessageObject == null ? "" : loggingEvent.MessageObject.ToString();
-            logEvent["TimeStamp"] = loggingEvent.TimeStamp;
             logEvent["Exception"] = loggingEvent.ExceptionObject == null ? "" : loggingEvent.ExceptionObject.ToString();
             logEvent["Message"] = loggingEvent.RenderedMessage;
             //logEvent["Fix"] = loggingEvent.Fix.ToString(); // We need this?
+            logEvent["Domain"] = loggingEvent.Domain;
             logEvent["HostName"] = Environment.MachineName;
 
             if (loggingEvent.Level != null)
@@ -233,10 +231,13 @@ namespace log4net.ElasticSearch
                 locationInfo["MethodName"] = loggingEvent.LocationInformation.MethodName;
             }
 
-            var properties = loggingEvent.GetProperties();
-            foreach (var propertyKey in properties.GetKeys())
+            if (FixedFields.IsSwitched(FixFlags.Properties))
             {
-                logEvent.Add(propertyKey, properties[propertyKey].ToString());
+                var properties = loggingEvent.GetProperties();
+                foreach (var propertyKey in properties.GetKeys())
+                {
+                    logEvent.Add(propertyKey, properties[propertyKey].ToString());
+                }
             }
             return logEvent;
         }

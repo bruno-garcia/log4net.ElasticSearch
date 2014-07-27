@@ -4,21 +4,17 @@ using Newtonsoft.Json.Linq;
 
 namespace log4net.ElasticSearch.Filters
 {
-    public class RemoveKeyFilter : IElasticAppenderFilter
+    public class RemoveKeyFilter : FilterPropertiesValidator 
     {
-        private SmartFormatter _key;
+        private SmartFormatter<LogEventProcessor> _key;
 
         public string Key
         {
+            get { return _key; }
             set { _key = value; }
         }
 
-        public void PrepareConfiguration(ElasticClient client)
-        {
-            // TODO: validate?
-        }
-
-        public void PrepareEvent(JObject logEvent, ElasticClient client)
+        public override void PrepareEvent(JObject logEvent, ElasticClient client)
         {
             logEvent.Remove(_key.Format(logEvent));
         }
