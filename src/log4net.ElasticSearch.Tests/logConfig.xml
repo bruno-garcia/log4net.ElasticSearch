@@ -25,13 +25,22 @@
               <Key>SmartValue</Key>
               <Value>the type is %{@type}</Value>
             </Add>
+            <Remove>
+              <Key>@type</Key>
+            </Remove>
             <Filter type="log4net.ElasticSearch.Filters.RenameKeyFilter, log4net.ElasticSearch">
-              <Key>None</Key>
-              <RenameTo>Nony</RenameTo>
+              <Key>SmartValue</Key>
+              <RenameTo>SmartValue2</RenameTo>
             </Filter>
             <Kv>
-              <DigValues/> 
+              <DigValues>
+                <RootKey>_raw</RootKey>
+              </DigValues> 
             </Kv>
+            <Grok>
+              <SourceKey>Message</SourceKey>
+              <Pattern>name is (?&lt;name&gt;\w+)</Pattern>
+            </Grok>
           </ElasticFilters>
         </appender>
       

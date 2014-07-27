@@ -52,6 +52,11 @@ namespace log4net.ElasticSearch.SmartFormatter
             return result.ToString();
         }
 
+        public override string ToString()
+        {
+            return Raw;
+        }
+
         public static implicit operator string(SmartFormatter<T> f)
         {
             return f == null ? null : f.Raw;

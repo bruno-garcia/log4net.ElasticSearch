@@ -195,14 +195,14 @@ namespace log4net.ElasticSearch
 
             var logEvent = new JObject();
 
-            logEvent["Id"] = UniqueIdGenerator.Instance.GenerateUniqueId();
+            //logEvent["Id"] = UniqueIdGenerator.Instance.GenerateUniqueId();
             logEvent["TimeStamp"] = loggingEvent.TimeStamp;
             logEvent["LoggerName"] = loggingEvent.LoggerName;
             logEvent["ThreadName"] = loggingEvent.ThreadName;
 
-            logEvent["MessageObject"] = loggingEvent.MessageObject == null ? "" : loggingEvent.MessageObject.ToString();
+            logEvent["Message"] = loggingEvent.MessageObject == null ? "" : loggingEvent.MessageObject.ToString();
             logEvent["Exception"] = loggingEvent.ExceptionObject == null ? "" : loggingEvent.ExceptionObject.ToString();
-            logEvent["Message"] = loggingEvent.RenderedMessage;
+            //logEvent["Message"] = loggingEvent.RenderedMessage;
             //logEvent["Fix"] = loggingEvent.Fix.ToString(); // We need this?
             logEvent["Domain"] = loggingEvent.Domain;
             logEvent["HostName"] = Environment.MachineName;

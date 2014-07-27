@@ -14,14 +14,14 @@ namespace log4net.ElasticSearch.Tests
         private static readonly ILog Logger = LogManager.GetLogger(typeof(ElasticSearchAppender));
         public static void Main()
         {
-            var tasks = new List<Task>();
-            for (int i = 0; i < 1; i++)
-            {
-                int i1 = i;
-                tasks.Add(Task.Run(() => Runner(i1)));
-            }
-            Task.WaitAll(tasks.ToArray());
-            
+            Logger.Info("yoyo=yiyi , a=[this is id:1, o:2]");
+            //var tasks = new List<Task>();
+            //for (int i = 0; i < 1; i++)
+            //{
+            //    int i1 = i;
+            //    tasks.Add(Task.Run(() => Runner(i1)));
+            //}
+            //Task.WaitAll(tasks.ToArray());
         }
 
         public static void Runner(int t)

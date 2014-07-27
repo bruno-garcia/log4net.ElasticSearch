@@ -41,12 +41,20 @@ namespace log4net.ElasticSearch.Filters
                 var groups = match.Groups.Cast<Group>().Where(g => g.Success).ToList();
                 var key = groups[1].Value;
                 var value = groups[2].Value;
+                
+                ProcessValueAndStore(logEvent, key, value);
+            }
+        }
 
-                if (DigValues != null)
+        private void ProcessValueAndStore(JObject logEvent, string key, string value)
+        {   
+            if (DigValues != null)
+            {
+                var innerEvent = new JObject();
+                ScanMessage(innerEvent, value);
+
+                if (innerEvent.HasValues)
                 {
-                    var innerEvent = new JObject();
-                    ScanMessage(innerEvent, value); 
-
                     // preserve the original value if RootKey specefied
                     if (!string.IsNullOrEmpty(DigValues.RootKey))
                     {
@@ -54,12 +62,11 @@ namespace log4net.ElasticSearch.Filters
                     }
 
                     logEvent.AddOrSet(key, innerEvent);
-                }
-                else
-                {
-                    logEvent.AddOrSet(key, value);
+                    return;
                 }
             }
+
+            logEvent.AddOrSet(key, value);
         }
     }
 
