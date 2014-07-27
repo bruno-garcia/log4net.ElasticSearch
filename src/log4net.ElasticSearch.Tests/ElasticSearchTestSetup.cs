@@ -1,28 +1,28 @@
 ﻿using System;
+using log4net.ElasticSearch.Models;
+using log4net.ElasticSearch.SmartFormatter;
 using Nest;
+using Newtonsoft.Json.Linq;
 
 namespace log4net.ElasticSearch.Tests
 {
     public class ElasticSearchTestSetup
     {
         public readonly ElasticClient Client;
-        protected readonly string _testIndex;
+        public readonly string TestIndex = "log_test_" + DateTime.Now.ToString("yyyy-MM-dd");
 
         public ElasticSearchTestSetup()
         {
-            _testIndex = string.Format("{0}-{1}", "log_test", DateTime.Now.ToString("yyyy-MM-dd"));
+            ConnectionSettings elasticSettings =
+                new ConnectionSettings(new Uri("http://127.0.0.1:9200"))
+                    .SetDefaultIndex(TestIndex);
 
-            ConnectionSettings elasticSettings = new ConnectionSettings(new Uri("http://127.0.0.1:9200"))
-                .SetDefaultIndex(_testIndex);
-            
             Client = new ElasticClient(elasticSettings);
-
-            Client.DeleteIndex(_testIndex);
         }
 
         public void DeleteTestIndex()
         {
-            Client.DeleteIndex(_testIndex);
+            Client.DeleteIndex(TestIndex);
         }
     }
 }

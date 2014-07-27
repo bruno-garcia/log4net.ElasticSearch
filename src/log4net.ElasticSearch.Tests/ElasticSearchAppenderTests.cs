@@ -4,20 +4,28 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using Nest;
-using Xunit;
+using NUnit.Framework;
 
 namespace log4net.ElasticSearch.Tests
 {
-    public class ElasticSearchAppenderTests : ElasticSearchTestSetup, IDisposable
+    [TestFixture]
+    public class ElasticSearchAppenderTests : ElasticSearchTestSetup
     {
         private static readonly ILog _log = LogManager.GetLogger(typeof(ElasticSearchAppenderTests));
 
-        public ElasticSearchAppenderTests()
+        [SetUp]
+        public void TestsSetup()
         {
-            
+            DeleteTestIndex();
         }
 
-        [Fact]
+        [TestFixtureTearDown]
+        public void TearDown()
+        {
+            DeleteTestIndex();
+        }
+
+        [Test]
         public void Can_insert_record()
         {
             var logEvent = new 
@@ -34,34 +42,15 @@ namespace log4net.ElasticSearch.Tests
                     TimeStamp = DateTime.Now
                 };
 
-            var results = Client.Index(logEvent, _testIndex, "type1");
+            var results = Client.Index(logEvent);
 
             Assert.NotNull(results.Id);
         }
 
-        [Fact(Skip = "xunit weirdness")]
-        public void Can_read_properties()
-        {
-            GlobalContext.Properties["globalDynamicProperty"] = "global";
-            ThreadContext.Properties["threadDynamicProperty"] = "thread";
-            LogicalThreadContext.Properties["logicalThreadDynamicProperty"] = "local thread";
-            _log.Info("loggingtest");
-
-            Thread.Sleep(1500);
-
-            var searchResults = Client.Search(s => s.Query(q => q.Term("message", "loggingtest")));
-
-            Assert.Equal(1, Convert.ToInt32(searchResults.Hits.Total));
-            var firstEntry = searchResults.Documents.First();
-            Assert.Equal("global", firstEntry.globalDynamicProperty.ToString());
-            Assert.Equal("thread", firstEntry.threadDynamicProperty.ToString());
-            Assert.Equal("local thread", firstEntry.logicalThreadDynamicProperty.ToString());
-        }
-
-        [Fact]
+        [Test]
         public void Can_read_inserted_record()
         {
-            var logEvent = new 
+            var logEvent = new
             {
                 ClassName = "IntegrationTestClass",
                 Exception = "ReadingTest"
@@ -70,36 +59,51 @@ namespace log4net.ElasticSearch.Tests
             Client.Index(logEvent);
             Client.Refresh();
 
-            var searchResults = Client.Search(s => s.Query(q => q.Term("exception", "readingtest")));
+            var searchResults = Client.Search(s => s.Query(q => q.Term("Exception", "readingtest")));
 
-            Assert.Equal(1, Convert.ToInt32(searchResults.Hits.Total));
+            Assert.AreEqual(1, Convert.ToInt32(searchResults.Hits.Total));
         }
 
-        [Fact]
+        [Test]
         public void Can_create_an_event_from_log4net()
         {
             _log.Info("loggingtest");
-            Thread.Sleep(2000);
 
-            var searchResults = Client.Search(s => s.Query(q => q.Term("message", "loggingtest")));
+            var searchResults = Client.Search(s => s.Query(q => q.Term("Message", "loggingtest")));
 
-            Assert.Equal(1, Convert.ToInt32(searchResults.Hits.Total));
-            
+            Assert.AreEqual(1, Convert.ToInt32(searchResults.Hits.Total));
+
         }
 
-        //[Fact]
-        //public void Can_update_logger_configuration()
-        //{
-        //    while (true)
-        //    {
-        //        _log.Info("log");
-        //        Thread.Sleep(2000);
-        //    }
-        //}
-
-        public void Dispose()
+        [Test]
+        public void Can_read_properties()
         {
-            DeleteTestIndex();
+            GlobalContext.Properties["globalDynamicProperty"] = "global";
+            ThreadContext.Properties["threadDynamicProperty"] = "thread";
+            LogicalThreadContext.Properties["logicalThreadDynamicProperty"] = "local thread";
+            _log.Info("loggingtest");
+
+            var searchResults = Client.Search(s => s.Query(q => q.Term("Message", "loggingtest")));
+
+            Assert.AreEqual(1, Convert.ToInt32(searchResults.Hits.Total));
+            var firstEntry = searchResults.Documents.First();
+            Assert.AreEqual("global", firstEntry.globalDynamicProperty.ToString());
+            Assert.AreEqual("thread", firstEntry.threadDynamicProperty.ToString());
+            Assert.AreEqual("local thread", firstEntry.logicalThreadDynamicProperty.ToString());
         }
+
+        [Test]
+        public void Can_read_KvFilter_properties()
+        {
+            _log.Info("this is message key=value, another = 'another' object:[id=1] anotherObj:[id=2,content=blue]");
+
+            var searchResults = Client.Search(s => s.Take(1));
+            var entry = searchResults.Documents.First();
+            Assert.AreEqual("value", entry.key.ToString());
+            Assert.AreEqual("another", entry.another.ToString());
+            Assert.AreEqual("1", entry["object"].id.ToString());
+            Assert.AreEqual("blue", entry.anotherObj.content.ToString());
+        }
+
     }
 }

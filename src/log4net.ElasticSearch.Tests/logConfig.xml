@@ -10,11 +10,12 @@
         <appender name="ElasticSearchAppender" type="log4net.ElasticSearch.ElasticSearchAppender, log4net.ElasticSearch">
           <Server>localhost</Server>
           <Port>9200</Port>
-          <IndexType>LogEvent-%{taskNumber}</IndexType>
-          <Bulksize>2000</Bulksize>
+          <IndexName>log_test_%{+yyyy-MM-dd}</IndexName>
+          <IndexType>LogEvent</IndexType>
+          <Bulksize>1</Bulksize>
           <BulkIdleTimeout>-1</BulkIdleTimeout>
           <IndexAsync>False</IndexAsync>
-          <FixedFields>Partial,LocationInfo</FixedFields>
+          <FixedFields>Partial</FixedFields>
           <ElasticFilters>
             <Add>
               <Key>@type</Key>
@@ -28,6 +29,9 @@
               <Key>None</Key>
               <RenameTo>Nony</RenameTo>
             </Filter>
+            <Kv>
+              <DigValues/> 
+            </Kv>
           </ElasticFilters>
         </appender>
       
