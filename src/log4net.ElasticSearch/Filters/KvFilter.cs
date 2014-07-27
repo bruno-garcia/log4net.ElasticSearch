@@ -17,7 +17,6 @@ namespace log4net.ElasticSearch.Filters
 
         public KvFilter()
         {
-            SourceKey = "Message";
             ValueSplit = "=:";
             FieldSplit = " ,";
 

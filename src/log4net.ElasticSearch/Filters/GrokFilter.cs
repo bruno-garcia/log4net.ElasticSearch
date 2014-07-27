@@ -6,11 +6,12 @@ namespace log4net.ElasticSearch.Filters
 {
     public class GrokFilter : ScannerFilter
     {
+        private const string FailedGrok = "GrokMatchFailed";
         private Regex _regex;
         private string[] _groupNames;
 
         public bool Overwrite { get; set; }
-
+        
         public string Pattern
         {
             get { return _regex.ToString(); }
@@ -24,6 +25,12 @@ namespace log4net.ElasticSearch.Filters
         protected override void ScanMessage(JObject logEvent, string input)
         {
             var match = _regex.Match(input);
+            
+            if (!match.Success)
+            {
+                logEvent.AddTag(FailedGrok);
+            }
+
             foreach (var groupName in _groupNames)
             {
                 var key = match.Groups[groupName];

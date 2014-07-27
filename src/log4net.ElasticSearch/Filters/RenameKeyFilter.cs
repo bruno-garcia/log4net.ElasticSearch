@@ -35,6 +35,8 @@ namespace log4net.ElasticSearch.Filters
             JToken token;
             if (logEvent.TryGetValue(_key.Format(logEvent), out token))
             {
+                token.Parent.Remove();
+
                 var renameTo = _renameTo.Format(logEvent);
 
                 if (!Overwrite && logEvent.HasKey(renameTo))
@@ -43,7 +45,6 @@ namespace log4net.ElasticSearch.Filters
                     return;
                 }
 
-                token.Remove();
                 logEvent[renameTo] = token;
             }
         }

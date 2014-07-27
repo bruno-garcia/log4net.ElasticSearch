@@ -7,6 +7,11 @@ namespace log4net.ElasticSearch.Filters
     {
         public string SourceKey { get; set; }
 
+        protected ScannerFilter()
+        {
+            SourceKey = "Message";
+        }
+
         protected abstract void ScanMessage(JObject logEvent, string input);
 
         public override void PrepareEvent(JObject logEvent, ElasticClient client)
