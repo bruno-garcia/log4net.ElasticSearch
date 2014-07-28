@@ -20,7 +20,7 @@ namespace log4net.ElasticSearch.Filters
             var invalidProperties =
                 GetType().GetProperties()
                     .Where(prop => prop.PropertyType == typeof(string)
-                                   && string.IsNullOrEmpty((string)prop.GetValue(this)))
+                                   && string.IsNullOrEmpty((string)prop.GetValue(this, null)))
                     .Select(p => p.Name).ToList();
 
             if (invalidProperties.Any())
