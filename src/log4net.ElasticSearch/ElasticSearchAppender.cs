@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Threading;
 using log4net.ElasticSearch.InnerExceptions;
 using log4net.ElasticSearch.Models;
@@ -18,10 +20,10 @@ namespace log4net.ElasticSearch
         private SmartFormatter<LogEventProcessor> _indexName;
         private SmartFormatter<LogEventProcessor> _indexType;
 
-        private readonly object _bulkSync;
-        private int _currentBulkSize;
         private BulkDescriptor _bulkDescriptor;
-        private readonly Timer _timer;
+        private readonly Timer _timer;    
+        private readonly FieldInfo _innerBulkOperationsFieldInfo;
+        public int CurrentBulkSize { get { return GetBulkSize(_bulkDescriptor); } }
 
         public FixFlags FixedFields { get; set; }
 
@@ -51,11 +53,12 @@ namespace log4net.ElasticSearch
         {
             FixedFields = FixFlags.Partial;
 
-            _currentBulkSize = 0;
+            // ugly hack because nest.net didn't let us know the count :(
+            _innerBulkOperationsFieldInfo = typeof(BulkDescriptor).GetField("_Operations", ~BindingFlags.Public);
+
             BulkSize = 2000;
             BulkIdleTimeout = 5000;
             TimeoutToWaitForTimer = 5000;
-            _bulkSync = new object();
             _bulkDescriptor = new BulkDescriptor();
             _timer = new Timer(TimerElapsed, "timer", -1, -1);
 
@@ -123,7 +126,7 @@ namespace log4net.ElasticSearch
             var logEvent = CreateLogEvent(loggingEvent);
             PrepareAndAddToBulk(logEvent, loggingEvent);
 
-            if (_currentBulkSize >= BulkSize && BulkSize > 0)
+            if (CurrentBulkSize >= BulkSize && BulkSize > 0)
             {
                 DoIndexNow();
             }
@@ -142,18 +145,14 @@ namespace log4net.ElasticSearch
             var indexName = _indexName.Format(logEvent).ToLower();
             var indexType = _indexType.Format(logEvent);
 
-            lock (_bulkSync)
+            _bulkDescriptor.Index<JObject>(descriptor =>
             {
-                _bulkDescriptor.Index<JObject>(descriptor =>
-                {
-                    descriptor.Object(logEvent);
-                    descriptor.Index(indexName);
-                    descriptor.Type(indexType);
-                    descriptor.Timestamp(timeStampTicks);
-                    return descriptor;
-                });
-                _currentBulkSize++;
-            }
+                descriptor.Object(logEvent);
+                descriptor.Index(indexName);
+                descriptor.Type(indexType);
+                descriptor.Timestamp(timeStampTicks);
+                return descriptor;
+            });
         }
 
         public void TimerElapsed(object state)
@@ -163,13 +162,11 @@ namespace log4net.ElasticSearch
 
         private void DoIndexNow()
         {
-            BulkDescriptor bulk;
-            lock (_bulkSync)
-            {
-                bulk = _bulkDescriptor;
-                _bulkDescriptor = new BulkDescriptor();
-                _currentBulkSize = 0;
-            }
+            // ref-swap no need lock :)
+            BulkDescriptor bulk = _bulkDescriptor;
+            _bulkDescriptor = new BulkDescriptor();
+
+            if (GetBulkSize(bulk) == 0) return;
 
             try
             {
@@ -186,6 +183,11 @@ namespace log4net.ElasticSearch
             {
                 LogLog.Error(GetType(), "Invalid connection to ElasticSearch", ex);
             }
+        }
+
+        private int GetBulkSize(BulkDescriptor descriptor)
+        {
+            return ((IList<BaseBulkOperation>)_innerBulkOperationsFieldInfo.GetValue(descriptor)).Count;
         }
 
         private JObject CreateLogEvent(LoggingEvent loggingEvent)

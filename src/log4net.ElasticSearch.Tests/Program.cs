@@ -16,6 +16,7 @@ namespace log4net.ElasticSearch.Tests
         {
             Logger.InfoFormat("yoyo=yiyi b='this is id {0}', a=[this is id:1, o:2]", 1);
             Logger.InfoFormat("yoyo=yiyi aa='this is id {0}', c=[this is id:1, o:2]", 1);
+            Thread.Sleep(2000);
             //var tasks = new List<Task>();
             //for (int i = 0; i < 1; i++)
             //{
