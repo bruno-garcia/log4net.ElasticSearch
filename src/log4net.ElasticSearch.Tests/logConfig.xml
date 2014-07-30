@@ -37,13 +37,15 @@
               <RenameTo>SmartValue2</RenameTo>
             </Filter>
             <Kv>
-              <DigValues>
-                <RootKey>_raw</RootKey>
-              </DigValues> 
+              <Recursive>true</Recursive>
             </Kv>
             <Grok>
               <SourceKey>Message</SourceKey>
               <Pattern>name is (?&lt;name&gt;\w+)</Pattern>
+            </Grok>
+            <Grok>
+              <SourceKey>aa</SourceKey>
+              <Pattern>this is id (?&lt;tId&gt;\d)</Pattern>
             </Grok>
           </ElasticFilters>
         </appender>

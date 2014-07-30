@@ -6,17 +6,19 @@ using log4net.ElasticSearch.Models;
 
 namespace log4net.ElasticSearch.Filters
 {
-    internal class KvFilter : ScannerFilter
+    internal class KvFilter : FilterPropertiesValidator
     {
         private readonly Regex _regex;
-        private readonly Regex _checkInputRegex;
+        private const string FailedKv = "KvFilterFailed";
 
+        public string SourceKey { get; set; }
         public string ValueSplit { get; set; }
         public string FieldSplit { get; set; }
-        public DigValuesOption DigValues { get; set; }
+        public bool Recursive { get; set; }
 
         public KvFilter()
         {
+            SourceKey = "Message";
             ValueSplit = "=:";
             FieldSplit = " ,";
 
@@ -28,14 +30,22 @@ namespace log4net.ElasticSearch.Filters
             _regex = new Regex(
                 string.Format("([^{0}{1}]+)\\s*[{1}]\\s*{2}", FieldSplit, ValueSplit, valueRxString)
                 , RegexOptions.Compiled | RegexOptions.Multiline);
-            _checkInputRegex = new Regex("[" + ValueSplit + "]", RegexOptions.Compiled | RegexOptions.Multiline);
         }
 
-        protected override void ScanMessage(JObject logEvent, string input)
+        public override void PrepareEvent(JObject logEvent, ElasticClient client)
         {
-            if(!_checkInputRegex.IsMatch(input))
+            string input;
+            if (!logEvent.TryGetStringValue(SourceKey, out input))
+            {
+                logEvent.AddTag(FailedKv);
                 return;
+            }
 
+            ScanMessage(logEvent, input);
+        }
+
+        protected void ScanMessage(JObject logEvent, string input)
+        {
             foreach (Match match in _regex.Matches(input))
             {
                 var groups = match.Groups.Cast<Group>().Where(g => g.Success).ToList();
@@ -48,19 +58,13 @@ namespace log4net.ElasticSearch.Filters
 
         private void ProcessValueAndStore(JObject logEvent, string key, string value)
         {   
-            if (DigValues != null)
+            if (Recursive)
             {
                 var innerEvent = new JObject();
                 ScanMessage(innerEvent, value);
 
                 if (innerEvent.HasValues)
                 {
-                    // preserve the original value if RootKey specefied
-                    if (!string.IsNullOrEmpty(DigValues.RootKey))
-                    {
-                        innerEvent[DigValues.RootKey] = value;
-                    }
-
                     logEvent.AddOrSet(key, innerEvent);
                     return;
                 }
@@ -68,10 +72,5 @@ namespace log4net.ElasticSearch.Filters
 
             logEvent.AddOrSet(key, value);
         }
-    }
-
-    internal class DigValuesOption
-    {
-        public string RootKey { get; set; }
     }
 }

@@ -61,7 +61,6 @@
     <Compile Include="Filters\FilterPropertiesValidator.cs" />
     <Compile Include="Filters\GrokFilter.cs" />
     <Compile Include="Filters\KvFilter.cs" />
-    <Compile Include="Filters\ScannerFilter.cs" />
     <Compile Include="IElasticAppenderFilter.cs" />
     <Compile Include="InnerExceptions\ErrorSettingTemplateException.cs" />
     <Compile Include="InnerExceptions\InvalidFilterConfigException.cs" />

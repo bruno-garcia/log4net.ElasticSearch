@@ -53,7 +53,7 @@ namespace log4net.ElasticSearch
 
             _currentBulkSize = 0;
             BulkSize = 2000;
-            BulkIdleTimeout = 10;
+            BulkIdleTimeout = 5000;
             TimeoutToWaitForTimer = 5000;
             _bulkSync = new object();
             _bulkDescriptor = new BulkDescriptor();
@@ -121,9 +121,9 @@ namespace log4net.ElasticSearch
             }
 
             var logEvent = CreateLogEvent(loggingEvent);
-            PrepareAndAddToBulk(logEvent);
+            PrepareAndAddToBulk(logEvent, loggingEvent);
 
-            if (Interlocked.Increment(ref _currentBulkSize) >= BulkSize && BulkSize > 0)
+            if (_currentBulkSize >= BulkSize && BulkSize > 0)
             {
                 DoIndexNow();
             }
@@ -133,8 +133,10 @@ namespace log4net.ElasticSearch
         /// Prepare the event and add it to the BulkDescriptor.
         /// </summary>
         /// <param name="logEvent"></param>
-        private void PrepareAndAddToBulk(JObject logEvent)
+        /// <param name="loggingEvent"></param>
+        private void PrepareAndAddToBulk(JObject logEvent, LoggingEvent loggingEvent)
         {
+            var timeStampTicks = loggingEvent.TimeStamp.Ticks;
             ElasticFilters.PrepareEvent(logEvent, _client);
 
             var indexName = _indexName.Format(logEvent).ToLower();
@@ -147,8 +149,10 @@ namespace log4net.ElasticSearch
                     descriptor.Object(logEvent);
                     descriptor.Index(indexName);
                     descriptor.Type(indexType);
+                    descriptor.Timestamp(timeStampTicks);
                     return descriptor;
                 });
+                _currentBulkSize++;
             }
         }
 
@@ -159,15 +163,9 @@ namespace log4net.ElasticSearch
 
         private void DoIndexNow()
         {
-            if (_currentBulkSize == 0)
-                return;
-
             BulkDescriptor bulk;
             lock (_bulkSync)
             {
-                if (_currentBulkSize == 0)
-                    return;
-
                 bulk = _bulkDescriptor;
                 _bulkDescriptor = new BulkDescriptor();
                 _currentBulkSize = 0;
@@ -187,7 +185,6 @@ namespace log4net.ElasticSearch
             catch (Exception ex)
             {
                 LogLog.Error(GetType(), "Invalid connection to ElasticSearch", ex);
-                throw;
             }
         }
 
@@ -209,7 +206,7 @@ namespace log4net.ElasticSearch
             logEvent["Exception"] = loggingEvent.ExceptionObject == null ? "" : loggingEvent.ExceptionObject.ToString();
             //logEvent["Message"] = loggingEvent.RenderedMessage;
             //logEvent["Fix"] = loggingEvent.Fix.ToString(); // We need this?
-            logEvent["Domain"] = loggingEvent.Domain;
+            logEvent["AppDomain"] = loggingEvent.Domain;
             logEvent["HostName"] = Environment.MachineName;
 
             if (loggingEvent.Level != null)

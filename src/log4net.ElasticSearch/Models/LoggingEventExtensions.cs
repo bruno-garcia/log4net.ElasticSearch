@@ -34,5 +34,22 @@ namespace log4net.ElasticSearch.Models
         {
             jObject.AddOrSet(TagsKeyName, tag);
         }
+
+        public static bool TryGetStringValue(this JObject jObject, string key, out string value)
+        {
+            value = string.Empty;
+
+            var token = jObject[key];
+            if (token == null)
+                return false;
+
+            if (token.Type != JTokenType.String)
+            {
+                return false;
+            }
+
+            value = token.Value<string>();
+            return true;
+        }
     }
 }
