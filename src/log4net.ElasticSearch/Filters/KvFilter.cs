@@ -6,7 +6,7 @@ using log4net.ElasticSearch.Models;
 
 namespace log4net.ElasticSearch.Filters
 {
-    internal class KvFilter : FilterPropertiesValidator
+    public class KvFilter : IElasticAppenderFilter
     {
         private readonly Regex _regex;
         private const string FailedKv = "KvFilterFailed";
@@ -32,7 +32,12 @@ namespace log4net.ElasticSearch.Filters
                 , RegexOptions.Compiled | RegexOptions.Multiline);
         }
 
-        public override void PrepareEvent(JObject logEvent, ElasticClient client)
+        public void PrepareConfiguration(ElasticClient client)
+        {
+            ElasticAppenderFilters.ValidateFilterProperties(this);   
+        }
+
+        public void PrepareEvent(JObject logEvent, ElasticClient client)
         {
             string input;
             if (!logEvent.TryGetStringValue(SourceKey, out input))

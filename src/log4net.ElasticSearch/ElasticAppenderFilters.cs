@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Linq;
 using log4net.ElasticSearch.Filters;
+using log4net.ElasticSearch.InnerExceptions;
 using Nest;
 using Newtonsoft.Json.Linq;
 
@@ -28,6 +30,22 @@ namespace log4net.ElasticSearch
         public void AddFilter(IElasticAppenderFilter filter)
         {
             _filters.Add(filter);
+        }
+
+        public static void ValidateFilterProperties(IElasticAppenderFilter filter)
+        {
+            var invalidProperties =
+                filter.GetType().GetProperties()
+                    .Where(prop => prop.PropertyType == typeof(string)
+                                   && string.IsNullOrEmpty((string)prop.GetValue(filter, null)))
+                    .Select(p => p.Name).ToList();
+
+            if (invalidProperties.Any())
+            {
+                var properties = string.Join(",", invalidProperties);
+                throw new InvalidFilterConfigException(
+                    string.Format("The properties ({0}) of {1} must be set.", properties, filter.GetType().Name));
+            }
         }
 
         #region Helpers for common filters

@@ -58,7 +58,6 @@
     <Compile Include="AssemblyVersionInfo.cs" />
     <Compile Include="ElasticSearchAppender.cs" />
     <Compile Include="ElasticAppenderFilters.cs" />
-    <Compile Include="Filters\FilterPropertiesValidator.cs" />
     <Compile Include="Filters\GrokFilter.cs" />
     <Compile Include="Filters\KvFilter.cs" />
     <Compile Include="IElasticAppenderFilter.cs" />

@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 
 namespace log4net.ElasticSearch.Filters
 {
-    public class AddValueFilter : FilterPropertiesValidator
+    public class AddValueFilter : IElasticAppenderFilter
     {
         private SmartFormatter<LogEventProcessor> _key;
         private SmartFormatter<LogEventProcessor> _value;
@@ -22,7 +22,12 @@ namespace log4net.ElasticSearch.Filters
             set { _value = value; }
         }
 
-        public override void PrepareEvent(JObject logEvent, ElasticClient client)
+        public void PrepareConfiguration(ElasticClient client)
+        {
+            ElasticAppenderFilters.ValidateFilterProperties(this);
+        }
+
+        public void PrepareEvent(JObject logEvent, ElasticClient client)
         {
             logEvent.AddOrSet(_key.Format(logEvent), _value.Format(logEvent));
         }

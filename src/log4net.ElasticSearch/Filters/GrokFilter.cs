@@ -6,13 +6,13 @@ using Newtonsoft.Json.Linq;
 
 namespace log4net.ElasticSearch.Filters
 {
-    public class GrokFilter : FilterPropertiesValidator
+    public class GrokFilter : IElasticAppenderFilter
     {
         private const string FailedGrok = "GrokMatchFailed";
         private readonly string[] _exceptGroups = new[] { "0" };
         private Regex _regex;
         private string[] _groupNames;
-        
+
         public string SourceKey { get; set; }
 
         public bool Overwrite { get; set; }
@@ -32,7 +32,12 @@ namespace log4net.ElasticSearch.Filters
             SourceKey = "Message";
         }
 
-        public override void PrepareEvent(JObject logEvent, ElasticClient client)
+        public void PrepareConfiguration(ElasticClient client)
+        {
+            ElasticAppenderFilters.ValidateFilterProperties(this);   
+        }
+
+        public void PrepareEvent(JObject logEvent, ElasticClient client)
         {
             string input;
             if (!logEvent.TryGetStringValue(SourceKey, out input))
