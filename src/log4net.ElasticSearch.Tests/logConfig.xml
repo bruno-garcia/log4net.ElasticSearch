@@ -13,7 +13,7 @@
           <IndexName>log_test_%{+yyyy-MM-dd}</IndexName>
           <IndexType>LogEvent</IndexType>
           <Bulksize>1</Bulksize>
-          <BulkIdleTimeout>100</BulkIdleTimeout>
+          <BulkIdleTimeout>-1</BulkIdleTimeout>
           <IndexAsync>False</IndexAsync>
           <FixedFields>Partial</FixedFields>
           <Template>
