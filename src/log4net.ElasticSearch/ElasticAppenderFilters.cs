@@ -77,6 +77,11 @@ namespace log4net.ElasticSearch
             AddFilter(filter);
         }
 
+        private void AddConvertToArray(ConvertToArrayFilter filter)
+        {
+            AddFilter(filter);
+        }
+
         #endregion
     }
 }
