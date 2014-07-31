@@ -18,9 +18,7 @@ namespace log4net.ElasticSearch
         private SmartFormatter<LogEventProcessor> _indexName;
         private SmartFormatter<LogEventProcessor> _indexType;
 
-        private readonly object _bulkSync;
-        private int _currentBulkSize;
-        private BulkDescriptor _bulkDescriptor;
+        private BulkDescriptorProxy _bulkDescriptor;
         private readonly Timer _timer;
 
         public FixFlags FixedFields { get; set; }
@@ -51,12 +49,10 @@ namespace log4net.ElasticSearch
         {
             FixedFields = FixFlags.Partial;
 
-            _currentBulkSize = 0;
             BulkSize = 2000;
             BulkIdleTimeout = 5000;
             TimeoutToWaitForTimer = 5000;
-            _bulkSync = new object();
-            _bulkDescriptor = new BulkDescriptor();
+            _bulkDescriptor = new BulkDescriptorProxy();
             _timer = new Timer(TimerElapsed, "timer", -1, -1);
 
             Server = "localhost";
@@ -123,7 +119,7 @@ namespace log4net.ElasticSearch
             var logEvent = CreateLogEvent(loggingEvent);
             PrepareAndAddToBulk(logEvent, loggingEvent);
 
-            if (_currentBulkSize >= BulkSize && BulkSize > 0)
+            if (_bulkDescriptor.Size >= BulkSize && BulkSize > 0)
             {
                 DoIndexNow();
             }
@@ -142,18 +138,14 @@ namespace log4net.ElasticSearch
             var indexName = _indexName.Format(logEvent).ToLower();
             var indexType = _indexType.Format(logEvent);
 
-            lock (_bulkSync)
+            _bulkDescriptor.AddIndexOperation<JObject>(descriptor =>
             {
-                _bulkDescriptor.Index<JObject>(descriptor =>
-                {
-                    descriptor.Object(logEvent);
-                    descriptor.Index(indexName);
-                    descriptor.Type(indexType);
-                    descriptor.Timestamp(timeStampTicks);
-                    return descriptor;
-                });
-                _currentBulkSize++;
-            }
+                descriptor.Object(logEvent);
+                descriptor.Index(indexName);
+                descriptor.Type(indexType);
+                descriptor.Timestamp(timeStampTicks);
+                return descriptor;
+            });
         }
 
         public void TimerElapsed(object state)
@@ -163,24 +155,13 @@ namespace log4net.ElasticSearch
 
         private void DoIndexNow()
         {
-            BulkDescriptor bulk;
-            lock (_bulkSync)
-            {
-                bulk = _bulkDescriptor;
-                _bulkDescriptor = new BulkDescriptor();
-                _currentBulkSize = 0;
-            }
+            // ref-swap its atomic so we dont need to lock 
+            BulkDescriptorProxy bulk = _bulkDescriptor;
+            _bulkDescriptor = new BulkDescriptorProxy();
 
             try
             {
-                if (IndexAsync)
-                {
-                    _client.BulkAsync(bulk);
-                }
-                else
-                {
-                    _client.Bulk(bulk);
-                }
+                bulk.DoIndex(_client, IndexAsync);
             }
             catch (Exception ex)
             {
