@@ -7,8 +7,8 @@
     <ProjectGuid>{055FD962-C4DC-4E3C-BE56-E1E0EAA4ACCA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>log4net.ElasticSearch.net40</RootNamespace>
-    <AssemblyName>log4net.ElasticSearch.net40</AssemblyName>
+    <RootNamespace>log4net.ElasticSearch</RootNamespace>
+    <AssemblyName>log4net.ElasticSearch</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -19,7 +19,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\bin\lib\net40\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
