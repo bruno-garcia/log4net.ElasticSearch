@@ -69,7 +69,7 @@
       <Link>Filters\AddValueFilter.cs</Link>
     </Compile>
     <Compile Include="..\log4net.ElasticSearch\Filters\ConvertToArrayFilter.cs">
-      <Link>ConvertToArrayFilter.cs</Link>
+      <Link>Filters\ConvertToArrayFilter.cs</Link>
     </Compile>
     <Compile Include="..\log4net.ElasticSearch\Filters\GrokFilter.cs">
       <Link>Filters\GrokFilter.cs</Link>

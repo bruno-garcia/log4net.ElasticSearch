@@ -22,7 +22,14 @@ namespace log4net.ElasticSearch.Tests
                    .SetDefaultIndex(TestIndex);
 
             Client = new ElasticClient(elasticSettings);
-            FixtureTearDown();
+            try
+            {
+                FixtureTearDown();
+            }
+            catch (Exception ex)
+            {
+                
+            }
         }
 
         [TestFixtureTearDown]
@@ -72,7 +79,7 @@ namespace log4net.ElasticSearch.Tests
             Client.Refresh();
             var searchResults = Client.Search(s => s.Take(1));
             Assert.AreEqual(1, searchResults.Hits.Total);
-            Assert.AreEqual("ReadingTest", searchResults.Documents.First().Exception);
+            Assert.AreEqual("ReadingTest", searchResults.Documents.First().exception.ToString());
         }
 
         [Test]
@@ -110,7 +117,7 @@ namespace log4net.ElasticSearch.Tests
         [Test]
         public void Can_read_KvFilter_properties()
         {
-            _log.Info("this is message key=value, another = 'another' object:[id=1] anotherObj:[another id=2,content=blue]");
+            _log.Info("this is message key=value, another = 'another' object:[id=1]");
 
             Client.Refresh();
             var searchResults = Client.Search(s => s.Take(1));
@@ -118,9 +125,7 @@ namespace log4net.ElasticSearch.Tests
             var entry = searchResults.Documents.First();
             Assert.AreEqual("value", entry.key.ToString());
             Assert.AreEqual("another", entry.another.ToString());
-            Assert.AreEqual("1", entry["object"].id.ToString());
-            Assert.AreEqual("blue", entry.anotherObj.content.ToString());
-            Assert.AreEqual("another id=2,content=blue", entry.anotherObj._raw.ToString());
+            Assert.AreEqual("id=1", entry["object"].ToString());
         }
 
         [Test]
@@ -132,7 +137,18 @@ namespace log4net.ElasticSearch.Tests
             var res = Client.Search(s => s.Take((1)));
             var doc = res.Documents.First();
             Assert.AreEqual("UnknownError", doc.name.ToString());
+            Assert.IsNullOrEmpty(doc["0"]);
         }
 
+        [Test]
+        public void Can_remove_rename_add_properties()
+        {
+            _log.Info("bla");
+            Client.Refresh();
+            var res = Client.Search(s => s.Query(a => a.Term("Message", "bla")));
+            var doc = res.Documents.First();
+            Assert.IsNullOrEmpty(doc.@type);
+            Assert.AreEqual("the type is Special", doc.SmartValue2.ToString());
+        }
     }
 }

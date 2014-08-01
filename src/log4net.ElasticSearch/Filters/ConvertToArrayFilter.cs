@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using log4net.ElasticSearch.Models;
+using log4net.ElasticSearch.SmartFormatter;
 using Nest;
 using Newtonsoft.Json.Linq;
 
@@ -13,7 +14,13 @@ namespace log4net.ElasticSearch.Filters
     public class ConvertToArrayFilter : IElasticAppenderFilter
     {
         private Regex _seperateRegex;
-        public string SourceKey { get; set; }
+        private SmartFormatter<LogEventProcessor> _sourceKey;
+
+        public string SourceKey
+        {
+            get { return _sourceKey; }
+            set { _sourceKey = value; }
+        }
 
         public string Seperator
         {
@@ -34,13 +41,14 @@ namespace log4net.ElasticSearch.Filters
 
         public void PrepareEvent(JObject logEvent, ElasticClient client)
         {
+            string formattedKey = _sourceKey.Format(logEvent);
             string value;
-            if (!logEvent.TryGetStringValue(SourceKey, out value))
+            if (!logEvent.TryGetStringValue(formattedKey, out value))
             {
                 return;
             }
 
-            logEvent[SourceKey] = new JArray(_seperateRegex.Split(value).Where(s => !string.IsNullOrEmpty(s)));
+            logEvent[formattedKey] = new JArray(_seperateRegex.Split(value).Where(s => !string.IsNullOrEmpty(s)));
         }
     }
 }

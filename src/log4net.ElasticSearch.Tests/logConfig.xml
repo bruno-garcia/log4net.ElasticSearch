@@ -16,10 +16,10 @@
           <BulkIdleTimeout>-1</BulkIdleTimeout>
           <IndexAsync>False</IndexAsync>
           <FixedFields>Partial</FixedFields>
-          <Template>
+          <!--<Template>
             <Name>template1</Name>
             <FileName>template.json</FileName>
-          </Template>
+          </Template>-->
           <ElasticFilters>
             <Add>
               <Key>@type</Key>
@@ -36,9 +36,7 @@
               <Key>SmartValue</Key>
               <RenameTo>SmartValue2</RenameTo>
             </Filter>
-            <Kv>
-              <Recursive>true</Recursive>
-            </Kv>
+            <Kv/>
             <Grok>
               <SourceKey>Message</SourceKey>
               <Pattern>name is (?&lt;name&gt;\w+)</Pattern>

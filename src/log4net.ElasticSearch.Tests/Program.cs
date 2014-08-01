@@ -14,8 +14,11 @@ namespace log4net.ElasticSearch.Tests
         private static readonly ILog Logger = LogManager.GetLogger(typeof(ElasticSearchAppender));
         public static void Main()
         {
-            Logger.InfoFormat("yoyo=yiyi b='this is id {0}', a=[this is id:1, o:2]", 1);
-            Logger.InfoFormat("yoyo=yiyi aa='this is id {0}', c=[this is id:1, o:2]", 1);
+            Logger.Info("someIds=[123, 124 ,125 , 007]");
+            Logger.Info("someIds=[123]");
+            Logger.Info("someIds=[123]");
+            Logger.Info("someIds=[222, 007, 1]");
+            Logger.Info("someIds=[1]");
             //var tasks = new List<Task>();
             //for (int i = 0; i < 1; i++)
             //{

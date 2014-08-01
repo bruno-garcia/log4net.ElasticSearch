@@ -42,7 +42,7 @@ namespace log4net.ElasticSearch.Filters
             string input;
             if (!logEvent.TryGetStringValue(SourceKey, out input))
             {
-                logEvent.AddTag(FailedKv);
+                //logEvent.AddTag(FailedKv);
                 return;
             }
 
