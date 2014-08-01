@@ -1,5 +1,5 @@
 using log4net.ElasticSearch.Models;
-using log4net.ElasticSearch.SmartFormatter;
+using log4net.ElasticSearch.SmartFormatters;
 using Nest;
 using Newtonsoft.Json.Linq;
 
@@ -7,8 +7,8 @@ namespace log4net.ElasticSearch.Filters
 {
     public class RenameKeyFilter : IElasticAppenderFilter
     {
-        private SmartFormatter<LogEventProcessor> _key;
-        private SmartFormatter<LogEventProcessor> _renameTo;
+        private LogEventSmartFormatter _key;
+        private LogEventSmartFormatter _renameTo;
         private const string FailedToRename = "RenameFailed";
 
         public bool Overwrite { get; set; }

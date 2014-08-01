@@ -3,7 +3,7 @@ using System.IO;
 using System.Threading;
 using log4net.ElasticSearch.InnerExceptions;
 using log4net.ElasticSearch.Models;
-using log4net.ElasticSearch.SmartFormatter;
+using log4net.ElasticSearch.SmartFormatters;
 using log4net.Util;
 using Nest;
 using log4net.Appender;
@@ -15,8 +15,8 @@ namespace log4net.ElasticSearch
     public class ElasticSearchAppender : AppenderSkeleton
     {
         private ElasticClient _client;
-        private SmartFormatter<LogEventProcessor> _indexName;
-        private SmartFormatter<LogEventProcessor> _indexType;
+        private LogEventSmartFormatter _indexName;
+        private LogEventSmartFormatter _indexType;
 
         private BulkDescriptorProxy _bulkDescriptor;
         private readonly Timer _timer;

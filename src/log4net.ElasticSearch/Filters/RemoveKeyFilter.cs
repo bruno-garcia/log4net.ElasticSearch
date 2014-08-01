@@ -1,5 +1,5 @@
 using log4net.ElasticSearch.Models;
-using log4net.ElasticSearch.SmartFormatter;
+using log4net.ElasticSearch.SmartFormatters;
 using Nest;
 using Newtonsoft.Json.Linq;
 
@@ -7,7 +7,7 @@ namespace log4net.ElasticSearch.Filters
 {
     public class RemoveKeyFilter : IElasticAppenderFilter
     {
-        private SmartFormatter<LogEventProcessor> _key;
+        private LogEventSmartFormatter _key;
 
         public string Key
         {

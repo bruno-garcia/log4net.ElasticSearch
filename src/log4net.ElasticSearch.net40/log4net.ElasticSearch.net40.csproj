@@ -101,14 +101,14 @@
     <Compile Include="..\log4net.ElasticSearch\Models\UniqueIdGenerator.cs">
       <Link>Models\UniqueIdGenerator.cs</Link>
     </Compile>
-    <Compile Include="..\log4net.ElasticSearch\SmartFormatter\ISmartFormatterProcessor.cs">
-      <Link>SmartFormatter\ISmartFormatterProcessor.cs</Link>
+    <Compile Include="..\log4net.ElasticSearch\SmartFormatters\ISmartFormatter.cs">
+      <Link>SmartFormatters\ISmartFormatter.cs</Link>
     </Compile>
-    <Compile Include="..\log4net.ElasticSearch\SmartFormatter\LogEventProcessor.cs">
-      <Link>SmartFormatter\LogEventProcessor.cs</Link>
+    <Compile Include="..\log4net.ElasticSearch\SmartFormatters\LogEventSmartFormatter.cs">
+      <Link>SmartFormatters\LogEventSmartFormatter.cs</Link>
     </Compile>
-    <Compile Include="..\log4net.ElasticSearch\SmartFormatter\SmartFormatter.cs">
-      <Link>SmartFormatter\SmartFormatter.cs</Link>
+    <Compile Include="..\log4net.ElasticSearch\SmartFormatters\SmartFormatter.cs">
+      <Link>SmartFormatters\SmartFormatter.cs</Link>
     </Compile>
     <Compile Include="..\log4net.ElasticSearch\TemplateInfo.cs">
       <Link>TemplateInfo.cs</Link>

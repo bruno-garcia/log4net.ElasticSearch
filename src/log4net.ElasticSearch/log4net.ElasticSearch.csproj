@@ -66,9 +66,9 @@
     <Compile Include="InnerExceptions\ErrorSettingTemplateException.cs" />
     <Compile Include="InnerExceptions\InvalidFilterConfigException.cs" />
     <Compile Include="Models\FixFlagsExtensions.cs" />
-    <Compile Include="SmartFormatter\ISmartFormatterProcessor.cs" />
-    <Compile Include="SmartFormatter\LogEventProcessor.cs" />
-    <Compile Include="SmartFormatter\SmartFormatter.cs" />
+    <Compile Include="SmartFormatters\ISmartFormatter.cs" />
+    <Compile Include="SmartFormatters\LogEventSmartFormatter.cs" />
+    <Compile Include="SmartFormatters\SmartFormatter.cs" />
     <Compile Include="Models\LoggingEventExtensions.cs" />
     <Compile Include="Models\UniqueIdGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -77,7 +77,6 @@
     <Compile Include="TemplateInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

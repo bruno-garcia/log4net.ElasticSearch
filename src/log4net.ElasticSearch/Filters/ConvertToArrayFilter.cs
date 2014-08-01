@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using log4net.ElasticSearch.Models;
-using log4net.ElasticSearch.SmartFormatter;
+using log4net.ElasticSearch.SmartFormatters;
 using Nest;
 using Newtonsoft.Json.Linq;
 
@@ -14,7 +14,7 @@ namespace log4net.ElasticSearch.Filters
     public class ConvertToArrayFilter : IElasticAppenderFilter
     {
         private Regex _seperateRegex;
-        private SmartFormatter<LogEventProcessor> _sourceKey;
+        private LogEventSmartFormatter _sourceKey;
 
         public string SourceKey
         {
