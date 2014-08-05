@@ -11,6 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		..\log4net.ElasticSearch.nuspec = ..\log4net.ElasticSearch.nuspec
 		..\pack-nuget.bat = ..\pack-nuget.bat
+		.ci\RunTests.sh = .ci\RunTests.sh
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{A113BBCF-B1A1-4597-B7AD-0A58C882598A}"
@@ -21,6 +22,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{A113BB
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log4net.ElasticSearch.net40", "log4net.ElasticSearch.net40\log4net.ElasticSearch.net40.csproj", "{055FD962-C4DC-4E3C-BE56-E1E0EAA4ACCA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".ci", ".ci", "{DB38FCDE-D40E-4280-91D2-F46099B430F8}"
+	ProjectSection(SolutionItems) = preProject
+		.ci\RunTests.sh = .ci\RunTests.sh
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
