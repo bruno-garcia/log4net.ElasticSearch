@@ -10,9 +10,6 @@ env:
  matrix:
   - MONO_VER="3.4.0"
 
-services:
-  - elasticsearch
-
 before_install:
  - wget "http://download.mono-project.com/archive/${MONO_VER}/macos-10-x86/MonoFramework-MDK-${MONO_VER}.macos10.xamarin.x86.pkg"
  - sudo installer -pkg "MonoFramework-MDK-${MONO_VER}.macos10.xamarin.x86.pkg" -target /
@@ -20,8 +17,11 @@ before_install:
 script:
  - cd src
  - xbuild
- - .ci/RunTests.sh
+ - sh .ci/RunTests.sh
 
 branches:
  only:
   - Dev
+
+services:
+  - elasticsearch
