@@ -92,9 +92,6 @@
     <Compile Include="..\log4net.ElasticSearch\InnerExceptions\InvalidFilterConfigException.cs">
       <Link>InnerExceptions\InvalidFilterConfigException.cs</Link>
     </Compile>
-    <Compile Include="..\log4net.ElasticSearch\Models\FixFlagsExtensions.cs">
-      <Link>Models\FixFlagsExtensions.cs</Link>
-    </Compile>
     <Compile Include="..\log4net.ElasticSearch\Models\LoggingEventExtensions.cs">
       <Link>Models\LoggingEventExtensions.cs</Link>
     </Compile>
