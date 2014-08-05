@@ -1,0 +1,23 @@
+# Travis-CI Build for log4net.ElasticSearch (copied from WampSharp)
+# Copied from keyczar-dotnet
+# see travis-ci.org for details
+
+language: objective-c
+
+env:
+ global:
+  - EnableNuGetPackageRestore=true
+ matrix:
+  - MONO_VER="3.4.0"
+
+before_install:
+ - wget "http://download.mono-project.com/archive/${MONO_VER}/macos-10-x86/MonoFramework-MDK-${MONO_VER}.macos10.xamarin.x86.pkg"
+ - sudo installer -pkg "MonoFramework-MDK-${MONO_VER}.macos10.xamarin.x86.pkg" -target /
+
+script:
+ - cd src
+ - xbuild
+
+branches:
+ only:
+  - master
