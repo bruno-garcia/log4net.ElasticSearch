@@ -17,8 +17,8 @@ before_install:
 script:
  - cd src
  - xbuild
- - .ci/PrepareTests.sh
- - .ci/RunTests.sh
+ - sudo .ci/PrepareTests.sh
+ - sudo .ci/RunTests.sh
 
 branches:
  only:
