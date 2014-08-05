@@ -17,7 +17,9 @@ before_install:
 script:
  - cd src
  - xbuild
+ - .ci/PrepareTests.sh
+ - .ci/RunTests.sh
 
 branches:
  only:
-  - master
+  - Dev
