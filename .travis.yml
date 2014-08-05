@@ -10,10 +10,12 @@ env:
  matrix:
   - MONO_VER="3.4.0"
 
+services:
+  - elasticsearch
+
 before_install:
  - wget "http://download.mono-project.com/archive/${MONO_VER}/macos-10-x86/MonoFramework-MDK-${MONO_VER}.macos10.xamarin.x86.pkg"
  - sudo installer -pkg "MonoFramework-MDK-${MONO_VER}.macos10.xamarin.x86.pkg" -target /
- - wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.3.1.deb && sudo dpkg -i elasticsearch-1.3.1.deb && sudo service elasticsearch restart
 
 script:
  - cd src
