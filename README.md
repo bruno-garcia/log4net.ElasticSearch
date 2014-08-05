@@ -19,3 +19,18 @@ I do my best to reply to issues or questions ASAP. Please use the [ISSUES](https
 
 ### Thanks:
 Many thanks to [@mpdreamz](https://github.com/Mpdreamz) and the team for their great work on the NEST library!
+
+### Build status:
+
+| Status | Provider |
+| ------ | -------- |
+| [![Build status][TravisImg]][TravisLink] | Mono CI provided by [travis-ci][] |
+| [![Build Status][AppVeyorImg]][AppVeyorLink] | Windows CI provided by [AppVeyor][] |
+
+[TravisImg]:https://travis-ci.org/urielha/log4net.ElasticSearch.svg?branch=master
+[TravisLink]:https://travis-ci.org/urielha/log4net.ElasticSearch
+[AppVeyorImg]:https://ci.appveyor.com/api/projects/status/a1nc4olvjw42728s
+[AppVeyorLink]:https://ci.appveyor.com/project/urielha/log4net-elasticsearch
+
+[travis-ci]:https://travis-ci.org/
+[AppVeyor]:http://www.appveyor.com/
