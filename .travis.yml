@@ -1,5 +1,6 @@
 # Travis-CI Build for log4net.ElasticSearch (copied from WampSharp)
 # Copied from keyczar-dotnet
+# The Elasticsearch install copied from elasticsearch-dsl-py
 # see travis-ci.org for details
 
 language: objective-c
@@ -7,12 +8,16 @@ language: objective-c
 env:
  global:
   - EnableNuGetPackageRestore=true
+  - ES_VERSION=1.3.1
  matrix:
   - MONO_VER="3.4.0"
 
 before_install:
  - wget "http://download.mono-project.com/archive/${MONO_VER}/macos-10-x86/MonoFramework-MDK-${MONO_VER}.macos10.xamarin.x86.pkg"
  - sudo installer -pkg "MonoFramework-MDK-${MONO_VER}.macos10.xamarin.x86.pkg" -target /
+ - mkdir /tmp/elasticsearch
+ - wget -O - https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-${ES_VERSION}.tar.gz | tar xz --directory=/tmp/elasticsearch --strip-components=1
+ - /tmp/elasticsearch/bin/elasticsearch -d -D es.path.data=/tmp -D es.gateway.type=none -D es.index.store.type=memory -D es.discovery.zen.ping.multicast.enabled=false
 
 script:
  - cd src
@@ -22,6 +27,4 @@ script:
 branches:
  only:
   - Dev
-
-services:
-  - elasticsearch
+  - master

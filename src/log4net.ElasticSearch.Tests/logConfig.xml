@@ -16,10 +16,10 @@
           <BulkIdleTimeout>-1</BulkIdleTimeout>
           <IndexAsync>False</IndexAsync>
           <FixedFields>Partial</FixedFields>
-          <!--<Template>
+          <Template>
             <Name>template1</Name>
             <FileName>template.json</FileName>
-          </Template>-->
+          </Template>
           <ElasticFilters>
             <Add>
               <Key>@type</Key>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading;
+using Elasticsearch.Net;
 using log4net.ElasticSearch.InnerExceptions;
 using log4net.ElasticSearch.Models;
 using log4net.ElasticSearch.SmartFormatters;
@@ -71,13 +72,14 @@ namespace log4net.ElasticSearch
             var connectionSettings = new ConnectionSettings(new Uri(string.Format("http://{0}:{1}", Server, Port)));
             connectionSettings.SetMaximumAsyncConnections(MaxAsyncConnections);
             _client = new ElasticClient(connectionSettings);
-
+            
             if (Template != null && Template.IsValid)
             {
-                var res = _client.PutTemplateRaw(Template.Name, File.ReadAllText(Template.FileName));
-                if (!res.Acknowledged)
+                var lowLevelElastic = new ElasticsearchClient(connectionSettings);
+                var res = lowLevelElastic.IndicesPutTemplateForAll(Template.Name, File.ReadAllText(Template.FileName));
+                if (!res.Success)
                 {
-                    throw new ErrorSettingTemplateException(res.ConnectionStatus);
+                    throw new ErrorSettingTemplateException(res);
                 }
             }
 
@@ -140,7 +142,7 @@ namespace log4net.ElasticSearch
 
             _bulkDescriptor.AddIndexOperation<JObject>(descriptor =>
             {
-                descriptor.Object(logEvent);
+                descriptor.Document(logEvent);
                 descriptor.Index(indexName);
                 descriptor.Type(indexType);
                 descriptor.Timestamp(timeStampTicks);

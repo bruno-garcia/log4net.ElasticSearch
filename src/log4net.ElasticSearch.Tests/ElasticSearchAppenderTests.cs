@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
+using Elasticsearch.Net;
 using Nest;
+using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
 namespace log4net.ElasticSearch.Tests
@@ -26,7 +28,7 @@ namespace log4net.ElasticSearch.Tests
             {
                 FixtureTearDown();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 
             }
@@ -35,7 +37,7 @@ namespace log4net.ElasticSearch.Tests
         [TestFixtureTearDown]
         public void FixtureTearDown()
         {
-            Client.DeleteIndex(TestIndex);
+            Client.DeleteIndex(descriptor => descriptor.Index(TestIndex));
         }
 
         [SetUp]
@@ -61,9 +63,9 @@ namespace log4net.ElasticSearch.Tests
                     TimeStamp = DateTime.Now
                 };
 
-            var results = Client.Index(logEvent, null, "anonymous");
+            var results = Client.Index(logEvent, descriptor => descriptor.Type("anonymous"));
 
-            Assert.NotNull(results.Id);
+            Assert.IsNotNullOrEmpty(results.Id);
         }
 
         [Test]
@@ -75,10 +77,11 @@ namespace log4net.ElasticSearch.Tests
                 Exception = "ReadingTest"
             };
 
-            Client.Index(logEvent, null, "anonymous");
+            Client.Index(logEvent, descriptor => descriptor.Type("anonymous"));
             Client.Refresh();
-            var searchResults = Client.Search(s => s.Take(1));
-            Assert.AreEqual(1, searchResults.Hits.Total);
+
+            var searchResults = Client.Search<dynamic>(s => s.AllTypes().MatchAll());
+            Assert.AreEqual(1, searchResults.HitsMetaData.Total);
             Assert.AreEqual("ReadingTest", searchResults.Documents.First().exception.ToString());
         }
 
@@ -88,9 +91,10 @@ namespace log4net.ElasticSearch.Tests
             _log.Info("loggingtest");
 
             Client.Refresh();
-            var searchResults = Client.Search(s => s.Query(q => q.Term("Message", "loggingtest")));
             
-            Assert.AreEqual(1, searchResults.Hits.Total);
+            var searchResults = Client.Search<JObject>(s => s.AllTypes().Query(q => q.Term("Message", "loggingtest")));
+            
+            Assert.AreEqual(1, searchResults.Total);
             var doc = searchResults.Documents.First();
             Assert.IsNull(doc["@type"]);
             Assert.IsNotNull(doc["SmartValue2"]);
@@ -105,9 +109,9 @@ namespace log4net.ElasticSearch.Tests
             _log.Info("loggingtest");
 
             Client.Refresh();
-            var searchResults = Client.Search(s => s.Query(q => q.Term("Message", "loggingtest")));
+            var searchResults = Client.Search<dynamic>(s => s.AllTypes().Query(q => q.Term("Message", "loggingtest")));
 
-            Assert.AreEqual(1, Convert.ToInt32(searchResults.Hits.Total));
+            Assert.AreEqual(1, Convert.ToInt32(searchResults.Total));
             var firstEntry = searchResults.Documents.First();
             Assert.AreEqual("global", firstEntry.globalDynamicProperty.ToString());
             Assert.AreEqual("thread", firstEntry.threadDynamicProperty.ToString());
@@ -120,7 +124,7 @@ namespace log4net.ElasticSearch.Tests
             _log.Info("this is message key=value, another = 'another' object:[id=1]");
 
             Client.Refresh();
-            var searchResults = Client.Search(s => s.Take(1));
+            var searchResults = Client.Search<dynamic>(s => s.AllTypes().Take(1));
             
             var entry = searchResults.Documents.First();
             Assert.AreEqual("value", entry.key.ToString());
@@ -134,7 +138,7 @@ namespace log4net.ElasticSearch.Tests
             _log.Error("error! name is UnknownError");
 
             Client.Refresh();
-            var res = Client.Search(s => s.Take((1)));
+            var res = Client.Search<dynamic>(s => s.AllTypes().Take((1)));
             var doc = res.Documents.First();
             Assert.AreEqual("UnknownError", doc.name.ToString());
             Assert.IsNullOrEmpty(doc["0"]);
@@ -145,7 +149,7 @@ namespace log4net.ElasticSearch.Tests
         {
             _log.Info("bla");
             Client.Refresh();
-            var res = Client.Search(s => s.Query(a => a.Term("Message", "bla")));
+            var res = Client.Search<dynamic>(s => s.AllTypes().Query(a => a.Term("Message", "bla")));
             var doc = res.Documents.First();
             Assert.IsNullOrEmpty(doc.@type);
             Assert.AreEqual("the type is Special", doc.SmartValue2.ToString());

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>NEST</id>
+    <version>1.0.1</version>
+    <title>NEST - Elasticsearch Client</title>
+    <authors>Elasticsearch Inc. and contributors</authors>
+    <owners>Elasticsearch Inc. and contributors</owners>
+    <licenseUrl>https://github.com/elasticsearch/elasticsearch-net/blob/master/license.txt</licenseUrl>
+    <projectUrl>https://github.com/elasticsearch/elasticsearch-net</projectUrl>
+    <iconUrl>http://nest.azurewebsites.net/images/nest-nuget-icon.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Elasticsearch client, strongly typed interface to Elasticsearch. Fluent request builder, mapped responses and powerful query dsl. Uses and exposes Elasticsearch.Net</description>
+    <summary>Strongly typed interface to Elasticsearch. Fluent request builder, mapped responses and powerful query dsl. Uses and exposes Elasticsearch.Net</summary>
+    <tags>elasticsearch elastic search lucene nest</tags>
+    <dependencies>
+      <dependency id="Elasticsearch.Net" version="1.0.1" />
+      <dependency id="Newtonsoft.Json" version="6.0.1" />
+    </dependencies>
+  </metadata>
+</package>

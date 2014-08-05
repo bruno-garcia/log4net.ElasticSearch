@@ -25,7 +25,7 @@ Many thanks to [@mpdreamz](https://github.com/Mpdreamz) and the team for their g
 | Status | Provider |
 | ------ | -------- |
 | [![Build status][TravisImg]][TravisLink] | Mono CI provided by [travis-ci][] |
-| [![Build Status][AppVeyorImg]][AppVeyorLink] | Windows CI provided by [AppVeyor][] |
+| [![Build Status][AppVeyorImg]][AppVeyorLink] | Windows CI provided by [AppVeyor][] (without tests for now) |
 
 [TravisImg]:https://travis-ci.org/urielha/log4net.ElasticSearch.svg?branch=master
 [TravisLink]:https://travis-ci.org/urielha/log4net.ElasticSearch
