@@ -181,7 +181,7 @@ namespace log4net.ElasticSearch.Tests
         public void Performance()
         {
             ChangeBulkConfiguration(250, -1);
-            Program.Main(1, 2000);
+            Program.Main(1, 1500);
         }
 
         private static void ChangeBulkConfiguration(int bulkSize, int bulktimeout)
