@@ -91,13 +91,26 @@ namespace log4net.ElasticSearch.Tests
             _log.Info("loggingtest");
 
             Client.Refresh();
-            
+
             var searchResults = Client.Search<JObject>(s => s.AllTypes().Query(q => q.Term("Message", "loggingtest")));
-            
+
+            Assert.AreEqual(1, searchResults.Total);
+        }
+
+        [Test]
+        public void Can_add_and_remove_smart_values()
+        {
+            _log.Info("loggingtest");
+
+            Client.Refresh();
+
+            var searchResults = Client.Search<JObject>(s => s.AllTypes().Query(q => q.Term("Message", "loggingtest")));
+
             Assert.AreEqual(1, searchResults.Total);
             var doc = searchResults.Documents.First();
             Assert.IsNull(doc["@type"]);
             Assert.IsNotNull(doc["SmartValue2"]);
+            Assert.AreEqual("the type is Special", doc["SmartValue2"].ToString());
         }
 
         [Test]
@@ -111,7 +124,7 @@ namespace log4net.ElasticSearch.Tests
             Client.Refresh();
             var searchResults = Client.Search<dynamic>(s => s.AllTypes().Query(q => q.Term("Message", "loggingtest")));
 
-            Assert.AreEqual(1, Convert.ToInt32(searchResults.Total));
+            Assert.AreEqual(1, searchResults.Total);
             var firstEntry = searchResults.Documents.First();
             Assert.AreEqual("global", firstEntry.globalDynamicProperty.ToString());
             Assert.AreEqual("thread", firstEntry.threadDynamicProperty.ToString());
@@ -147,14 +160,19 @@ namespace log4net.ElasticSearch.Tests
         }
 
         [Test]
-        public void Can_remove_rename_add_properties()
+        public void Can_convert_to_Array_filter()
         {
-            _log.Info("bla");
+            _log.Info("someIds=[123, 124 ,125 , 007] anotherIds=[33]");
+
             Client.Refresh();
-            var res = Client.Search<dynamic>(s => s.AllTypes().Query(a => a.Term("Message", "bla")));
+
+            var res = Client.Search<JObject>(s => s.AllTypes().Take((1)));
             var doc = res.Documents.First();
-            Assert.IsNullOrEmpty(doc.@type);
-            Assert.AreEqual("the type is Special", doc.SmartValue2.ToString());
+            Assert.AreEqual(true, doc["someIds"].HasValues);
+            Assert.Contains("123", doc["someIds"].Values<string>().ToArray());
+            Assert.AreEqual(true, doc["anotherIds"].HasValues);
+            Assert.AreEqual("33", doc["anotherIds"].Values<string>().First());
         }
+
     }
 }
