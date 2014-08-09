@@ -180,8 +180,8 @@ namespace log4net.ElasticSearch.Tests
         [Test]
         public void Performance()
         {
-            ChangeBulkConfiguration(2500, -1);
-            Program.Main(1, 10000);
+            ChangeBulkConfiguration(250, -1);
+            Program.Main(1, 2000);
         }
 
         private static void ChangeBulkConfiguration(int bulkSize, int bulktimeout)
