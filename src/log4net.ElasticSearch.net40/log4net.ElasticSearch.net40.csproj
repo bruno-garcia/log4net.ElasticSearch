@@ -101,6 +101,9 @@
     <Compile Include="..\log4net.ElasticSearch\Models\UniqueIdGenerator.cs">
       <Link>Models\UniqueIdGenerator.cs</Link>
     </Compile>
+    <Compile Include="..\log4net.ElasticSearch\SmartFormatters\GrokSmartFormatter.cs">
+      <Link>SmartFormatters\GrokSmartFormatter.cs</Link>
+    </Compile>
     <Compile Include="..\log4net.ElasticSearch\SmartFormatters\LogEventSmartFormatter.cs">
       <Link>SmartFormatters\LogEventSmartFormatter.cs</Link>
     </Compile>

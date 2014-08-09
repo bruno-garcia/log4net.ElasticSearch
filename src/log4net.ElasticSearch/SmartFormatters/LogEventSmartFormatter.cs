@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -24,28 +25,26 @@ namespace log4net.ElasticSearch.SmartFormatters
 
         }
 
-        protected override void ProcessMatch(JObject logEvent, Match match, StringBuilder resultSb)
+        protected override bool TryProcessMatch(IDictionary<string, JToken> logEvent, Match match, out string replacementString)
         {
-            string wholeMatch = match.Value;
+            replacementString = string.Empty;
             string innerMatch = match.Groups[1].Value;
 
             // "+" means dateTime format
             if (innerMatch.StartsWith("+"))
             {
-                resultSb.Replace(wholeMatch, DateTime.Now.ToString(innerMatch.Substring(1), CultureInfo.InvariantCulture));
-                return;
+                replacementString = DateTime.Now.ToString(innerMatch.Substring(1), CultureInfo.InvariantCulture);
+                return true;
             }
 
             JToken token;
             if (logEvent.TryGetValue(innerMatch, out token))
             {
-                resultSb.Replace(wholeMatch, token.Value<string>());
+                replacementString = token.Value<string>();
+                return true;
             }
-        }
 
-        public override string ToString()
-        {
-            return Raw;
+            return false;
         }
 
         public static implicit operator LogEventSmartFormatter(string s)

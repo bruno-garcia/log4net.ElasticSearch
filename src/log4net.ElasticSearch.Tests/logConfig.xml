@@ -39,11 +39,11 @@
             <Kv/>
             <Grok>
               <SourceKey>Message</SourceKey>
-              <Pattern>name is (?&lt;name&gt;\w+)</Pattern>
+              <Pattern>name is %{WORD:name} and guid %{UUID:the_guid}</Pattern>
             </Grok>
             <Grok>
               <SourceKey>aa</SourceKey>
-              <Pattern>this is id (?&lt;tId&gt;\d)</Pattern>
+              <Pattern>this is id %{INT:tId}</Pattern>
             </Grok>
           </ElasticFilters>
         </appender>

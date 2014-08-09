@@ -70,6 +70,7 @@
     <Compile Include="IElasticAppenderFilter.cs" />
     <Compile Include="InnerExceptions\ErrorSettingTemplateException.cs" />
     <Compile Include="InnerExceptions\InvalidFilterConfigException.cs" />
+    <Compile Include="SmartFormatters\GrokSmartFormatter.cs" />
     <Compile Include="SmartFormatters\LogEventSmartFormatter.cs" />
     <Compile Include="SmartFormatters\SmartFormatter.cs" />
     <Compile Include="Models\LoggingEventExtensions.cs" />

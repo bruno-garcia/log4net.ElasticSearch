@@ -135,12 +135,14 @@ namespace log4net.ElasticSearch.Tests
         [Test]
         public void Can_read_grok_propertis()
         {
-            _log.Error("error! name is UnknownError");
+            var newGuid = Guid.NewGuid();
+            _log.Error("error! name is UnknownError and guid " + newGuid);
 
             Client.Refresh();
             var res = Client.Search<dynamic>(s => s.AllTypes().Take((1)));
             var doc = res.Documents.First();
             Assert.AreEqual("UnknownError", doc.name.ToString());
+            Assert.AreEqual(newGuid.ToString(), doc.the_guid.ToString());
             Assert.IsNullOrEmpty(doc["0"]);
         }
 

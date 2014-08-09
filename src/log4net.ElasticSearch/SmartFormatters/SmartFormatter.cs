@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json.Linq;
 
@@ -23,7 +24,7 @@ namespace log4net.ElasticSearch.SmartFormatters
             return Format(new JObject());
         }
 
-        public string Format(JObject jObj)
+        public string Format(IDictionary<string, JToken> jObj)
         {
             if (_dontBother)
             {
@@ -33,13 +34,17 @@ namespace log4net.ElasticSearch.SmartFormatters
             var result = new StringBuilder(Raw);
             foreach (Match match in _matches)
             {
-                ProcessMatch(jObj, match, result);
+                string replacementString;
+                if (TryProcessMatch(jObj, match, out replacementString))
+                {
+                    result.Replace(match.Value, replacementString);
+                }
             }
 
             return result.ToString();
         }
 
-        protected abstract void ProcessMatch(JObject jObj, Match match, StringBuilder result);
+        protected abstract bool TryProcessMatch(IDictionary<string, JToken> dictionary, Match match, out string replacementString);
 
         public override string ToString()
         {
@@ -51,19 +56,4 @@ namespace log4net.ElasticSearch.SmartFormatters
             return f == null ? null : f.Raw;
         }
     }
-
-    //public class GrokProcessor : ISmartFormatter
-    //{
-    //    private static readonly Regex InnerRegex = new Regex(@"%\{([^\}:]+)(?::([^\}]+))?\}", RegexOptions.Compiled);
-
-    //    public MatchCollection GetMatches()
-    //    {
-    //        return InnerRegex.Matches(Raw);
-    //    }
-
-    //    public void ProcessMatch(JObject logEvent, Match match, StringBuilder resultSb)
-    //    {
-    //        // todo
-    //    }
-    //}
 }
