@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Threading;
 using Elasticsearch.Net;
+using log4net.Appender;
+using log4net.Repository.Hierarchy;
 using Nest;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
@@ -44,6 +46,7 @@ namespace log4net.ElasticSearch.Tests
         public void TestSetup()
         {
             FixtureTearDown();
+            ChangeBulkConfiguration(1, -1);
         }
 
         [Test]
@@ -174,5 +177,29 @@ namespace log4net.ElasticSearch.Tests
             Assert.AreEqual("33", doc["anotherIds"].Values<string>().First());
         }
 
+        [Test]
+        public void Performance()
+        {
+            ChangeBulkConfiguration(2500, -1);
+            Program.Main(1, 10000);
+        }
+
+        private static void ChangeBulkConfiguration(int bulkSize, int bulktimeout)
+        {
+            var hierarchy = LogManager.GetRepository() as Hierarchy;
+            if (hierarchy != null)
+            {
+                IAppender[] appenders = hierarchy.GetAppenders();
+                foreach (IAppender appender in appenders)
+                {
+                    var elsAppender = appender as ElasticSearchAppender;
+                    if (elsAppender != null)
+                    {
+                        elsAppender.BulkSize = bulkSize;
+                        elsAppender.BulkIdleTimeout = bulktimeout;
+                    }
+                }
+            }
+        }
     }
 }

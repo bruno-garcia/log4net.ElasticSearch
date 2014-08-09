@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace log4net.ElasticSearch.Tests
@@ -12,29 +8,27 @@ namespace log4net.ElasticSearch.Tests
     public static class Program
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(ElasticSearchAppender));
+
         public static void Main()
         {
-            var tests = new ElasticSearchAppenderTests();
-            tests.FixtureSetup();
+            Main(1, 1);
+        }
 
+        public static void Main(int numberOfTasks, int numberOfCycles)
+        {
             var tasks = new List<Task>();
-            var numberOfTasks = 1;
             for (int i = 0; i < numberOfTasks; i++)
             {
                 int i1 = i;
-                tasks.Add(Task.Run(() => Runner(i1)));
+                tasks.Add(Task.Run(() => Runner(i1, numberOfCycles)));
             }
             Task.WaitAll(tasks.ToArray());
             Console.ReadLine();
-
-            tests.FixtureTearDown();
         }
 
-        public static void Runner(int t)
+        public static void Runner(int t, int numberOfCycles)
         {
             log4net.ThreadContext.Properties["taskNumber"] = t;
-            var numberOfCycles = 10000;
-            
             var sw = Stopwatch.StartNew();
             for (int i = 0; i < numberOfCycles; i++)
             {
