@@ -22,8 +22,7 @@ before_install:
 
 script:
  - cd src
- - sudo su
- - xbuild
+ - sudo xbuild
  - sh .ci/RunTests.sh
 
 branches:

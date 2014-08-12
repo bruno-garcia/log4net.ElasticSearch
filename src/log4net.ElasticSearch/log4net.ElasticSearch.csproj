@@ -86,7 +86,8 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <PropertyGroup>
-    <PostBuildEvent>$(SolutionDir)ilrepack.bat "$(TargetPath)"</PostBuildEvent>
+    <PostBuildEvent>$(SolutionDir)ilrepack.bat "$(TargetPath)"
+if errorlevel 1 exit 0</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
