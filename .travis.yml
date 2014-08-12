@@ -22,6 +22,7 @@ before_install:
 
 script:
  - cd src
+ - sudo su
  - xbuild
  - sh .ci/RunTests.sh
 
