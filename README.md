@@ -7,7 +7,7 @@ log4net.ElasticSearch is a module for the [log4net](http://logging.apache.org/lo
 * Supports .NET 4.0+
 * Easy installation and setup via [Nuget](https://nuget.org/packages/log4net.ElasticSearch/)
 * Uses the excellent [NEST](https://github.com/Mpdreamz/NEST) library which has great support for the newest ElasticSearch revisions
-* Ability to analyze the log event before sending it to elasticsearch using built-in filters and custom filters like [logstash]().
+* Ability to analyze the log event before sending it to elasticsearch using built-in filters and custom filters like [logstash](http://logstash.net/docs/1.4.2/).
 
 ### Filters:
 * Add - add new key and value to the event.
@@ -26,6 +26,7 @@ Please see the [DOCUMENTATION](https://github.com/jptoto/log4net.ElasticSearch/w
 I do my best to reply to issues or questions ASAP. Please use the [ISSUES](https://github.com/jptoto/log4net.ElasticSearch/issues) page to submit questions or errors.
 
 ### Configuration Example:
+(all parameters are optional, to see the default value of each - you can find them in the c'tor of appender)
 ```xml
 <appender name="ElasticSearchAppender" type="log4net.ElasticSearch.ElasticSearchAppender, log4net.ElasticSearch">
       <Server>localhost</Server>
