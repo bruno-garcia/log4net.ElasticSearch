@@ -75,8 +75,7 @@ namespace log4net.ElasticSearch
             
             if (Template != null && Template.IsValid)
             {
-                var lowLevelElastic = new ElasticsearchClient(connectionSettings);
-                var res = lowLevelElastic.IndicesPutTemplateForAll(Template.Name, File.ReadAllText(Template.FileName));
+                var res = _client.Raw.IndicesPutTemplateForAll(Template.Name, File.ReadAllText(Template.FileName));
                 if (!res.Success)
                 {
                     throw new ErrorSettingTemplateException(res);
