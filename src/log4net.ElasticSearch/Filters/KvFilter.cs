@@ -8,7 +8,7 @@ namespace log4net.ElasticSearch.Filters
 {
     public class KvFilter : IElasticAppenderFilter
     {
-        private readonly Regex _regex;
+        private Regex _regex;
         private const string FailedKv = "KvFilterFailed";
 
         public string SourceKey { get; set; }
@@ -21,20 +21,20 @@ namespace log4net.ElasticSearch.Filters
             SourceKey = "Message";
             ValueSplit = "=:";
             FieldSplit = " ,";
-
-            var valueRxString = "(?:\"([^\"]+)\"" +
-                                "|'([^']+)'" +
-                                "|\\(([^\\)]+)\\)" +
-                                "|\\[([^\\]]+)\\]" +
-                                "|([^" + FieldSplit + "]+))";
-            _regex = new Regex(
-                string.Format("([^{0}{1}]+)\\s*[{1}]\\s*{2}", FieldSplit, ValueSplit, valueRxString)
-                , RegexOptions.Compiled | RegexOptions.Multiline);
         }
 
         public void PrepareConfiguration(ElasticClient client)
         {
-            ElasticAppenderFilters.ValidateFilterProperties(this);   
+            ElasticAppenderFilters.ValidateFilterProperties(this);
+
+            var valueRxString = "(?:\"([^\"]+)\"" +
+                         "|'([^']+)'" +
+                         "|\\(([^\\)]+)\\)" +
+                         "|\\[([^\\]]+)\\]" +
+                         "|([^" + FieldSplit + "]+))";
+            _regex = new Regex(
+                string.Format("([^{0}{1}]+)\\s*[{1}]\\s*{2}", FieldSplit, ValueSplit, valueRxString)
+                , RegexOptions.Compiled | RegexOptions.Multiline);
         }
 
         public void PrepareEvent(JObject logEvent, ElasticClient client)
