@@ -8,12 +8,30 @@ namespace log4net.ElasticSearch.Filters
 {
     public class KvFilter : IElasticAppenderFilter
     {
-        private Regex _regex;
         private const string FailedKv = "KvFilterFailed";
+        private Regex _kvRegex;
+        private char[] _trimValue;
+        private char[] _trimKey;
 
-        public string SourceKey { get; set; }
+        [PropertyNotEmpty]
         public string ValueSplit { get; set; }
+        [PropertyNotEmpty]
         public string FieldSplit { get; set; }
+        [PropertyNotEmpty]
+        public string SourceKey { get; set; }
+
+        public string TrimValue
+        {
+            get { return string.Join("", _trimValue ?? Enumerable.Empty<char>()); }
+            set { _trimValue = value.ToCharArray(); }
+        }
+
+        public string TrimKey
+        {
+            get { return string.Join("", _trimKey ?? Enumerable.Empty<char>()); }
+            set { _trimKey = value.ToCharArray(); }
+        }
+
         public bool Recursive { get; set; }
 
         public KvFilter()
@@ -21,6 +39,8 @@ namespace log4net.ElasticSearch.Filters
             SourceKey = "Message";
             ValueSplit = "=:";
             FieldSplit = " ,";
+            TrimValue = "";
+            TrimKey = "";
         }
 
         public void PrepareConfiguration(ElasticClient client)
@@ -32,7 +52,7 @@ namespace log4net.ElasticSearch.Filters
                          "|\\(([^\\)]+)\\)" +
                          "|\\[([^\\]]+)\\]" +
                          "|([^" + FieldSplit + "]+))";
-            _regex = new Regex(
+            _kvRegex = new Regex(
                 string.Format("([^{0}{1}]+)\\s*[{1}]\\s*{2}", FieldSplit, ValueSplit, valueRxString)
                 , RegexOptions.Compiled | RegexOptions.Multiline);
         }
@@ -51,12 +71,21 @@ namespace log4net.ElasticSearch.Filters
 
         protected void ScanMessage(JObject logEvent, string input)
         {
-            foreach (Match match in _regex.Matches(input))
+            foreach (Match match in _kvRegex.Matches(input))
             {
                 var groups = match.Groups.Cast<Group>().Where(g => g.Success).ToList();
                 var key = groups[1].Value;
                 var value = groups[2].Value;
-                
+
+                if (_trimKey.Length > 0)
+                {
+                    key = key.Trim(_trimKey);
+                }
+                if (_trimValue.Length > 0)
+                {
+                    value = value.Trim(_trimValue);
+                }
+
                 ProcessValueAndStore(logEvent, key, value);
             }
         }

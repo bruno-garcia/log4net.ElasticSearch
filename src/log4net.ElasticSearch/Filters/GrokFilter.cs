@@ -18,10 +18,12 @@ namespace log4net.ElasticSearch.Filters
         private Regex _regex;
         private string[] _groupNames;
 
+        [PropertyNotEmpty]
         public string SourceKey { get; set; }
 
         public bool Overwrite { get; set; }
-        
+
+        [PropertyNotEmpty]
         public string Pattern
         {
             get { return _regex != null ? _regex.ToString(): string.Empty; }

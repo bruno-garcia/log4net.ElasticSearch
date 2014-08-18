@@ -59,8 +59,8 @@
     <Compile Include="..\log4net.ElasticSearch\AssemblyVersionInfo.cs">
       <Link>AssemblyVersionInfo.cs</Link>
     </Compile>
-    <Compile Include="..\log4net.ElasticSearch\BulkDescriptorProxy.cs">
-      <Link>BulkDescriptorProxy.cs</Link>
+    <Compile Include="..\log4net.ElasticSearch\BulkProxy.cs">
+      <Link>BulkProxy.cs</Link>
     </Compile>
     <Compile Include="..\log4net.ElasticSearch\ElasticAppenderFilters.cs">
       <Link>ElasticAppenderFilters.cs</Link>
@@ -92,8 +92,8 @@
     <Compile Include="..\log4net.ElasticSearch\InnerExceptions\ErrorSettingTemplateException.cs">
       <Link>InnerExceptions\ErrorSettingTemplateException.cs</Link>
     </Compile>
-    <Compile Include="..\log4net.ElasticSearch\InnerExceptions\InvalidFilterConfigException.cs">
-      <Link>InnerExceptions\InvalidFilterConfigException.cs</Link>
+    <Compile Include="..\log4net.ElasticSearch\InnerExceptions\InvalidFilterConfigurationException.cs">
+      <Link>InnerExceptions\InvalidFilterConfigurationException.cs</Link>
     </Compile>
     <Compile Include="..\log4net.ElasticSearch\Models\LoggingEventExtensions.cs">
       <Link>Models\LoggingEventExtensions.cs</Link>

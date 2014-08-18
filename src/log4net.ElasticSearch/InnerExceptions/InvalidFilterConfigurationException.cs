@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace log4net.ElasticSearch.InnerExceptions
 {
-    public class InvalidFilterConfigException : Exception
+    public class InvalidFilterConfigurationException : Exception
     {
-        public InvalidFilterConfigException()
+        public InvalidFilterConfigurationException()
         {
         }
 
-        public InvalidFilterConfigException(string message)
+        public InvalidFilterConfigurationException(string message)
             : base(message)
         {
         }

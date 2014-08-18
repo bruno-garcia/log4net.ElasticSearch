@@ -10,12 +10,14 @@ namespace log4net.ElasticSearch.Filters
         private LogEventSmartFormatter _key;
         private LogEventSmartFormatter _value;
 
+        [PropertyNotEmpty]
         public string Key
         {
             get { return _key; }
             set { _key = value; }
         }
 
+        [PropertyNotEmpty]
         public string Value
         {
             get { return _value; }

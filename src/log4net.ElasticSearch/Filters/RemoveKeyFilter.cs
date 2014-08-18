@@ -9,6 +9,7 @@ namespace log4net.ElasticSearch.Filters
     {
         private LogEventSmartFormatter _key;
 
+        [PropertyNotEmpty]
         public string Key
         {
             get { return _key; }

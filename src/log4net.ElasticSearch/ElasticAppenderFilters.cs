@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using log4net.ElasticSearch.Filters;
 using log4net.ElasticSearch.InnerExceptions;
 using Nest;
@@ -31,21 +33,31 @@ namespace log4net.ElasticSearch
         {
             _filters.Add(filter);
         }
-
+        
         public static void ValidateFilterProperties(IElasticAppenderFilter filter)
         {
             var invalidProperties =
                 filter.GetType().GetProperties()
-                    .Where(prop => prop.PropertyType == typeof(string)
-                                   && string.IsNullOrEmpty((string)prop.GetValue(filter, null)))
+                    .Where(prop => !IsValidProperty(prop, filter))
                     .Select(p => p.Name).ToList();
 
             if (invalidProperties.Any())
             {
                 var properties = string.Join(",", invalidProperties);
-                throw new InvalidFilterConfigException(
-                    string.Format("The properties ({0}) of {1} must be set.", properties, filter.GetType().Name));
+                throw new InvalidFilterConfigurationException(
+                    string.Format("The properties ({0}) of {1} are invalid.", properties, filter.GetType().Name));
             }
+        }
+
+        private static bool IsValidProperty(PropertyInfo prop, IElasticAppenderFilter filter)
+        {
+            var validation = prop.GetCustomAttributes(typeof (IPropertyValidationAttribute), true).FirstOrDefault() as IPropertyValidationAttribute;
+            if (validation == null)
+            {
+                return true;
+            }
+
+            return validation.IsValid(prop.GetValue(filter, null));
         }
 
         #region Helpers for common filters
@@ -83,5 +95,23 @@ namespace log4net.ElasticSearch
         }
 
         #endregion
+    }
+
+    public interface IPropertyValidationAttribute
+    {
+        bool IsValid<T>(T value);
+    }
+
+    public class PropertyNotEmptyAttribute : Attribute, IPropertyValidationAttribute
+    {
+        public bool IsValid<T>(T value)
+        {
+            return InnerIsValid(value as string);
+        }
+
+        private bool InnerIsValid(string value)
+        {
+            return !string.IsNullOrEmpty(value);
+        }
     }
 }

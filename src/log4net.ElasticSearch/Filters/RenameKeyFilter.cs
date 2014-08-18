@@ -13,12 +13,14 @@ namespace log4net.ElasticSearch.Filters
 
         public bool Overwrite { get; set; }
 
+        [PropertyNotEmpty]
         public string Key
         {
             get { return _key; }
             set { _key = value; }
         }
 
+        [PropertyNotEmpty]
         public string RenameTo
         {
             get { return _renameTo; }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading;
-using Elasticsearch.Net;
 using log4net.Appender;
 using log4net.ElasticSearch.Filters;
 using log4net.Repository.Hierarchy;
@@ -41,7 +41,14 @@ namespace log4net.ElasticSearch.Tests
         [TestFixtureTearDown]
         public void FixtureTearDown()
         {
-            Client.DeleteIndex(descriptor => descriptor.Index(TestIndex));
+            try
+            {
+                Client.DeleteIndex(descriptor => descriptor.Index(TestIndex));
+            }
+            catch
+            {
+                // we don't care if the index does not exists
+            }
         }
 
         [SetUp]
@@ -141,11 +148,13 @@ namespace log4net.ElasticSearch.Tests
         }
 
         [Test]
-        [TestCase(1, new[] { ",", " " }, new[] { ":", "=" })]
-        [TestCase(2, new[] { ";", " " }, new[] { "~" })]
-        [TestCase(3, new[] { ";" },      new[] { "~" }, ExpectedException = typeof(Exception), ExpectedMessage = "spaces issue")]
-        [TestCase(4, new[] { "\\|"," "}, new[] { "\\>" })]
-        public void Can_read_KvFilter_properties(int num, string[] fieldSplit, string[] valueSplit)
+        [TestCase(new[] { ",", " " }, new[] { ":", "=" }, "", TestName = "Regular1")]
+        [TestCase(new[] { ";", " " }, new[] { "~" }, "", TestName = "Regular2")]
+        [TestCase(new[] { ";" },      new[] { "~" }, "", TestName = "No whiteSpace on fieldSplit cause the 'another ' key", ExpectedException = typeof(Exception), ExpectedMessage = "spaces issue")]
+        [TestCase(new[] { "\\|"," "}, new[] {"\\>"}, "", TestName = "Regex chars need to be escaped with backslash")]
+        [TestCase(new[] { ";" },      new[] { "~" }, " ", TestName = "No whiteSpace but with trimming fix the 'another' key")]
+        [TestCase(new[] { "\n" },     new[] { ":" }, " ", TestName = "NewLine")]
+        public void Can_read_KvFilter_properties(string[] fieldSplit, string[] valueSplit, string trim)
         {
             ElasticAppenderFilters oldFilters = null;
             QueryConfiguration(appender =>
@@ -155,7 +164,9 @@ namespace log4net.ElasticSearch.Tests
                 appender.ElasticFilters.AddFilter(new KvFilter()
                 {
                     FieldSplit = string.Join("", fieldSplit),
-                    ValueSplit = string.Join("", valueSplit)
+                    ValueSplit = string.Join("", valueSplit),
+                    TrimKey = trim,
+                    TrimValue = trim
                 });
                 appender.ActivateOptions();
             });
@@ -237,14 +248,14 @@ namespace log4net.ElasticSearch.Tests
 
         [Test]
         [Ignore("the build agent have problems on running performance")]
-        public void Performance()
+        public static void Performance()
         {
             QueryConfiguration(appender =>
             {
-                appender.BulkSize = 250;
+                appender.BulkSize = 4000;
                 appender.BulkIdleTimeout = -1;
             });
-            Program.Main(1, 1500);
+            Program.PerformanceTest(1, 12000);
         }
 
         private static void QueryConfiguration(Action<ElasticSearchAppender> action)

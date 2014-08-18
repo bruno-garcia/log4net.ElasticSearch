@@ -11,10 +11,10 @@ namespace log4net.ElasticSearch.Tests
 
         public static void Main()
         {
-            Main(1, 1);
+            ElasticSearchAppenderTests.Performance();
         }
 
-        public static void Main(int numberOfTasks, int numberOfCycles)
+        public static void PerformanceTest(int numberOfTasks, int numberOfCycles)
         {
             var tasks = new List<Task>();
             for (int i = 0; i < numberOfTasks; i++)
@@ -23,7 +23,7 @@ namespace log4net.ElasticSearch.Tests
                 tasks.Add(Task.Run(() => Runner(i1, numberOfCycles)));
             }
             Task.WaitAll(tasks.ToArray());
-            Console.ReadLine();
+            //Console.ReadLine();
         }
 
         public static void Runner(int t, int numberOfCycles)
@@ -33,7 +33,6 @@ namespace log4net.ElasticSearch.Tests
             for (int i = 0; i < numberOfCycles; i++)
             {
                 Logger.InfoFormat("testNum: {0}, name is someName and guid {1}", i, Guid.NewGuid());
-                //Thread.Sleep(1);
             }
             sw.Stop();
 

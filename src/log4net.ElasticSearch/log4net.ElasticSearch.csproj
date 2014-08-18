@@ -59,7 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BulkDescriptorProxy.cs" />
+    <Compile Include="BulkProxy.cs" />
     <Compile Include="Filters\AddValueFilter.cs" />
     <Compile Include="AssemblyVersionInfo.cs" />
     <Compile Include="ElasticSearchAppender.cs" />
@@ -69,7 +69,7 @@
     <Compile Include="Filters\KvFilter.cs" />
     <Compile Include="IElasticAppenderFilter.cs" />
     <Compile Include="InnerExceptions\ErrorSettingTemplateException.cs" />
-    <Compile Include="InnerExceptions\InvalidFilterConfigException.cs" />
+    <Compile Include="InnerExceptions\InvalidFilterConfigurationException.cs" />
     <Compile Include="SmartFormatters\GrokSmartFormatter.cs" />
     <Compile Include="SmartFormatters\LogEventSmartFormatter.cs" />
     <Compile Include="SmartFormatters\SmartFormatter.cs" />

@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using log4net.ElasticSearch.Models;
 using log4net.ElasticSearch.SmartFormatters;
 using Nest;
@@ -16,12 +12,14 @@ namespace log4net.ElasticSearch.Filters
         private Regex _seperateRegex;
         private LogEventSmartFormatter _sourceKey;
 
+        [PropertyNotEmpty]
         public string SourceKey
         {
             get { return _sourceKey; }
             set { _sourceKey = value; }
         }
 
+        [PropertyNotEmpty]
         public string Seperator
         {
             get { return _seperateRegex != null ? _seperateRegex.ToString() : string.Empty; }
