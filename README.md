@@ -26,7 +26,9 @@ Please see the [DOCUMENTATION](https://github.com/jptoto/log4net.ElasticSearch/w
 I do my best to reply to issues or questions ASAP. Please use the [ISSUES](https://github.com/jptoto/log4net.ElasticSearch/issues) page to submit questions or errors.
 
 ### Configuration Example:
-(all parameters are optional, to see the default value of each - you can find them in the c'tor of appender)
+Almost all the parameters are optional, to see the default values check c'tor of the appender and filters. 
+You can also set any public property in the appender/filter which didn't appear in the example.
+
 ```xml
 <appender name="ElasticSearchAppender" type="log4net.ElasticSearch.ElasticSearchAppender, log4net.ElasticSearch">
       <Server>localhost</Server>

@@ -22,6 +22,8 @@ namespace log4net.ElasticSearch.Filters
             set { _value = value; }
         }
 
+        public bool Overwrite { get; set; }
+
         public void PrepareConfiguration(ElasticClient client)
         {
             ElasticAppenderFilters.ValidateFilterProperties(this);
@@ -29,7 +31,17 @@ namespace log4net.ElasticSearch.Filters
 
         public void PrepareEvent(JObject logEvent, ElasticClient client)
         {
-            logEvent.AddOrSet(_key.Format(logEvent), _value.Format(logEvent));
+            var key = _key.Format(logEvent);
+            var value = _value.Format(logEvent);
+
+            if (Overwrite)
+            {
+                logEvent[key] = value;
+            }
+            else
+            {
+                logEvent.AddOrSet(key, value);
+            }
         }
     }
 }
