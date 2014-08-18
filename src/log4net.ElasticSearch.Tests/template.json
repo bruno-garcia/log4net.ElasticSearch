@@ -20,15 +20,18 @@
 		},
 
         "LogEvent" : {
+			"_timestamp" : {
+				"enabled" : true,
+				"path" : "TimeStamp"
+			},
 			"properties" : {
 				"Message" : {
 					"type":"string",
 					"index": "analyzed"
 				},
-                "someIds" : {
-                    "type":"string",
-                    "index":"analyzed"
-                }
+				"TimeStamp" : {
+					"type":"date"
+				}
 			}
         }
     }

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using Elasticsearch.Net;
 using log4net.Appender;
+using log4net.ElasticSearch.Filters;
 using log4net.Repository.Hierarchy;
 using Nest;
 using Newtonsoft.Json.Linq;
@@ -11,29 +12,30 @@ using NUnit.Framework;
 namespace log4net.ElasticSearch.Tests
 {
     [TestFixture]
-    public class ElasticSearchAppenderTests 
+    public class ElasticSearchAppenderTests
     {
         public ElasticClient Client;
         public readonly string TestIndex = "log_test_" + DateTime.Now.ToString("yyyy-MM-dd");
-        
+
         private static readonly ILog _log = LogManager.GetLogger(typeof(ElasticSearchAppenderTests));
 
         [TestFixtureSetUp]
         public void FixtureSetup()
         {
+            string host = null, port = null;
+            QueryConfiguration(appender =>
+            {
+                appender.IndexName = TestIndex;
+
+                host = appender.Server;
+                port = appender.Port;
+            });
+
             ConnectionSettings elasticSettings =
-               new ConnectionSettings(new Uri("http://127.0.0.1:9200"))
-                   .SetDefaultIndex(TestIndex);
+                new ConnectionSettings(new Uri(string.Format("http://{0}:{1}", host, port)))
+                    .SetDefaultIndex(TestIndex);
 
             Client = new ElasticClient(elasticSettings);
-            try
-            {
-                FixtureTearDown();
-            }
-            catch (Exception)
-            {
-                
-            }
         }
 
         [TestFixtureTearDown]
@@ -46,13 +48,17 @@ namespace log4net.ElasticSearch.Tests
         public void TestSetup()
         {
             FixtureTearDown();
-            ChangeBulkConfiguration(1, -1);
+            QueryConfiguration(appender =>
+            {
+                appender.BulkSize = 1;
+                appender.BulkIdleTimeout = -1;
+            });
         }
 
         [Test]
         public void Can_insert_record()
         {
-            var logEvent = new 
+            var logEvent = new
                 {
                     ClassName = "IntegrationTestClass",
                     Domain = "TestDomain",
@@ -84,7 +90,7 @@ namespace log4net.ElasticSearch.Tests
             Client.Refresh();
 
             var searchResults = Client.Search<dynamic>(s => s.AllTypes().MatchAll());
-            Assert.AreEqual(1, searchResults.HitsMetaData.Total);
+            Assert.AreEqual(1, searchResults.Total);
             Assert.AreEqual("ReadingTest", searchResults.Documents.First().exception.ToString());
         }
 
@@ -135,17 +141,50 @@ namespace log4net.ElasticSearch.Tests
         }
 
         [Test]
-        public void Can_read_KvFilter_properties()
+        [TestCase(1, new[] { ",", " " }, new[] { ":", "=" })]
+        [TestCase(2, new[] { ";", " " }, new[] { "~" })]
+        [TestCase(3, new[] { ";" },      new[] { "~" }, ExpectedException = typeof(Exception), ExpectedMessage = "spaces issue")]
+        [TestCase(4, new[] { "\\|"," "}, new[] { "\\>" })]
+        public void Can_read_KvFilter_properties(int num, string[] fieldSplit, string[] valueSplit)
         {
-            _log.Info("this is message key=value, another = 'another' object:[id=1]");
+            ElasticAppenderFilters oldFilters = null;
+            QueryConfiguration(appender =>
+            {
+                oldFilters = appender.ElasticFilters;
+                appender.ElasticFilters = new ElasticAppenderFilters();
+                appender.ElasticFilters.AddFilter(new KvFilter()
+                {
+                    FieldSplit = string.Join("", fieldSplit),
+                    ValueSplit = string.Join("", valueSplit)
+                });
+                appender.ActivateOptions();
+            });
+
+            _log.InfoFormat(
+                "this is message{1}key{0}value{1}another {0} 'another'{1}object{0}[this is object :)]",
+                valueSplit[0].TrimStart('\\'), fieldSplit[0].TrimStart('\\'));
 
             Client.Refresh();
             var searchResults = Client.Search<dynamic>(s => s.AllTypes().Take(1));
-            
+
             var entry = searchResults.Documents.First();
+
+            QueryConfiguration(appender =>
+            {
+                appender.ElasticFilters = oldFilters;
+                appender.ActivateOptions();
+            });
+
+            Assert.IsNotNull(entry.key);
+            Assert.IsNotNull(entry["object"]);
+            if (entry.another == null)
+            {
+                throw new Exception("spaces issue");
+            }
+
             Assert.AreEqual("value", entry.key.ToString());
             Assert.AreEqual("another", entry.another.ToString());
-            Assert.AreEqual("id=1", entry["object"].ToString());
+            Assert.AreEqual("this is object :)", entry["object"].ToString());
         }
 
         [Test]
@@ -178,14 +217,37 @@ namespace log4net.ElasticSearch.Tests
         }
 
         [Test]
+        public void test_ttl()
+        {
+            Client.PutTemplate("ttltemplate",
+                descriptor =>
+                    descriptor.Template("*").Settings(settings => settings.Add("indices.ttl.interval", "1s").Add("indices.ttl.bulk_size", "1"))
+                        .AddMapping<dynamic>(mapping => mapping.Type("_default_").TtlField(ttl => ttl.Enable().Default("1ms"))));
+
+            _log.Info("test");
+            Thread.Sleep(2000);
+            Client.Refresh();
+            Client.Optimize();
+
+            var res = Client.Search<dynamic>(s => s.AllTypes().AllIndices());
+            Client.DeleteTemplate("ttltemplate");
+
+            Assert.AreEqual(0, res.Total);
+        }
+
+        [Test]
         [Ignore("the build agent have problems on running performance")]
         public void Performance()
         {
-            ChangeBulkConfiguration(250, -1);
+            QueryConfiguration(appender =>
+            {
+                appender.BulkSize = 250;
+                appender.BulkIdleTimeout = -1;
+            });
             Program.Main(1, 1500);
         }
 
-        private static void ChangeBulkConfiguration(int bulkSize, int bulktimeout)
+        private static void QueryConfiguration(Action<ElasticSearchAppender> action)
         {
             var hierarchy = LogManager.GetRepository() as Hierarchy;
             if (hierarchy != null)
@@ -194,10 +256,9 @@ namespace log4net.ElasticSearch.Tests
                 foreach (IAppender appender in appenders)
                 {
                     var elsAppender = appender as ElasticSearchAppender;
-                    if (elsAppender != null)
+                    if (elsAppender != null && action != null)
                     {
-                        elsAppender.BulkSize = bulkSize;
-                        elsAppender.BulkIdleTimeout = bulktimeout;
+                        action(elsAppender);
                     }
                 }
             }
