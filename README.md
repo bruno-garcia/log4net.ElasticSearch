@@ -82,7 +82,7 @@ You can also set any public property in the appender/filter which didn't appear 
     </appender>
 ```
 
-Note that the filters get called by the order thet appear in the config (as shown in the example).
+Note that the filters got called by the order they appeared in the config (as shown in the example).
 
 ### License:
 [MIT License](https://github.com/jptoto/log4net.ElasticSearch/blob/master/LICENSE)
@@ -90,7 +90,7 @@ Note that the filters get called by the order thet appear in the config (as show
 ### Thanks:
 Many thanks to [@mpdreamz](https://github.com/Mpdreamz) and the team for their great work on the NEST library!
 Thanks to [@gluck](https://github.com/gluck) for the package [il-repack](https://github.com/gluck/il-repack).
-The inspiration to the filters and style had taken from [logstash](https://github.com/elasticsearch/logstash) project.
+The inspiration to the filters and style had taken from [elasticsearch/logstash](https://github.com/elasticsearch/logstash) project.
 
 ### Build status:
 
