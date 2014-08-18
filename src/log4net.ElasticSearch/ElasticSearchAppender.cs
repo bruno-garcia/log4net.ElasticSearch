@@ -133,7 +133,6 @@ namespace log4net.ElasticSearch
         /// <param name="loggingEvent"></param>
         private void PrepareAndAddToBulk(JObject logEvent, LoggingEvent loggingEvent)
         {
-            var timeStampTicks = loggingEvent.TimeStamp.Ticks;
             ElasticFilters.PrepareEvent(logEvent, _client);
 
             var indexName = _indexName.Format(logEvent).ToLower();
@@ -144,7 +143,6 @@ namespace log4net.ElasticSearch
                 descriptor.Document(logEvent);
                 descriptor.Index(indexName);
                 descriptor.Type(indexType);
-                descriptor.Timestamp(timeStampTicks);
                 return descriptor;
             });
         }
