@@ -50,17 +50,24 @@ You can also set any public property in the appender/filter which didn't appear 
           <Key>@type</Key>
           <Value>Special</Value>
         </Add>
+
+        <!-- using the @type value from the previous filter -->
         <Add>
           <Key>SmartValue</Key>
           <Value>the type is %{@type}</Value>
         </Add>
+
         <Remove>
           <Key>@type</Key>
         </Remove>
+
+        <!-- you can load custom filters like I do here -->
         <Filter type="log4net.ElasticSearch.Filters.RenameKeyFilter, log4net.ElasticSearch">
           <Key>SmartValue</Key>
           <RenameTo>SmartValue2</RenameTo>
         </Filter>
+
+        <!-- kv and grok filters similar to logstash's filters -->
         <Kv>
         	<SourceKey>Message</SourceKey>
         	<ValueSplit>:=</ValueSplit>
@@ -75,12 +82,15 @@ You can also set any public property in the appender/filter which didn't appear 
     </appender>
 ```
 
+Note that the filters get called by the order thet appear in the config (as shown in the example).
+
 ### License:
 [MIT License](https://github.com/jptoto/log4net.ElasticSearch/blob/master/LICENSE)
 
 ### Thanks:
 Many thanks to [@mpdreamz](https://github.com/Mpdreamz) and the team for their great work on the NEST library!
-Thanks to [@gluck](https://github.com/gluck) for the package [il-repack](https://github.com/gluck/il-repack)
+Thanks to [@gluck](https://github.com/gluck) for the package [il-repack](https://github.com/gluck/il-repack).
+The inspiration to the filters and style had taken from [logstash](https://github.com/elasticsearch/logstash) project.
 
 ### Build status:
 
