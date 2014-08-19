@@ -227,23 +227,48 @@ namespace log4net.ElasticSearch.Tests
             Assert.AreEqual("33", doc["anotherIds"].Values<string>().First());
         }
 
+
         [Test]
-        public void test_ttl()
+        [TestCase("1s", 0, TestName = "ttl elapsed")]
+        [TestCase("20m", 1, TestName = "ttl didn't elapsed")]
+        public void test_ttl(string ttlValue, int expectation)
         {
             Client.PutTemplate("ttltemplate",
                 descriptor =>
-                    descriptor.Template("*").Settings(settings => settings.Add("indices.ttl.interval", "1s").Add("indices.ttl.bulk_size", "1"))
-                        .AddMapping<dynamic>(mapping => mapping.Type("_default_").TtlField(ttl => ttl.Enable().Default("1ms"))));
+                    descriptor.Template("*")
+                        .Settings(settings => settings.Add("indices.ttl.interval", "1s").Add("index.ttl.interval", "1s"))
+                        .AddMapping<dynamic>(mapping => mapping.Type("_default_").TtlField(ttlField => ttlField.Enable().Default("1d"))));
+
+            ElasticAppenderFilters oldFilters = null;
+            QueryConfiguration(
+                appender =>
+                {
+                    oldFilters = appender.ElasticFilters;
+                    appender.ElasticFilters = new ElasticAppenderFilters();
+                    appender.ElasticFilters.AddFilter(new AddValueFilter() { Key = "_ttl", Value = ttlValue });
+                });
 
             _log.Info("test");
-            Thread.Sleep(2000);
             Client.Refresh();
-            Client.Optimize();
-
             var res = Client.Search<dynamic>(s => s.AllTypes().AllIndices());
-            Client.DeleteTemplate("ttltemplate");
+            Assert.AreEqual(1, res.Total);
 
-            Assert.AreEqual(0, res.Total);
+            // Magic. The time of deletion isn't consistent :/
+            int numOfTries = 20;
+            while (--numOfTries > 0)
+            {
+                Thread.Sleep(3000);
+                Client.Refresh();
+                Client.Optimize();
+                res = Client.Search<dynamic>(s => s.AllTypes().AllIndices());
+                numOfTries = res.Total == expectation ? 0 : numOfTries ;
+            }
+
+            res = Client.Search<dynamic>(s => s.AllTypes().AllIndices());
+            Client.DeleteTemplate("ttltemplate");
+            QueryConfiguration(appender => appender.ElasticFilters = oldFilters);
+
+            Assert.AreEqual(expectation, res.Total);
         }
 
         [Test]

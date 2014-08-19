@@ -22,14 +22,14 @@
         "LogEvent" : {
 			"_timestamp" : {
 				"enabled" : true,
-				"path" : "TimeStamp"
+				"path" : "@timestamp"
 			},
 			"properties" : {
 				"Message" : {
 					"type":"string",
 					"index": "analyzed"
 				},
-				"TimeStamp" : {
+				"@timestamp" : {
 					"type":"date"
 				}
 			}

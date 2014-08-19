@@ -173,7 +173,7 @@ namespace log4net.ElasticSearch
             var logEvent = new JObject();
 
             //logEvent["Id"] = UniqueIdGenerator.Instance.GenerateUniqueId();
-            logEvent["TimeStamp"] = loggingEvent.TimeStamp;
+            logEvent["@timestamp"] = loggingEvent.TimeStamp.ToUniversalTime().ToString("O");
             logEvent["LoggerName"] = loggingEvent.LoggerName;
             logEvent["ThreadName"] = loggingEvent.ThreadName;
 
