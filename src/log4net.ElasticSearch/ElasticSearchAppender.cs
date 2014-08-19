@@ -33,7 +33,7 @@ namespace log4net.ElasticSearch
             var logEvent = CreateLogEvent(loggingEvent);
             try
             {
-                client.IndexAsync(logEvent, settings.DefaultIndex, "LogEvent");
+                client.IndexAsync(logEvent);
             }
             catch (InvalidOperationException ex)
             {
@@ -41,13 +41,14 @@ namespace log4net.ElasticSearch
             }
         }
 
-        private static dynamic CreateLogEvent(LoggingEvent loggingEvent)
+        private static LogEvent CreateLogEvent(LoggingEvent loggingEvent)
         {
             if (loggingEvent == null)
             {
                 throw new ArgumentNullException("loggingEvent");
             }
-            dynamic logEvent = new ExpandoObject();
+
+            var logEvent = new LogEvent();
             logEvent.Id = new UniqueIdGenerator().GenerateUniqueId();
             logEvent.LoggerName = loggingEvent.LoggerName;
             logEvent.Domain = loggingEvent.Domain;
@@ -76,10 +77,10 @@ namespace log4net.ElasticSearch
             }
 
             var properties = loggingEvent.GetProperties();
-            var expandoDict = logEvent as IDictionary<string, Object>;
+           
             foreach (var propertyKey in properties.GetKeys())
             {
-                expandoDict.Add(propertyKey, properties[propertyKey].ToString());
+                logEvent.Properties.Add(propertyKey, properties[propertyKey].ToString());
             }
             return logEvent;
         }

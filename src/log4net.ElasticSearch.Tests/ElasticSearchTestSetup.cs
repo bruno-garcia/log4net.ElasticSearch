@@ -18,12 +18,12 @@ namespace log4net.ElasticSearch.Tests
             
             client = new ElasticClient(elasticSettings);
 
-            client.DeleteIndex(testIndex);
+            client.DeleteIndex(new DeleteIndexRequest(testIndex));
         }
 
         public void DeleteTestIndex()
         {
-            client.DeleteIndex(testIndex);
+            client.DeleteIndex(new DeleteIndexRequest(testIndex));
         }
     }
 }
