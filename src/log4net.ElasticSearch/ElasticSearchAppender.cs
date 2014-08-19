@@ -55,7 +55,7 @@ namespace log4net.ElasticSearch
             logEvent.ThreadName = loggingEvent.ThreadName;
             logEvent.UserName = loggingEvent.UserName;
             logEvent.MessageObject = loggingEvent.MessageObject == null ? "" : loggingEvent.MessageObject.ToString();
-            logEvent.TimeStamp = loggingEvent.TimeStamp;
+            ((IDictionary<string, object>) logEvent).Add("@timestamp", loggingEvent.TimeStamp.ToUniversalTime().ToString("O"));
             logEvent.Exception = loggingEvent.ExceptionObject == null ? "" : loggingEvent.ExceptionObject.ToString();
             logEvent.Message = loggingEvent.RenderedMessage;
             logEvent.Fix = loggingEvent.Fix.ToString();
