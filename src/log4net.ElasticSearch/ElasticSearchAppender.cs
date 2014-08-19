@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Dynamic;
 using log4net.ElasticSearch.Models;
-using Nest;
 using log4net.Appender;
 using log4net.Core;
 
@@ -10,9 +7,6 @@ namespace log4net.ElasticSearch
 {
     public class ElasticSearchAppender : AppenderSkeleton
     {
-        //private readonly ConnectionSettings elasticSettings;
-        private  ElasticClient client;
-
         public string ConnectionString { get; set; }
 
         /// <summary>
@@ -29,11 +23,12 @@ namespace log4net.ElasticSearch
                 return;
             }
             var settings = ConnectionBuilder.BuildElsticSearchConnection(ConnectionString);
-            client = new ElasticClient(settings);
+            var client = new LogClient(settings);
+
             var logEvent = CreateLogEvent(loggingEvent);
             try
             {
-                client.IndexAsync(logEvent);
+                client.CreateEvent(logEvent);
             }
             catch (InvalidOperationException ex)
             {
@@ -82,6 +77,7 @@ namespace log4net.ElasticSearch
             {
                 logEvent.Properties.Add(propertyKey, properties[propertyKey].ToString());
             }
+
             return logEvent;
         }
     }

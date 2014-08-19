@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
-using log4net.ElasticSearch.Models;
 using Xunit;
 
 namespace log4net.ElasticSearch.Tests

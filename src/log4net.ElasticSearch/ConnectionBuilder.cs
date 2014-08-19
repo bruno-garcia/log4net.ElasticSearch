@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Specialized;
-using Nest;
+using log4net.ElasticSearch.Models;
 
 namespace log4net.ElasticSearch
 {
     /// <summary>
     /// Class to support passing in traditional style connection strings and then parsing
-    /// them into ElasticSearch components. We create a NEST ElasticSearch connection object and pass
-    /// it back to the calling function.
+    /// them into ElasticSearch components. We create a generic connection string to use for 
+    /// basic http request
     /// </summary>
     public class ConnectionBuilder
     {
-        public static ConnectionSettings BuildElsticSearchConnection(string connectionString)
+        public static ElasticsearchConnection BuildElsticSearchConnection(string connectionString)
         {
             try
             {
@@ -32,8 +32,12 @@ namespace log4net.ElasticSearch
                         index = string.Format("{0}-{1}", index, DateTime.Now.ToString("yyyy-MM-dd"));
 
                 return
-                    new ConnectionSettings(new Uri(string.Format("http://{0}:{1}", lookup["Server"], 
-                        Convert.ToInt32(lookup["Port"])))).SetDefaultIndex(index);
+                    new ElasticsearchConnection
+                    {
+                        Server = lookup["Server"],
+                        Port = lookup["Port"],
+                        Index = index
+                    };
             }
             catch
             {

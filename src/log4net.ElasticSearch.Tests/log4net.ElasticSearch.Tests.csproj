@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="ElasticSearchAppenderTests.cs" />
     <Compile Include="ElasticSearchTestSetup.cs" />
+    <Compile Include="LogEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
