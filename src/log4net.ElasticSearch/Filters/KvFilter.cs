@@ -45,8 +45,6 @@ namespace log4net.ElasticSearch.Filters
 
         public void PrepareConfiguration(ElasticClient client)
         {
-            ElasticAppenderFilters.ValidateFilterProperties(this);
-
             var valueRxString = "(?:\"([^\"]+)\"" +
                          "|'([^']+)'" +
                          "|\\(([^\\)]+)\\)" +

@@ -17,6 +17,7 @@ namespace log4net.ElasticSearch
         {
             foreach (var filter in _filters)
             {
+                ValidateFilterProperties(filter);
                 filter.PrepareConfiguration(client);
             }
         }
