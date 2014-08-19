@@ -1,85 +1,221 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Dynamic;
+using System.IO;
+using System.Threading;
+using Elasticsearch.Net;
+using log4net.ElasticSearch.InnerExceptions;
 using log4net.ElasticSearch.Models;
+using log4net.ElasticSearch.SmartFormatters;
+using log4net.Util;
 using Nest;
 using log4net.Appender;
 using log4net.Core;
+using Newtonsoft.Json.Linq;
 
 namespace log4net.ElasticSearch
 {
     public class ElasticSearchAppender : AppenderSkeleton
     {
-        //private readonly ConnectionSettings elasticSettings;
-        private  ElasticClient client;
+        private static readonly string MachineName = Environment.MachineName;
 
-        public string ConnectionString { get; set; }
+        private ElasticClient _client;
+        private LogEventSmartFormatter _indexName;
+        private LogEventSmartFormatter _indexType;
+
+        private BulkProxy _bulk;
+        private readonly Timer _timer;
+
+        public FixFlags FixedFields { get; set; }
+
+        public int BulkSize { get; set; }
+        public int BulkIdleTimeout { get; set; }
+        public int TimeoutToWaitForTimer { get; set; }
+
+        // elastic configuration
+        public string Server { get; set; }
+        public string Port { get; set; }
+        public bool IndexAsync { get; set; }
+        public int MaxAsyncConnections { get; set; }
+        public TemplateInfo Template { get; set; }
+        public ElasticAppenderFilters ElasticFilters { get; set; }
+
+        public string IndexName
+        {
+            set { _indexName = value; }
+        }
+
+        public string IndexType
+        {
+            set { _indexType = value; }
+        }
+
+        public ElasticSearchAppender()
+        {
+            FixedFields = FixFlags.Partial;
+
+            BulkSize = 2000;
+            BulkIdleTimeout = 5000;
+            TimeoutToWaitForTimer = 5000;
+            _bulk = new BulkProxy();
+            _timer = new Timer(TimerElapsed, "timer", -1, -1);
+
+            Server = "localhost";
+            Port = "9200";
+            IndexName = "LogEvent-%{+yyyy-MM-dd}";
+            IndexType = "LogEvent";
+            IndexAsync = true;
+            MaxAsyncConnections = 10;
+            Template = null;
+
+            ElasticFilters = new ElasticAppenderFilters();
+        }
+
+        public override void ActivateOptions()
+        {
+            var connectionSettings = new ConnectionSettings(new Uri(string.Format("http://{0}:{1}", Server, Port)));
+            connectionSettings.SetMaximumAsyncConnections(MaxAsyncConnections);
+            _client = new ElasticClient(connectionSettings);
+            
+            if (Template != null && Template.IsValid)
+            {
+                var res = _client.Raw.IndicesPutTemplateForAll(Template.Name, File.ReadAllText(Template.FileName));
+                if (!res.Success)
+                {
+                    throw new ErrorSettingTemplateException(res);
+                }
+            }
+
+            ElasticFilters.PrepareConfiguration(_client);
+
+            RestartTimer();
+        }
+
+        private void RestartTimer()
+        {
+            var timeout = TimeSpan.FromMilliseconds(BulkIdleTimeout);
+            _timer.Change(timeout, timeout);
+        }
+
+        /// <summary>
+        /// On case of error or when the appender is closed on configuration change.
+        /// </summary>
+        protected override void OnClose()
+        {
+            DoIndexNow();
+
+            // let the timer finish its job
+            WaitHandle notifyObj = new AutoResetEvent(false);
+            _timer.Dispose(notifyObj);
+            notifyObj.WaitOne(TimeoutToWaitForTimer);
+        }
 
         /// <summary>
         /// Add a log event to the ElasticSearch Repo
         /// </summary>
         /// <param name="loggingEvent"></param>
-        protected override void Append(Core.LoggingEvent loggingEvent)
+        protected override void Append(LoggingEvent loggingEvent)
         {
-            if (string.IsNullOrEmpty(ConnectionString))
+            if (_client == null || loggingEvent == null)
             {
-                var exception = new InvalidOperationException("Connection string not present.");
-                ErrorHandler.Error("Connection string not included in appender.", exception, ErrorCode.GenericFailure);
-
                 return;
             }
-            var settings = ConnectionBuilder.BuildElsticSearchConnection(ConnectionString);
-            client = new ElasticClient(settings);
+
             var logEvent = CreateLogEvent(loggingEvent);
-            try
+            PrepareAndAddToBulk(logEvent, loggingEvent);
+
+            if (_bulk.Size >= BulkSize && BulkSize > 0)
             {
-                client.IndexAsync(logEvent, settings.DefaultIndex, "LogEvent");
-            }
-            catch (InvalidOperationException ex)
-            {
-                ErrorHandler.Error("Invalid connection to ElasticSearch", ex, ErrorCode.GenericFailure);
+                DoIndexNow();
             }
         }
 
-        private static dynamic CreateLogEvent(LoggingEvent loggingEvent)
+        /// <summary>
+        /// Prepare the event and add it to the BulkDescriptor.
+        /// </summary>
+        /// <param name="logEvent"></param>
+        /// <param name="loggingEvent"></param>
+        private void PrepareAndAddToBulk(JObject logEvent, LoggingEvent loggingEvent)
+        {
+            ElasticFilters.PrepareEvent(logEvent, _client);
+
+            var indexName = _indexName.Format(logEvent).ToLower();
+            var indexType = _indexType.Format(logEvent);
+
+            _bulk.AddIndexOperation<JObject>(logEvent, indexName, indexType);
+        }
+
+        public void TimerElapsed(object state)
+        {
+            DoIndexNow();
+        }
+
+        private void DoIndexNow()
+        { 
+            BulkProxy bulkToSend = _bulk;
+            _bulk = new BulkProxy();
+
+            try
+            {
+                bulkToSend.DoIndex(_client, IndexAsync);
+            }
+            catch (Exception ex)
+            {
+                LogLog.Error(GetType(), "Invalid connection to ElasticSearch", ex);
+            }
+        }
+
+        private JObject CreateLogEvent(LoggingEvent loggingEvent)
         {
             if (loggingEvent == null)
             {
                 throw new ArgumentNullException("loggingEvent");
             }
-            dynamic logEvent = new ExpandoObject();
-            logEvent.Id = new UniqueIdGenerator().GenerateUniqueId();
-            logEvent.LoggerName = loggingEvent.LoggerName;
-            logEvent.Domain = loggingEvent.Domain;
-            logEvent.Identity = loggingEvent.Identity;
-            logEvent.ThreadName = loggingEvent.ThreadName;
-            logEvent.UserName = loggingEvent.UserName;
-            logEvent.MessageObject = loggingEvent.MessageObject == null ? "" : loggingEvent.MessageObject.ToString();
-            logEvent.TimeStamp = loggingEvent.TimeStamp;
-            logEvent.Exception = loggingEvent.ExceptionObject == null ? "" : loggingEvent.ExceptionObject.ToString();
-            logEvent.Message = loggingEvent.RenderedMessage;
-            logEvent.Fix = loggingEvent.Fix.ToString();
-            logEvent.HostName = Environment.MachineName;
+
+            var logEvent = new JObject();
+
+            //logEvent["Id"] = UniqueIdGenerator.Instance.GenerateUniqueId();
+            logEvent["@timestamp"] = loggingEvent.TimeStamp.ToUniversalTime().ToString("O");
+            logEvent["LoggerName"] = loggingEvent.LoggerName;
+            logEvent["ThreadName"] = loggingEvent.ThreadName;
+
+            logEvent["Message"] = loggingEvent.MessageObject == null ? "" : loggingEvent.MessageObject.ToString();
+            logEvent["Exception"] = loggingEvent.ExceptionObject == null ? "" : loggingEvent.ExceptionObject.ToString();
+            //logEvent["Message"] = loggingEvent.RenderedMessage;
+            //logEvent["Fix"] = loggingEvent.Fix.ToString(); // We need this?
+            logEvent["AppDomain"] = loggingEvent.Domain;
+            logEvent["HostName"] = MachineName;
 
             if (loggingEvent.Level != null)
             {
-                logEvent.Level = loggingEvent.Level.DisplayName;
+                logEvent["Level"] = loggingEvent.Level.DisplayName;
             }
 
-            if (loggingEvent.LocationInformation != null)
+            if (FixedFields.HasFlag(FixFlags.Identity))
             {
-                logEvent.ClassName = loggingEvent.LocationInformation.ClassName;
-                logEvent.FileName = loggingEvent.LocationInformation.FileName;
-                logEvent.LineNumber = loggingEvent.LocationInformation.LineNumber;
-                logEvent.FullInfo = loggingEvent.LocationInformation.FullInfo;
-                logEvent.MethodName = loggingEvent.LocationInformation.MethodName;
+                logEvent["Identity"] = loggingEvent.Identity;
             }
 
-            var properties = loggingEvent.GetProperties();
-            var expandoDict = logEvent as IDictionary<string, Object>;
-            foreach (var propertyKey in properties.GetKeys())
+            if (FixedFields.HasFlag(FixFlags.UserName))
             {
-                expandoDict.Add(propertyKey, properties[propertyKey].ToString());
+                logEvent["UserName"] = loggingEvent.UserName;
+            }
+
+            if (FixedFields.HasFlag(FixFlags.LocationInfo) && loggingEvent.LocationInformation != null)
+            {
+                var locationInfo = logEvent["LocationInformation"] = new JObject();
+                locationInfo["ClassName"] = loggingEvent.LocationInformation.ClassName;
+                locationInfo["FileName"] = loggingEvent.LocationInformation.FileName;
+                locationInfo["LineNumber"] = loggingEvent.LocationInformation.LineNumber;
+                locationInfo["FullInfo"] = loggingEvent.LocationInformation.FullInfo;
+                locationInfo["MethodName"] = loggingEvent.LocationInformation.MethodName;
+            }
+
+            if (FixedFields.HasFlag(FixFlags.Properties))
+            {
+                var properties = loggingEvent.GetProperties();
+                foreach (var propertyKey in properties.GetKeys())
+                {
+                    logEvent.Add(propertyKey, properties[propertyKey].ToString());
+                }
             }
             return logEvent;
         }

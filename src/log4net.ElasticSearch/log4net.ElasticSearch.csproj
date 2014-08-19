@@ -12,6 +12,8 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,15 +35,20 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Elasticsearch.Net">
+      <HintPath>..\packages\Elasticsearch.Net.1.0.1\lib\Elasticsearch.Net.dll</HintPath>
+    </Reference>
     <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Nest">
-      <HintPath>..\packages\NEST.0.12.0.0\lib\NET4\Nest.dll</HintPath>
+    <Reference Include="Nest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NEST.1.0.1\lib\Nest.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -52,17 +59,36 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BulkProxy.cs" />
+    <Compile Include="Filters\AddValueFilter.cs" />
     <Compile Include="AssemblyVersionInfo.cs" />
-    <Compile Include="ConnectionBuilder.cs" />
     <Compile Include="ElasticSearchAppender.cs" />
+    <Compile Include="ElasticAppenderFilters.cs" />
+    <Compile Include="Filters\ConvertToArrayFilter.cs" />
+    <Compile Include="Filters\GrokFilter.cs" />
+    <Compile Include="Filters\KvFilter.cs" />
+    <Compile Include="IElasticAppenderFilter.cs" />
+    <Compile Include="InnerExceptions\ErrorSettingTemplateException.cs" />
+    <Compile Include="InnerExceptions\InvalidFilterConfigurationException.cs" />
+    <Compile Include="SmartFormatters\GrokSmartFormatter.cs" />
+    <Compile Include="SmartFormatters\LogEventSmartFormatter.cs" />
+    <Compile Include="SmartFormatters\SmartFormatter.cs" />
+    <Compile Include="Models\LoggingEventExtensions.cs" />
     <Compile Include="Models\UniqueIdGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Filters\RemoveKeyFilter.cs" />
+    <Compile Include="Filters\RenameKeyFilter.cs" />
+    <Compile Include="TemplateInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

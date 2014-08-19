@@ -1,0 +1,38 @@
+﻿{
+    "template" : "log_test_*",
+    "settings" : {
+        "number_of_shards" : 1
+    },
+    "mappings" : {
+		"_default_" : {
+            "_source" : { "enabled" : true },
+			"dynamic_templates" : [
+            {
+                "dtemplate_1" : {
+                    "match" : "*",
+					"match_mapping_type" : "string",
+                    "mapping" : {
+                        "type" : "string",
+                        "index" : "not_analyzed"
+                    }
+                }
+            } ]
+		},
+
+        "LogEvent" : {
+			"_timestamp" : {
+				"enabled" : true,
+				"path" : "@timestamp"
+			},
+			"properties" : {
+				"Message" : {
+					"type":"string",
+					"index": "analyzed"
+				},
+				"@timestamp" : {
+					"type":"date"
+				}
+			}
+        }
+    }
+}
