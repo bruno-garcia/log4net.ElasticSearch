@@ -17,6 +17,6 @@ I do my best to reply to issues or questions ASAP. Please use the [ISSUES](https
 [MIT License](https://github.com/jptoto/log4net.ElasticSearch/blob/master/LICENSE)
 
 ### Thanks:
-[@mpdreamz](https://github.com/Mpdreamz) and the team for their great work on the NEST library!
-[@mastoj](https://github.com/mastoj)
-[@kjersti](https://github.com/kjersti)
+- [@mpdreamz](https://github.com/Mpdreamz) and the team for their great work on the NEST library!
+- [@mastoj](https://github.com/mastoj)
+- [@kjersti](https://github.com/kjersti)
