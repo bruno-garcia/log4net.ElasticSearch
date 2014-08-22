@@ -29,7 +29,7 @@ namespace log4net.ElasticSearch
                 // If the user asked for rolling logs, setup the index by day
                 if (!string.IsNullOrEmpty(lookup["rolling"]))
                     if (lookup["rolling"] == "true")
-                        index = string.Format("{0}-{1}", index, DateTime.Now.ToString("yyyy-MM-dd"));
+                        index = string.Format("{0}-{1}", index, DateTime.Now.ToString("yyyy.MM.dd"));
 
                 return
                     new ElasticsearchConnection

@@ -51,7 +51,7 @@ namespace log4net.ElasticSearch
             logEvent.ThreadName = loggingEvent.ThreadName;
             logEvent.UserName = loggingEvent.UserName;
             logEvent.MessageObject = loggingEvent.MessageObject == null ? "" : loggingEvent.MessageObject.ToString();
-            logEvent.TimeStamp = loggingEvent.TimeStamp;
+            logEvent.TimeStamp = loggingEvent.TimeStamp.ToUniversalTime().ToString("O");
             logEvent.Exception = loggingEvent.ExceptionObject == null ? "" : loggingEvent.ExceptionObject.ToString();
             logEvent.Message = loggingEvent.RenderedMessage;
             logEvent.Fix = loggingEvent.Fix.ToString();
@@ -77,6 +77,9 @@ namespace log4net.ElasticSearch
             {
                 logEvent.Properties.Add(propertyKey, properties[propertyKey].ToString());
             }
+
+            // Add a "@timestamp" field to match the logstash format
+            logEvent.Properties.Add("@timestamp", loggingEvent.TimeStamp.ToUniversalTime().ToString("O")); 
 
             return logEvent;
         }

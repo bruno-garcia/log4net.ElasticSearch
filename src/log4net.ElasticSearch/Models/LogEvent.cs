@@ -15,7 +15,7 @@ namespace log4net.ElasticSearch.Models
 
         public string Id { get; set; }
 
-        public DateTime TimeStamp { get; set; }
+        public string TimeStamp { get; set; }
   
         public string Message { get; set; }
     

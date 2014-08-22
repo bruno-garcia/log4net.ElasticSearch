@@ -2,7 +2,7 @@
 <package >
     <metadata>
         <id>log4net.ElasticSearch</id>
-        <version>1.2-beta</version>
+        <version>1.2.0-beta4</version>
         <authors>JP Toto</authors>
         <owners>JP Toto</owners>
         <iconUrl>http://nest.azurewebsites.net/images/nuget-icon.png</iconUrl>
@@ -26,5 +26,6 @@
         <file src="lib\**\log4net.ElasticSearch*.dll" target="lib"/>
         <file src="lib\**\log4net.ElasticSearch*.pdb" target="lib"/>
         <file src="lib\**\log4net.ElasticSearch*.XML" target="lib"/>
+        <file src="readme.txt" target="" />
     </files>
 </package>
