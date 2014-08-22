@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Dynamic;
 using log4net.ElasticSearch.Models;
-using Nest;
 using log4net.Appender;
 using log4net.Core;
 
@@ -10,9 +7,6 @@ namespace log4net.ElasticSearch
 {
     public class ElasticSearchAppender : AppenderSkeleton
     {
-        //private readonly ConnectionSettings elasticSettings;
-        private  ElasticClient client;
-
         public string ConnectionString { get; set; }
 
         /// <summary>
@@ -29,11 +23,12 @@ namespace log4net.ElasticSearch
                 return;
             }
             var settings = ConnectionBuilder.BuildElsticSearchConnection(ConnectionString);
-            client = new ElasticClient(settings);
+            var client = new LogClient(settings);
+
             var logEvent = CreateLogEvent(loggingEvent);
             try
             {
-                client.IndexAsync(logEvent, settings.DefaultIndex, "LogEvent");
+                client.CreateEvent(logEvent);
             }
             catch (InvalidOperationException ex)
             {
@@ -41,13 +36,14 @@ namespace log4net.ElasticSearch
             }
         }
 
-        private static dynamic CreateLogEvent(LoggingEvent loggingEvent)
+        private static LogEvent CreateLogEvent(LoggingEvent loggingEvent)
         {
             if (loggingEvent == null)
             {
                 throw new ArgumentNullException("loggingEvent");
             }
-            dynamic logEvent = new ExpandoObject();
+
+            var logEvent = new LogEvent();
             logEvent.Id = new UniqueIdGenerator().GenerateUniqueId();
             logEvent.LoggerName = loggingEvent.LoggerName;
             logEvent.Domain = loggingEvent.Domain;
@@ -55,7 +51,7 @@ namespace log4net.ElasticSearch
             logEvent.ThreadName = loggingEvent.ThreadName;
             logEvent.UserName = loggingEvent.UserName;
             logEvent.MessageObject = loggingEvent.MessageObject == null ? "" : loggingEvent.MessageObject.ToString();
-            logEvent.TimeStamp = loggingEvent.TimeStamp;
+            logEvent.TimeStamp = loggingEvent.TimeStamp.ToUniversalTime().ToString("O");
             logEvent.Exception = loggingEvent.ExceptionObject == null ? "" : loggingEvent.ExceptionObject.ToString();
             logEvent.Message = loggingEvent.RenderedMessage;
             logEvent.Fix = loggingEvent.Fix.ToString();
@@ -76,11 +72,15 @@ namespace log4net.ElasticSearch
             }
 
             var properties = loggingEvent.GetProperties();
-            var expandoDict = logEvent as IDictionary<string, Object>;
+           
             foreach (var propertyKey in properties.GetKeys())
             {
-                expandoDict.Add(propertyKey, properties[propertyKey].ToString());
+                logEvent.Properties.Add(propertyKey, properties[propertyKey].ToString());
             }
+
+            // Add a "@timestamp" field to match the logstash format
+            logEvent.Properties.Add("@timestamp", loggingEvent.TimeStamp.ToUniversalTime().ToString("O")); 
+
             return logEvent;
         }
     }

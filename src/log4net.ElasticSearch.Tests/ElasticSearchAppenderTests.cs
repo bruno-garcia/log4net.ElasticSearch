@@ -17,7 +17,7 @@ namespace log4net.ElasticSearch.Tests
         [Fact]
         public void Can_insert_record()
         {
-            var logEvent = new 
+            var logEvent = new LogEvent
                 {
                     ClassName = "IntegrationTestClass",
                     Domain = "TestDomain",
@@ -46,9 +46,9 @@ namespace log4net.ElasticSearch.Tests
 
             Thread.Sleep(1500);
 
-            var searchResults = client.Search(s => s.Query(q => q.Term("message", "loggingtest")));
+            var searchResults = client.Search<dynamic>(s => s.Query(q => q.Term("message", "loggingtest")));
 
-            Assert.Equal(1, Convert.ToInt32(searchResults.Hits.Total));
+            Assert.Equal(1, Convert.ToInt32(searchResults.Total));
             var firstEntry = searchResults.Documents.First();
             Assert.Equal("global", firstEntry.globalDynamicProperty.ToString());
             Assert.Equal("thread", firstEntry.threadDynamicProperty.ToString());
@@ -58,18 +58,14 @@ namespace log4net.ElasticSearch.Tests
         [Fact]
         public void Can_read_inserted_record()
         {
-            var logEvent = new 
-            {
-                ClassName = "IntegrationTestClass",
-                Exception = "ReadingTest"
-            };
+            var logEvent = new LogEvent {Message = "testmessage", ClassName = "thisclass"};
 
             client.Index(logEvent);
-            client.Refresh();
+            Thread.Sleep(2000);
 
-            var searchResults = client.Search(s => s.Query(q => q.Term("exception", "readingtest")));
+            var searchResults = client.Search<LogEvent>(s => s.Query(q => q.Term("ClassName", "thisclass")));
 
-            Assert.Equal(1, Convert.ToInt32(searchResults.Hits.Total));
+            Assert.Equal(1, Convert.ToInt32(searchResults.Total));
         }
 
         [Fact]
@@ -78,9 +74,9 @@ namespace log4net.ElasticSearch.Tests
             _log.Info("loggingtest");
             Thread.Sleep(2000);
 
-            var searchResults = client.Search(s => s.Query(q => q.Term("message", "loggingtest")));
+            var searchResults = client.Search<LogEvent>(s => s.Query(q => q.Term("Message", "loggingtest")));
 
-            Assert.Equal(1, Convert.ToInt32(searchResults.Hits.Total));
+            Assert.Equal(1, Convert.ToInt32(searchResults.Total));
             
         }
 

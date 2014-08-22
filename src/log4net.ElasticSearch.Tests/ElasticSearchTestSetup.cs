@@ -11,19 +11,19 @@ namespace log4net.ElasticSearch.Tests
 
         public ElasticSearchTestSetup()
         {
-            testIndex = string.Format("{0}-{1}", "log_test", DateTime.Now.ToString("yyyy-MM-dd"));
+            testIndex = string.Format("{0}-{1}", "log_test", DateTime.Now.ToString("yyyy.MM.dd"));
 
             elasticSettings = new ConnectionSettings(new Uri("http://127.0.0.1:9200"))
                 .SetDefaultIndex(testIndex);
             
             client = new ElasticClient(elasticSettings);
 
-            client.DeleteIndex(testIndex);
+            client.DeleteIndex(new DeleteIndexRequest(testIndex));
         }
 
         public void DeleteTestIndex()
         {
-            client.DeleteIndex(testIndex);
+            client.DeleteIndex(new DeleteIndexRequest(testIndex));
         }
     }
 }

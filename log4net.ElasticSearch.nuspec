@@ -2,7 +2,7 @@
 <package >
     <metadata>
         <id>log4net.ElasticSearch</id>
-        <version>1.1</version>
+        <version>1.2.0-beta4</version>
         <authors>JP Toto</authors>
         <owners>JP Toto</owners>
         <iconUrl>http://nest.azurewebsites.net/images/nuget-icon.png</iconUrl>
@@ -10,17 +10,15 @@
         <projectUrl>https://github.com/jptoto/log4net.ElasticSearch</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>log4net.Elasticsearch is a log4net adapter for easy logging of exceptions and messages to Elasticsearch indices.</description>
-        <releaseNotes>Added 'rolling' boolean to connection string. Adding 'rolling=true' will cause new log indexes to be created daily</releaseNotes>
+        <releaseNotes>Dropped dependencies on NEST, Elasticsearch.NET, Json.NET</releaseNotes>
         <copyright>Copyright 2014</copyright>
         <tags>log logging exception elasticsearch log4net</tags>
         <dependencies>
             <group targetFramework="net45">
                 <dependency id="log4net" version="2.0.3.0" />
-                <dependency id="NEST" version="0.12.0.0" />
             </group>
             <group targetFramework="net40">
                 <dependency id="log4net" version="2.0.3.0" />
-                <dependency id="NEST" version="0.12.0.0" />
             </group>
         </dependencies>
     </metadata>
@@ -28,5 +26,6 @@
         <file src="lib\**\log4net.ElasticSearch*.dll" target="lib"/>
         <file src="lib\**\log4net.ElasticSearch*.pdb" target="lib"/>
         <file src="lib\**\log4net.ElasticSearch*.XML" target="lib"/>
+        <file src="readme.txt" target="" />
     </files>
 </package>
