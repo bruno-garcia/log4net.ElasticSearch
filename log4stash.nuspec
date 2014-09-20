@@ -2,13 +2,13 @@
 <package >
     <metadata>
         <id>log4stash</id>
-        <version>0.0.1-pre</version>
+        <version>0.0.2-pre</version>
         <authors>urielha</authors>
         <owners>urielha</owners>
         <title>log4stash - Elasticsearch log4net appender</title>
         <iconUrl>http://logstash.net/images/logstash.png</iconUrl>
-        <licenseUrl>https://github.com/urielha/log4net.ElasticSearch/blob/master/LICENSE</licenseUrl>
-        <projectUrl>https://github.com/urielha/log4net.ElasticSearch</projectUrl>
+        <licenseUrl>https://github.com/urielha/log4stash/blob/master/LICENSE</licenseUrl>
+        <projectUrl>https://github.com/urielha/log4stash</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>log4stash is a log4net adapter for easy logging of exceptions and messages to Elasticsearch indices.</description>
         <!-- <releaseNotes>Added 'rolling' boolean to connection string. Adding 'rolling=true' will cause new log indexes to be created daily</releaseNotes> -->

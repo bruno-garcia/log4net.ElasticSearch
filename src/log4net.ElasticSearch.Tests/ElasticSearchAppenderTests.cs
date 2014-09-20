@@ -148,12 +148,12 @@ namespace log4net.ElasticSearch.Tests
         }
 
         [Test]
-        [TestCase(new[] { ",", " " }, new[] { ":", "=" }, "", TestName = "Regular1")]
-        [TestCase(new[] { ";", " " }, new[] { "~" }, "", TestName = "Regular2")]
-        [TestCase(new[] { ";" },      new[] { "~" }, "", TestName = "No whiteSpace on fieldSplit cause the 'another ' key", ExpectedException = typeof(Exception), ExpectedMessage = "spaces issue")]
-        [TestCase(new[] { "\\|"," "}, new[] {"\\>"}, "", TestName = "Regex chars need to be escaped with backslash")]
-        [TestCase(new[] { ";" },      new[] { "~" }, " ", TestName = "No whiteSpace but with trimming fix the 'another' key")]
-        [TestCase(new[] { "\n" },     new[] { ":" }, " ", TestName = "NewLine")]
+        [TestCase(new[] { ",", " " }, new[] { ":", "=" }, "", TestName = "Can_read_KvFilter_properties: Regular1")]
+        [TestCase(new[] { ";", " " }, new[] { "~" }, "", TestName = "Can_read_KvFilter_properties: Regular2")]
+        [TestCase(new[] { ";" }, new[] { "~" }, "", TestName = "Can_read_KvFilter_properties: No whiteSpace on fieldSplit cause the 'another ' key", ExpectedException = typeof(Exception), ExpectedMessage = "spaces issue")]
+        [TestCase(new[] { "\\|", " " }, new[] { "\\>" }, "", TestName = "Can_read_KvFilter_properties: Regex chars need to be escaped with backslash")]
+        [TestCase(new[] { ";" }, new[] { "~" }, " ", TestName = "Can_read_KvFilter_properties: No whiteSpace but with trimming fix the 'another' key")]
+        [TestCase(new[] { "\n" }, new[] { ":" }, " ", TestName = "Can_read_KvFilter_properties: NewLine")]
         public void Can_read_KvFilter_properties(string[] fieldSplit, string[] valueSplit, string trim)
         {
             ElasticAppenderFilters oldFilters = null;

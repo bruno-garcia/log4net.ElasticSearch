@@ -10,6 +10,6 @@ runTest(){
    fi
 }
 
-runTest log4net.ElasticSearch.Tests/bin/Debug/log4net.ElasticSearch.Tests.dll -exclude=Performance
+runTest log4net.ElasticSearch.Tests/bin/Debug/log4stash.Tests.dll -exclude=Performance
 
 exit $?

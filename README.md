@@ -117,10 +117,10 @@ The inspiration to the filters and style had taken from [elasticsearch/logstash]
 | [![Build status][TravisImg]][TravisLink] | Mono CI provided by [travis-ci][] |
 | [![Build Status][AppVeyorImg]][AppVeyorLink] | Windows CI provided by [AppVeyor][] (without tests for now) |
 
-[TravisImg]:https://travis-ci.org/urielha/log4net.ElasticSearch.svg?branch=master
-[TravisLink]:https://travis-ci.org/urielha/log4net.ElasticSearch
-[AppVeyorImg]:https://ci.appveyor.com/api/projects/status/a1nc4olvjw42728s
-[AppVeyorLink]:https://ci.appveyor.com/project/urielha/log4net-elasticsearch
+[TravisImg]:https://travis-ci.org/urielha/log4stash.svg?branch=Dev
+[TravisLink]:https://travis-ci.org/urielha/log4stash
+[AppVeyorImg]:https://ci.appveyor.com/api/projects/status/byp4s7vl8cuhyae0
+[AppVeyorLink]:https://ci.appveyor.com/project/urielha/log4stash
 
 [travis-ci]:https://travis-ci.org/
 [AppVeyor]:http://www.appveyor.com/
