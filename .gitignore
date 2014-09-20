@@ -86,6 +86,7 @@ csx
 AppPackages/
 
 # Others
+[Bb]in_pack/
 [Bb]in
 [Oo]bj
 sql
@@ -109,6 +110,5 @@ UpgradeLog*.XML
 #src/packages/
 
 # Exceptions
-!tools/xunit/*
 #!src/packages/repositories.config
 

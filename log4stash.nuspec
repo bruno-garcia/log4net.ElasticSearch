@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<package >
+    <metadata>
+        <id>log4stash</id>
+        <version>0.0.1-pre</version>
+        <authors>urielha</authors>
+        <owners>urielha</owners>
+        <title>log4stash - Elasticsearch log4net appender</title>
+        <iconUrl>http://logstash.net/images/logstash.png</iconUrl>
+        <licenseUrl>https://github.com/urielha/log4net.ElasticSearch/blob/master/LICENSE</licenseUrl>
+        <projectUrl>https://github.com/urielha/log4net.ElasticSearch</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>log4stash is a log4net adapter for easy logging of exceptions and messages to Elasticsearch indices.</description>
+        <!-- <releaseNotes>Added 'rolling' boolean to connection string. Adding 'rolling=true' will cause new log indexes to be created daily</releaseNotes> -->
+        <copyright>Copyright 2014</copyright>
+        <tags>log logging exception elasticsearch log4net appender logstash</tags>
+        <dependencies>
+            <group targetFramework="net45">
+                <dependency id="log4net" version="2.0.3.0" />
+            </group>
+            <group targetFramework="net40">
+                <dependency id="log4net" version="2.0.3.0" />
+            </group>
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="lib\**\log4stash*.dll" target="lib"/>
+        <file src="lib\**\log4stash*.pdb" target="lib"/>
+    </files>
+</package>

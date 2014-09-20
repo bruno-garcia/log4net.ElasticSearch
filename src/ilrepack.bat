@@ -9,7 +9,7 @@ mkdir "%targetDir%"
 mkdir "%targetDir%net40"
 mkdir "%targetDir%net45"
 
-"%ILRepackExe%" "%sourceDir%net40\log4net.ElasticSearch.dll" "%sourceDir%net40\Elasticsearch.Net.dll" "%sourceDir%net40\Nest.dll" "%sourceDir%net40\Newtonsoft.Json.dll" /internalize /out:"%targetDir%net40\log4net.ElasticSearch.dll"
+"%ILRepackExe%" "%sourceDir%net40\log4stash.dll" "%sourceDir%net40\Elasticsearch.Net.dll" "%sourceDir%net40\Nest.dll" "%sourceDir%net40\Newtonsoft.Json.dll" /internalize /out:"%targetDir%net40\log4stash.dll"
 
-"%ILRepackExe%" "%sourceDir%net45\log4net.ElasticSearch.dll" "%sourceDir%net45\Elasticsearch.Net.dll" "%sourceDir%net45\Nest.dll" "%sourceDir%net45\Newtonsoft.Json.dll" /internalize /out:"%targetDir%net45\log4net.ElasticSearch.dll"
+"%ILRepackExe%" "%sourceDir%net45\log4stash.dll" "%sourceDir%net45\Elasticsearch.Net.dll" "%sourceDir%net45\Nest.dll" "%sourceDir%net45\Newtonsoft.Json.dll" /internalize /out:"%targetDir%net45\log4stash.dll"
 echo on

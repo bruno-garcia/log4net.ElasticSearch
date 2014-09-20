@@ -7,10 +7,10 @@
     <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.0"/>
   </startup>
   <log4net>
-    <appender name="ElasticSearchAppender" type="log4net.ElasticSearch.ElasticSearchAppender, log4net.ElasticSearch">
+    <appender name="ElasticSearchAppender" type="log4net.ElasticSearch.ElasticSearchAppender, log4stash">
       <Server>localhost</Server>
       <Port>9200</Port>
-      <IndexName>log_test_%{+yyyy-MM-dd}</IndexName>
+      <IndexName>log_test_%{+yyyy.MM.dd}</IndexName>
       <IndexType>LogEvent</IndexType>
       <Bulksize>1</Bulksize>
       <BulkIdleTimeout>-1</BulkIdleTimeout>
@@ -32,7 +32,7 @@
         <Remove>
           <Key>@type</Key>
         </Remove>
-        <Filter type="log4net.ElasticSearch.Filters.RenameKeyFilter, log4net.ElasticSearch">
+        <Filter type="log4net.ElasticSearch.Filters.RenameKeyFilter, log4stash">
           <Key>SmartValue</Key>
           <RenameTo>SmartValue2</RenameTo>
         </Filter>

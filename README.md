@@ -1,7 +1,10 @@
-log4net.ElasticSearch
+log4stash
 =====================
 
-log4net.ElasticSearch is a module for the [log4net](http://logging.apache.org/log4net/) library to log messages to the [ElasticSearch](http://www.elasticsearch.org) document database. ElasticSearch offers robust full-text search engine and analyzation so that errors and messages can be indexed quickly and searched easily.
+log4stash is a [log4net](http://logging.apache.org/log4net/) appender to log messages to the [ElasticSearch](http://www.elasticsearch.org) document database. ElasticSearch offers robust full-text search engine and analyzation so that errors and messages can be indexed quickly and searched easily.
+log4stash provide few logging filters taken from [logstash](http://logstash.net).
+
+The origin of log4stash is [@jptoto](https://github.com/jptoto)'s [log4net.ElasticSearch](https://github.com/jptoto/log4net.ElasticSearch) repository.
 
 ### Features:
 * Supports .NET 4.0+
@@ -19,18 +22,32 @@ log4net.ElasticSearch is a module for the [log4net](http://logging.apache.org/lo
 #### Custom filter:
 To add your own filters you just need to implement the interface IElasticAppenderFilter on your assembly and configure it on the log4net configuration file.
 
-### Usage:
-Please see the [DOCUMENTATION](https://github.com/jptoto/log4net.ElasticSearch/wiki/0-Documentation) Wiki page to begin logging errors to ElasticSearch!
+<!-- ### Usage:
+Please see the [DOCUMENTATION](https://github.com/urielha/log4net.ElasticSearch/wiki/0-Documentation) Wiki page to begin logging errors to ElasticSearch! -->
 
 ### Issues:
-I do my best to reply to issues or questions ASAP. Please use the [ISSUES](https://github.com/jptoto/log4net.ElasticSearch/issues) page to submit questions or errors.
+I do my best to reply to issues or questions ASAP. Please use the [ISSUES](https://github.com/urielha/log4net.ElasticSearch/issues) page to submit questions or errors.
 
-### Configuration Example:
+### Configuration Examples:
+
+#### Simple configuration:
+```xml
+<appender name="ElasticSearchAppender" type="log4net.ElasticSearch.ElasticSearchAppender, log4stash">
+      <Server>localhost</Server>
+      <Port>9200</Port>
+      <IndexName>log_test_%{+yyyy.MM.dd}</IndexName>
+      <IndexType>LogEvent</IndexType>
+      <Bulksize>2000</Bulksize>
+      <BulkIdleTimeout>10000</BulkIdleTimeout>
+      <IndexAsync>False</IndexAsync>
+</appender>
+```
+
 Almost all the parameters are optional, to see the default values check c'tor of the appender and filters. 
 You can also set any public property in the appender/filter which didn't appear in the example.
 
 ```xml
-<appender name="ElasticSearchAppender" type="log4net.ElasticSearch.ElasticSearchAppender, log4net.ElasticSearch">
+<appender name="ElasticSearchAppender" type="log4net.ElasticSearch.ElasticSearchAppender, log4stash">
       <Server>localhost</Server>
       <Port>9200</Port>
       <IndexName>log_test_%{+yyyy-MM-dd}</IndexName>
@@ -62,7 +79,7 @@ You can also set any public property in the appender/filter which didn't appear 
         </Remove>
 
         <!-- you can load custom filters like I do here -->
-        <Filter type="log4net.ElasticSearch.Filters.RenameKeyFilter, log4net.ElasticSearch">
+        <Filter type="log4net.ElasticSearch.Filters.RenameKeyFilter, log4stash">
           <Key>SmartValue</Key>
           <RenameTo>SmartValue2</RenameTo>
         </Filter>
@@ -79,15 +96,16 @@ You can also set any public property in the appender/filter which didn't appear 
           <Overwrite>true</Overwrite>
         </Grok>
       </ElasticFilters>
-    </appender>
+</appender>
 ```
 
 Note that the filters got called by the order they appeared in the config (as shown in the example).
 
 ### License:
-[MIT License](https://github.com/jptoto/log4net.ElasticSearch/blob/master/LICENSE)
+[MIT License](https://github.com/urielha/log4net.ElasticSearch/blob/master/LICENSE)
 
 ### Thanks:
+Thanks to [@jptoto](https://github.com/jptoto) for the idea and the first elasticappender.
 Many thanks to [@mpdreamz](https://github.com/Mpdreamz) and the team for their great work on the NEST library!
 Thanks to [@gluck](https://github.com/gluck) for the package [il-repack](https://github.com/gluck/il-repack).
 The inspiration to the filters and style had taken from [elasticsearch/logstash](https://github.com/elasticsearch/logstash) project.
