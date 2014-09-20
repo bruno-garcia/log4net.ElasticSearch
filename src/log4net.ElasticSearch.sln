@@ -10,7 +10,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{462F257B-5EDE-4409-9982-AFA7B17BDFF8}"
 	ProjectSection(SolutionItems) = preProject
 		ilrepack.bat = ilrepack.bat
-		..\log4net.ElasticSearch.nuspec = ..\log4net.ElasticSearch.nuspec
+		..\log4stash.nuspec = ..\log4stash.nuspec
 		..\pack-nuget.bat = ..\pack-nuget.bat
 		.ci\RunTests.sh = .ci\RunTests.sh
 	EndProjectSection
