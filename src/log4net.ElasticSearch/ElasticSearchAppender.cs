@@ -60,7 +60,7 @@ namespace log4net.ElasticSearch
 
             Server = "localhost";
             Port = "9200";
-            IndexName = "LogEvent-%{+yyyy-MM-dd}";
+            IndexName = "LogEvent-%{+yyyy.MM.dd}";
             IndexType = "LogEvent";
             IndexAsync = true;
             MaxAsyncConnections = 10;
