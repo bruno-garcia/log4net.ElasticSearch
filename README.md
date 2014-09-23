@@ -22,3 +22,14 @@ I do my best to reply to issues or questions ASAP. Please use the [ISSUES](https
 - [@mpdreamz](https://github.com/Mpdreamz) and the team for their great work on the NEST library!
 - [@mastoj](https://github.com/mastoj)
 - [@kjersti](https://github.com/kjersti)
+
+### How to build
+Use the psake.cmd file in the base directory for all build tasks.
+
+.\psake.cmd
+
+This will run the default task which compiles and runs the tests.
+
+.\psake.cmd package
+
+This task compiles the solution, runs the tests then creates a nuget package
