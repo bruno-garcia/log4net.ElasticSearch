@@ -1,13 +1,14 @@
 properties {
-    $base_dir   = (Get-Item (Resolve-Path .)).Parent.FullName
-    $bin_dir    = "$base_dir\bin"
-    $sln_path   = "$base_dir\src\log4net.ElasticSearch.sln"
-    $config     = "Release"
-    $tests_path = "$base_dir\src\log4net.ElasticSearch.Tests\bin\$config\log4net.ElasticSearch.Tests.dll"
-    $xunit_path = "$base_dir\src\packages\xunit.runners.1.9.2\tools\xunit.console.clr4.exe"
-    $dirs       = @($bin_dir)
-    $artefacts  = @("$base_dir\LICENSE", "$base_dir\readme.txt")
-    $nuget_path = "NuGet.exe"
+    $base_dir       = (Get-Item (Resolve-Path .)).Parent.FullName
+    $bin_dir        = "$base_dir\bin"
+    $sln_path       = "$base_dir\src\log4net.ElasticSearch.sln"
+    $config         = "Release"
+    $tests_path     = "$base_dir\src\log4net.ElasticSearch.Tests\bin\$config\log4net.ElasticSearch.Tests.dll"
+    $xunit_path     = "$base_dir\src\packages\xunit.runners.1.9.2\tools\xunit.console.clr4.exe"
+    $dirs           = @($bin_dir)
+    $artefacts      = @("$base_dir\LICENSE", "$base_dir\readme.txt")
+    $nuget_path     = "$base_dir\tools\nuget\NuGet.exe"
+    $nuspec_path    = "$base_dir\log4net.ElasticSearch.nuspec"
 }
 
 task default        -depends Clean, Compile, Test
@@ -35,7 +36,7 @@ task CopyArtefactsToBinDirectory {
 
 task CreateNugetPackage {
     exec {
-        & NuGet.exe pack log4net.ElasticSearch.nuspec -Basepath bin
+        & $nuget_path pack $nuspec_path -Basepath $bin_dir -OutputDirectory $bin_dir
     }
 }
 
