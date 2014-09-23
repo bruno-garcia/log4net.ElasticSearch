@@ -2,7 +2,8 @@ properties {
     $base_dir   = (Get-Item (Resolve-Path .)).Parent.FullName
     $bin_dir    = "$base_dir\bin"
     $sln_path   = "$base_dir\src\log4net.ElasticSearch.sln"
-    $tests_path = "$base_dir\src\log4net.ElasticSearch.Tests\bin\Debug\log4net.ElasticSearch.Tests.dll"
+    $config     = "Debug"
+    $tests_path = "$base_dir\src\log4net.ElasticSearch.Tests\bin\$config\log4net.ElasticSearch.Tests.dll"
     $xunit_path = "$base_dir\src\packages\xunit.runners.1.9.2\tools\xunit.console.clr4.exe"
     $dirs       = @($bin_dir)
 }
