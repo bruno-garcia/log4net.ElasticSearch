@@ -11,19 +11,7 @@ properties {
 task default        -depends Clean, Compile, Test
 
 task Clean {
-    $dirs | % {
-        $directory = $_
-
-        if (Test-Path $directory) {
-            Write-Host -NoNewline  "`tDeleting $directory"
-            Remove-Item $directory -Recurse -Force | out-null
-            Write-Host "...Done"
-        }
-
-        Write-Host -NoNewline  "`tCreating $directory"
-        New-Item $directory -Type Directory | out-null
-        Write-Host "...Done"
-    }
+    $dirs | % { Recreate-Directory $_ }
 }
 
 task Compile {
@@ -40,4 +28,17 @@ task Test {
 
 task ? -Description "Helper to display task info" {
     Write-Documentation
+}
+
+
+function Recreate-Directory($directory) {
+    if (Test-Path $directory) {
+        Write-Host -NoNewline  "`tDeleting $directory"
+        Remove-Item $directory -Recurse -Force | out-null
+        Write-Host "...Done"
+    }
+
+    Write-Host -NoNewline  "`tCreating $directory"
+    New-Item $directory -Type Directory | out-null
+    Write-Host "...Done"
 }
