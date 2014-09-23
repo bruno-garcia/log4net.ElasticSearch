@@ -28,7 +28,7 @@ task Clean {
 
 task Compile {
     exec {
-        msbuild $sln_path /t:Rebuild /v:Quiet /nologo
+        msbuild $sln_path /p:Configuration=$config /t:Rebuild /v:Quiet /nologo
     }
 }
 
