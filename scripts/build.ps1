@@ -2,7 +2,7 @@ properties {
     $base_dir   = (Get-Item (Resolve-Path .)).Parent.FullName
     $sln_path   = "$base_dir\src\log4net.ElasticSearch.sln"
     $tests_path = "$base_dir\src\log4net.ElasticSearch.Tests\bin\Debug\log4net.ElasticSearch.Tests.dll"
-    $xunit_path = "$base_dir\tools\xunit\xunit.console.clr4.exe"
+    $xunit_path = "$base_dir\src\packages\xunit.runners.1.9.2\tools\xunit.console.clr4.exe"
 }
 
 task default -depends Clean, Compile, Test
