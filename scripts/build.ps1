@@ -8,7 +8,7 @@ properties {
     $dirs           = @($bin_dir)
     $artefacts      = @("$base_dir\LICENSE", "$base_dir\readme.txt")
     $nuget_path     = "$base_dir\tools\nuget\NuGet.exe"
-    $nuspec_path    = "$base_dir\log4net.ElasticSearch.nuspec"
+    $nuspec_path    = "$base_dir\scripts\log4net.ElasticSearch.nuspec"
 }
 
 task default        -depends Clean, Compile, Test
