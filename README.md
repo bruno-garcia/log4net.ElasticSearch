@@ -3,7 +3,7 @@ log4stash
 
 log4stash is a [log4net](http://logging.apache.org/log4net/) appender to log messages to the [ElasticSearch](http://www.elasticsearch.org) document database. ElasticSearch offers robust full-text search engine and analyzation so that errors and messages can be indexed quickly and searched easily.
 
-log4stash provide few logging filters taken from [logstash](http://logstash.net).
+log4stash provide few logging filters similar to the filters on [logstash](http://logstash.net).
 
 The origin of log4stash is [@jptoto](https://github.com/jptoto)'s [log4net.ElasticSearch](https://github.com/jptoto/log4net.ElasticSearch) repository.
 
@@ -11,7 +11,7 @@ The origin of log4stash is [@jptoto](https://github.com/jptoto)'s [log4net.Elast
 * Supports .NET 4.0+
 * Easy installation and setup via [Nuget](https://nuget.org/packages/log4stash/)
 * Uses the excellent [NEST](https://github.com/Mpdreamz/NEST) library which has great support for the newest ElasticSearch revisions
-* Ability to analyze the log event before sending it to elasticsearch using built-in filters and custom filters like [logstash](http://logstash.net/docs/1.4.2/).
+* Ability to analyze the log event before sending it to elasticsearch using built-in filters and custom filters similar to [logstash](http://logstash.net/docs/1.4.2/).
 
 ### Filters:
 * **Add** - add new key and value to the event.
@@ -31,7 +31,7 @@ I do my best to reply to issues or questions ASAP. Please use the [ISSUES](https
 
 ### Configuration Examples:
 
-Almost all the parameters are optional, to see the default values check the (c'tor)[https://github.com/urielha/log4stash/blob/master/src/log4net.ElasticSearch/ElasticSearchAppender.cs#L51] of the appender and the c'tor of every filter. 
+Almost all the parameters are optional, to see the default values check the [c'tor](https://github.com/urielha/log4stash/blob/master/src/log4net.ElasticSearch/ElasticSearchAppender.cs#L51) of the appender and the c'tor of every filter. 
 You can also set any public property in the appender/filter which didn't appear in the example.
 
 ##### Simple configuration:

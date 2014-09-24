@@ -12,16 +12,13 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>
       log4stash is a log4net appender for easy logging of exceptions and messages to Elasticsearch indices.
-      You can configure few filters like logstash to analyze log events before they got sended to Elasticsearch.
+      You can configure few filters to analyze log events before they got sended to Elasticsearch similar to the filters on logstash.
     </description>
     <releaseNotes></releaseNotes>
     <copyright>Copyright 2014</copyright>
     <tags>log logging exception elasticsearch log4net appender logstash</tags>
     <dependencies>
-      <group targetFramework="net45">
-        <dependency id="log4net" version="2.0.3.0" />
-      </group>
-      <group targetFramework="net40">
+      <group>
         <dependency id="log4net" version="2.0.3.0" />
       </group>
     </dependencies>
