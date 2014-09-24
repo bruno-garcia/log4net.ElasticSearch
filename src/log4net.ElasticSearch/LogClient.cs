@@ -15,6 +15,7 @@ namespace log4net.ElasticSearch
 
         public LogClient(ElasticsearchConnection connection)
         {
+            ServicePointManager.Expect100Continue = false;
             httpWebRequest = (HttpWebRequest)WebRequest.Create(string.Format("http://{0}:{1}/{2}/LogEvent", 
                 connection.Server, connection.Port, connection.Index));
             
@@ -37,6 +38,7 @@ namespace log4net.ElasticSearch
                 streamWriter.Close();
 
                 var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                httpResponse.Close();
 
                 if (httpResponse.StatusCode != HttpStatusCode.Created)
                 {
