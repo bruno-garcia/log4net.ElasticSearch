@@ -1,7 +1,7 @@
 log4net.ElasticSearch
 =====================
 
-[![NuGet Status](http://img.shields.io/badge/nuget-1.2.1-green.svg)](https://www.nuget.org/packages/log4net.ElasticSearch/)
+[![NuGet Status](http://img.shields.io/badge/nuget-1.2-green.svg)](https://www.nuget.org/packages/log4net.ElasticSearch/)
 
 log4net.ElasticSearch is a module for the [log4net](http://logging.apache.org/log4net/) library to log messages to the [ElasticSearch](http://www.elasticsearch.org) document database. ElasticSearch offers robust full-text searchign an analyzation so that errors and messages can be indexed quickly and searched easily.
 
@@ -23,3 +23,14 @@ I do my best to reply to issues or questions ASAP. Please use the [ISSUES](https
 - [@mastoj](https://github.com/mastoj)
 - [@kjersti](https://github.com/kjersti)
 - [@hippasus](https://github.com/hippasus)
+
+### How to build
+Use the psake.cmd file in the base directory for all build tasks.
+
+.\psake.cmd
+
+This will run the default task which compiles and runs the tests.
+
+.\psake.cmd package
+
+This task compiles the solution, runs the tests then creates a nuget package
