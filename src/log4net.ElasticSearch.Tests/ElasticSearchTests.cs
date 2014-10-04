@@ -3,6 +3,7 @@ using Nest;
 using Xunit;
 using Xunit.Sdk;
 using log4net.ElasticSearch.Tests.Infrastructure;
+using LogEvent = log4net.ElasticSearch.Models.LogEvent;
 
 namespace log4net.ElasticSearch.Tests
 {
