@@ -1,14 +1,21 @@
 ﻿using System.Linq;
 using FluentAssertions;
+using Nest;
 using Xunit;
 using Xunit.Sdk;
 using log4net.ElasticSearch.Tests.Infrastructure;
 
 namespace log4net.ElasticSearch.Tests
 {
-    public class ElasticSearchAppenderTests : ElasticSearchTestSetup
+    public class ElasticSearchAppenderTests : IUseFixture<ElasticSearchTestSetup>
     {
         private static readonly ILog _log = LogManager.GetLogger(typeof(ElasticSearchAppenderTests));
+        private ElasticClient elasticClient;
+
+        public void SetFixture(ElasticSearchTestSetup fixture)
+        {
+            elasticClient = fixture.Client;
+        }
 
         [Fact]
         public void Global_context_properties_are_logged()
@@ -24,7 +31,7 @@ namespace log4net.ElasticSearch.Tests
 
             Retry.Ignoring<AssertException>(() =>
                 {
-                    var searchResults = Client.Search<LogEvent>(s => s.Query(q => q.Term(@event => @event.Message, message)));
+                    var searchResults = elasticClient.Search<LogEvent>(s => s.Query(q => q.Term(@event => @event.Message, message)));
 
                     searchResults.Total.Should().Be(1);
 
@@ -48,7 +55,7 @@ namespace log4net.ElasticSearch.Tests
 
             Retry.Ignoring<AssertException>(() =>
                 {
-                    var searchResults = Client.Search<LogEvent>(s => s.Query(q => q.Term(@event => @event.Message, message)));
+                    var searchResults = elasticClient.Search<LogEvent>(s => s.Query(q => q.Term(@event => @event.Message, message)));
 
                     searchResults.Total.Should().Be(1);
 
@@ -79,7 +86,7 @@ namespace log4net.ElasticSearch.Tests
             Retry.Ignoring<AssertException>(() =>
                 {
                     var searchResults =
-                        Client.Search<LogEvent>(s => s.Query(q => q.Term(@event => @event.Message, message)));
+                        elasticClient.Search<LogEvent>(s => s.Query(q => q.Term(@event => @event.Message, message)));
 
                     searchResults.Total.Should().Be(1);                                
                 });

@@ -3,12 +3,13 @@ using Nest;
 
 namespace log4net.ElasticSearch.Tests.Infrastructure
 {
-    public abstract class ElasticSearchTestSetup : IDisposable
+    public class ElasticSearchTestSetup : IDisposable
     {
-        protected readonly ElasticClient Client;
-        readonly string defaultIndex;
+        private readonly string defaultIndex;
 
-        protected ElasticSearchTestSetup()
+        public ElasticClient Client { get; private set; }
+
+        public ElasticSearchTestSetup()
         {
             defaultIndex = GetDefaultIndex();
 
