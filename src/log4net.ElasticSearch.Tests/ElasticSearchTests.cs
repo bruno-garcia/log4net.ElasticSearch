@@ -23,7 +23,9 @@ namespace log4net.ElasticSearch.Tests
 
             Retry.Ignoring<AssertException>(() =>
                 {
-                    var searchResults = client.Search<LogEvent>(s => s.Query(q => q.Term("ClassName", logEvent.ClassName)));
+                    var searchResults =
+                        client.Search<LogEvent>(
+                            s => s.Query(q => q.Term(@event => @event.ClassName, logEvent.ClassName)));
 
                     searchResults.Total.Should().Be(1);                    
                 });
