@@ -8,7 +8,7 @@ namespace log4net.ElasticSearch.Tests
         private readonly ConnectionSettings elasticSettings;
         private readonly string testIndex;
 
-        protected readonly ElasticClient client;
+        protected readonly ElasticClient Client;
 
         protected ElasticSearchTestSetup()
         {
@@ -17,7 +17,7 @@ namespace log4net.ElasticSearch.Tests
             elasticSettings = new ConnectionSettings(new Uri("http://127.0.0.1:9200"))
                 .SetDefaultIndex(testIndex);
             
-            client = new ElasticClient(elasticSettings);
+            Client = new ElasticClient(elasticSettings);
 
             DeleteTestIndex();
         }
@@ -29,7 +29,7 @@ namespace log4net.ElasticSearch.Tests
 
         void DeleteTestIndex()
         {
-            client.DeleteIndex(new DeleteIndexRequest(testIndex));
+            Client.DeleteIndex(new DeleteIndexRequest(testIndex));
         }
     }
 }

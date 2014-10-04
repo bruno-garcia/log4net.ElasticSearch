@@ -23,7 +23,7 @@ namespace log4net.ElasticSearch.Tests
 
             Retry.Ignoring<AssertException>(() =>
                 {
-                    var searchResults = client.Search<LogEvent>(s => s.Query(q => q.Term(@event => @event.Message, message)));
+                    var searchResults = Client.Search<LogEvent>(s => s.Query(q => q.Term(@event => @event.Message, message)));
 
                     searchResults.Total.Should().Be(1);
 
@@ -47,7 +47,7 @@ namespace log4net.ElasticSearch.Tests
 
             Retry.Ignoring<AssertException>(() =>
                 {
-                    var searchResults = client.Search<LogEvent>(s => s.Query(q => q.Term(@event => @event.Message, message)));
+                    var searchResults = Client.Search<LogEvent>(s => s.Query(q => q.Term(@event => @event.Message, message)));
 
                     searchResults.Total.Should().Be(1);
 
@@ -78,7 +78,7 @@ namespace log4net.ElasticSearch.Tests
             Retry.Ignoring<AssertException>(() =>
                 {
                     var searchResults =
-                        client.Search<LogEvent>(s => s.Query(q => q.Term(@event => @event.Message, message)));
+                        Client.Search<LogEvent>(s => s.Query(q => q.Term(@event => @event.Message, message)));
 
                     searchResults.Total.Should().Be(1);                                
                 });

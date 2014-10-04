@@ -9,7 +9,7 @@ namespace log4net.ElasticSearch.Tests
         [Fact]
         public void Can_insert_record()
         {
-            var results = client.Index(LogEventBuilder.Default.LogEvent);
+            var results = Client.Index(LogEventBuilder.Default.LogEvent);
 
             results.Id.Should().NotBeNull();
         }
@@ -19,12 +19,12 @@ namespace log4net.ElasticSearch.Tests
         {
             var logEvent = LogEventBuilder.Default.LogEvent;
 
-            client.Index(logEvent);            
+            Client.Index(logEvent);            
 
             Retry.Ignoring<AssertException>(() =>
                 {
                     var searchResults =
-                        client.Search<LogEvent>(
+                        Client.Search<LogEvent>(
                             s => s.Query(q => q.Term(@event => @event.ClassName, logEvent.ClassName)));
 
                     searchResults.Total.Should().Be(1);                    
