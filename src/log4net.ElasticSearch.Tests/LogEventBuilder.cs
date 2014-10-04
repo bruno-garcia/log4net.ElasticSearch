@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Globalization;
+using System.Linq;
 
 namespace log4net.ElasticSearch.Tests
 {
@@ -16,18 +18,11 @@ namespace log4net.ElasticSearch.Tests
         string message;
         DateTime timeStamp;
 
-        LogEventBuilder()
-        {
-        }
+        LogEventBuilder() {}
 
         public static LogEventBuilder Default
         {
             get { return new LogEventBuilder().WithDefaults(); }
-        }
-
-        public static LogEventBuilder Empty
-        {
-            get { return new LogEventBuilder(); }
         }
 
         public LogEvent LogEvent
@@ -35,30 +30,19 @@ namespace log4net.ElasticSearch.Tests
             get { return this; }
         }
 
-        public LogEventBuilder WithMessage(string value)
-        {
-            message = value;
-            return this;
-        }
-
-        public LogEventBuilder WithClassName(string value)
-        {
-            className = value;
-            return this;
-        }
-
         LogEventBuilder WithDefaults()
-        {
-            className = "IntegrationTestClass";
-            domain = "TestDomain";
-            exception = "This is a test exception";
-            fileName = "c:\test\file.txt";
-            fix = "none";
-            fullInfo = "A whole bunch of error info dump";
-            identity = "localhost\\user";
-            level = "9";
-            lineNumber = "99";
+        {            
+            className = Faker.Lorem.Words(1).Single();
+            domain = Faker.Lorem.Words(1).Single();
+            exception = Faker.Lorem.Sentence(50);
+            fileName = Faker.Lorem.Sentence(5);
+            fix = Faker.Lorem.Words(1).Single();
+            fullInfo = Faker.Lorem.Sentence(100);
+            identity = Faker.Lorem.Sentence(2);
+            level = Faker.RandomNumber.Next(10).ToString(CultureInfo.InvariantCulture);
+            lineNumber = Faker.RandomNumber.Next(1000).ToString(CultureInfo.InvariantCulture);
             timeStamp = DateTime.UtcNow;
+            message = Faker.Lorem.Sentence(20);
 
             return this;
         }
