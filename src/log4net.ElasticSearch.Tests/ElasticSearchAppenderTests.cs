@@ -9,31 +9,35 @@ namespace log4net.ElasticSearch.Tests
     {
         private static readonly ILog _log = LogManager.GetLogger(typeof(ElasticSearchAppenderTests));
 
-        [Fact(Skip = "xunit weirdness")]
+        [Fact]
         public void Can_read_properties()
         {
+            const string globalPropertyName = "globalProperty";
+            const string threadPropertyName = "threadProperty";
+            const string localThreadPropertyName = "logicalThreadProperty";
+
             var globalProperty = Faker.Lorem.Sentence(2);
             var threadProperty = Faker.Lorem.Sentence(2);
             var localTreadProperty = Faker.Lorem.Sentence(2);
             var message = Faker.Lorem.Words(1).First();
 
-            GlobalContext.Properties["globalDynamicProperty"] = globalProperty;
-            ThreadContext.Properties["threadDynamicProperty"] = threadProperty;
-            LogicalThreadContext.Properties["logicalThreadDynamicProperty"] = localTreadProperty;
+            GlobalContext.Properties[globalPropertyName] = globalProperty;
+            ThreadContext.Properties[threadPropertyName] = threadProperty;
+//            LogicalThreadContext.Properties[localThreadPropertyName] = localTreadProperty;
 
             _log.Info(message);
 
             Retry.Ignoring<AssertException>(() =>
                 {
-                    var searchResults = client.Search<dynamic>(s => s.Query(q => q.Term("message", message)));
+                    var searchResults = client.Search<LogEvent>(s => s.Query(q => q.Term(@event => @event.Message, message)));
 
                     searchResults.Total.Should().Be(1);
 
                     var firstEntry = searchResults.Documents.First();
 
-                    ((string)firstEntry.globalDynamicProperty.ToString()).Should().Be(globalProperty);
-                    ((string)firstEntry.threadDynamicProperty.ToString()).Should().Be(threadProperty);
-                    ((string)firstEntry.logicalThreadDynamicProperty.ToString()).Should().Be(localTreadProperty);                    
+                    firstEntry.Properties[globalPropertyName].Should().Be(globalProperty);
+                    firstEntry.Properties[threadPropertyName].Should().Be(threadProperty);
+//                    firstEntry.Properties["logicalThreadDynamicProperty"].Should().Be(localTreadProperty);
                 });
         }
 
@@ -45,7 +49,8 @@ namespace log4net.ElasticSearch.Tests
 
             Retry.Ignoring<AssertException>(() =>
                 {
-                    var searchResults = client.Search<LogEvent>(s => s.Query(q => q.Term(@event => @event.Message, message)));
+                    var searchResults =
+                        client.Search<LogEvent>(s => s.Query(q => q.Term(@event => @event.Message, message)));
 
                     searchResults.Total.Should().Be(1);                                
                 });
