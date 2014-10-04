@@ -46,7 +46,11 @@ namespace log4net.ElasticSearch.Tests
         [Fact]
         public void Can_read_inserted_record()
         {
-            var logEvent = new LogEvent {Message = "testmessage", ClassName = "thisclass"};
+            var logEvent = LogEventBuilder.
+                Empty.
+                WithMessage("testmessage").
+                WithClassName("thisclass").
+                LogEvent;
 
             client.Index(logEvent);
             Thread.Sleep(2000);

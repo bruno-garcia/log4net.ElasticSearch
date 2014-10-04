@@ -4,18 +4,50 @@ namespace log4net.ElasticSearch.Tests
 {
     public class LogEventBuilder
     {
-        readonly string className;
-        readonly string domain;
-        readonly string exception;
-        readonly string fileName;
-        readonly string fix;
-        readonly string fullInfo;
-        readonly string identity;
-        readonly string level;
-        readonly string lineNumber;
-        readonly DateTime timeStamp;
+        string className;
+        string domain;
+        string exception;
+        string fileName;
+        string fix;
+        string fullInfo;
+        string identity;
+        string level;
+        string lineNumber;
+        string message;
+        DateTime timeStamp;
 
         LogEventBuilder()
+        {
+        }
+
+        public static LogEventBuilder Default
+        {
+            get { return new LogEventBuilder().WithDefaults(); }
+        }
+
+        public static LogEventBuilder Empty
+        {
+            get { return new LogEventBuilder(); }
+        }
+
+        public LogEvent LogEvent
+        {
+            get { return this; }
+        }
+
+        public LogEventBuilder WithMessage(string value)
+        {
+            message = value;
+            return this;
+        }
+
+        public LogEventBuilder WithClassName(string value)
+        {
+            className = value;
+            return this;
+        }
+
+        LogEventBuilder WithDefaults()
         {
             className = "IntegrationTestClass";
             domain = "TestDomain";
@@ -27,16 +59,8 @@ namespace log4net.ElasticSearch.Tests
             level = "9";
             lineNumber = "99";
             timeStamp = DateTime.UtcNow;
-        }
 
-        public static LogEventBuilder Default
-        {
-            get { return new LogEventBuilder(); }
-        }
-
-        public LogEvent LogEvent
-        {
-            get { return this; }
+            return this;
         }
 
         public static implicit operator LogEvent(LogEventBuilder builder)
@@ -53,6 +77,7 @@ namespace log4net.ElasticSearch.Tests
                     Level = builder.level,
                     LineNumber = builder.lineNumber,
                     TimeStamp = builder.timeStamp,
+                    Message = builder.message
                 };
         }
     }
