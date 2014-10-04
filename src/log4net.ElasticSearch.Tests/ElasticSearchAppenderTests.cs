@@ -19,6 +19,21 @@ namespace log4net.ElasticSearch.Tests
         }
 
         [Fact]
+        public void Can_create_an_event_from_log4net()
+        {
+            var message = Faker.Lorem.Words(1).First();
+            _log.Info(message);
+
+            Retry.Ignoring<AssertException>(() =>
+            {
+                var searchResults =
+                    elasticClient.Search<LogEvent>(s => s.Query(q => q.Term(@event => @event.Message, message)));
+
+                searchResults.Total.Should().Be(1);
+            });
+        }
+
+        [Fact]
         public void Global_context_properties_are_logged()
         {
             const string globalPropertyName = "globalProperty";
@@ -76,21 +91,18 @@ namespace log4net.ElasticSearch.Tests
             LogicalThreadContext.Properties[localThreadPropertyName] = localTreadProperty;
 
             _log.Info(message);
-        }
-
-        [Fact]
-        public void Can_create_an_event_from_log4net()
-        {
-            var message = Faker.Lorem.Words(1).First();
-            _log.Info(message);
 
             Retry.Ignoring<AssertException>(() =>
-                {
-                    var searchResults =
-                        elasticClient.Search<LogEvent>(s => s.Query(q => q.Term(@event => @event.Message, message)));
+            {
+                var searchResults = elasticClient.Search<LogEvent>(s => s.Query(q => q.Term(@event => @event.Message, message)));
 
-                    searchResults.Total.Should().Be(1);                                
-                });
+                searchResults.Total.Should().Be(1);
+
+                var firstEntry = searchResults.Documents.First();
+
+                firstEntry.Properties[localThreadPropertyName].Should().Be(localTreadProperty);
+            });
         }
+
     }
 }
