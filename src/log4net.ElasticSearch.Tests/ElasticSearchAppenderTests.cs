@@ -12,19 +12,20 @@ namespace log4net.ElasticSearch.Tests
         [Fact(Skip = "xunit weirdness")]
         public void Can_read_properties()
         {
-            const string globalProperty = "global";
-            const string threadProperty = "thread";
-            const string localTreadProperty = "local thread";
+            var globalProperty = Faker.Lorem.Sentence(2);
+            var threadProperty = Faker.Lorem.Sentence(2);
+            var localTreadProperty = Faker.Lorem.Sentence(2);
+            var message = Faker.Lorem.Words(1).First();
 
             GlobalContext.Properties["globalDynamicProperty"] = globalProperty;
             ThreadContext.Properties["threadDynamicProperty"] = threadProperty;
             LogicalThreadContext.Properties["logicalThreadDynamicProperty"] = localTreadProperty;
 
-            _log.Info("loggingtest");
+            _log.Info(message);
 
             Retry.Ignoring<AssertException>(() =>
                 {
-                    var searchResults = client.Search<dynamic>(s => s.Query(q => q.Term("message", "loggingtest")));
+                    var searchResults = client.Search<dynamic>(s => s.Query(q => q.Term("message", message)));
 
                     searchResults.Total.Should().Be(1);
 
@@ -39,7 +40,7 @@ namespace log4net.ElasticSearch.Tests
         [Fact]
         public void Can_create_an_event_from_log4net()
         {
-            const string message = "loggingtest";
+            var message = Faker.Lorem.Words(1).First();
             _log.Info(message);
 
             Retry.Ignoring<AssertException>(() =>
