@@ -70,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ElasticSearchAppenderTests.cs" />
+    <Compile Include="ElasticSearchTests.cs" />
     <Compile Include="ElasticSearchTestSetup.cs" />
     <Compile Include="LogEvent.cs" />
     <Compile Include="LogEventBuilder.cs" />

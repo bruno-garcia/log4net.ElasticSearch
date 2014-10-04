@@ -9,14 +9,6 @@ namespace log4net.ElasticSearch.Tests
     {
         private static readonly ILog _log = LogManager.GetLogger(typeof(ElasticSearchAppenderTests));
 
-        [Fact]
-        public void Can_insert_record()
-        {
-            var results = client.Index(LogEventBuilder.Default.LogEvent);
-
-            results.Id.Should().NotBeNull();
-        }
-
         [Fact(Skip = "xunit weirdness")]
         public void Can_read_properties()
         {
@@ -41,19 +33,6 @@ namespace log4net.ElasticSearch.Tests
             ((string) firstEntry.globalDynamicProperty.ToString()).Should().Be(globalProperty);
             ((string)firstEntry.threadDynamicProperty.ToString()).Should().Be(threadProperty);
             ((string)firstEntry.logicalThreadDynamicProperty.ToString()).Should().Be(localTreadProperty);
-        }
-
-        [Fact]
-        public void Can_read_inserted_record()
-        {
-            var logEvent = LogEventBuilder.Default.LogEvent;
-
-            client.Index(logEvent);
-            Thread.Sleep(2000);
-
-            var searchResults = client.Search<LogEvent>(s => s.Query(q => q.Term("ClassName", logEvent.ClassName)));
-
-            searchResults.Total.Should().Be(1);
         }
 
         [Fact]
