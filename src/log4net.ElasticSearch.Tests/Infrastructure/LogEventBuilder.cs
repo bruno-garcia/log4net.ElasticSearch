@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Linq;
 
-namespace log4net.ElasticSearch.Tests
+namespace log4net.ElasticSearch.Tests.Infrastructure
 {
     public class LogEventBuilder
     {

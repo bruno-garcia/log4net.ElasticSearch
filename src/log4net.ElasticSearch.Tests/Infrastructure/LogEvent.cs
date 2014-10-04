@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Nest;
 
-namespace log4net.ElasticSearch.Tests
+namespace log4net.ElasticSearch.Tests.Infrastructure
 {
     [ElasticType(Name = "LogEvent")]
     public class LogEvent

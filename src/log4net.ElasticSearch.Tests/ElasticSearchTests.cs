@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Xunit;
 using Xunit.Sdk;
+using log4net.ElasticSearch.Tests.Infrastructure;
 
 namespace log4net.ElasticSearch.Tests
 {

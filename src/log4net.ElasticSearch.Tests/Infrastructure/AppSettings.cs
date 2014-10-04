@@ -1,7 +1,7 @@
 ﻿using System.Collections.Specialized;
 using System.Configuration;
 
-namespace log4net.ElasticSearch.Tests
+namespace log4net.ElasticSearch.Tests.Infrastructure
 {
     public static class AppSettings
     {

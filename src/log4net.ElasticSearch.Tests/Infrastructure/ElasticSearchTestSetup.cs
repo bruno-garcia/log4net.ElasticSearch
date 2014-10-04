@@ -1,7 +1,7 @@
 ﻿using System;
 using Nest;
 
-namespace log4net.ElasticSearch.Tests
+namespace log4net.ElasticSearch.Tests.Infrastructure
 {
     public abstract class ElasticSearchTestSetup : IDisposable
     {

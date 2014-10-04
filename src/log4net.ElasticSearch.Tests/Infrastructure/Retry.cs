@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace log4net.ElasticSearch.Tests
+namespace log4net.ElasticSearch.Tests.Infrastructure
 {
     public static class Retry
     {
