@@ -5,7 +5,7 @@ namespace log4net.ElasticSearch.Tests.Infrastructure
 {
     public static class AppSettings
     {
-        public static NameValueCollection Instance = ConfigurationManager.AppSettings;
+        public static readonly NameValueCollection Instance = ConfigurationManager.AppSettings;
 
         public static bool UseFiddler(this NameValueCollection self)
         {

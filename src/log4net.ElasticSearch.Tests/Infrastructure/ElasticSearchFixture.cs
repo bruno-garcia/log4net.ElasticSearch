@@ -3,15 +3,15 @@ using Nest;
 
 namespace log4net.ElasticSearch.Tests.Infrastructure
 {
-    public class ElasticSearchTestFixture : IDisposable
+    public class ElasticSearchFixture : IDisposable
     {
         readonly string defaultIndex;
 
-        public ElasticSearchTestFixture()
+        public ElasticSearchFixture()
         {
             defaultIndex = GetDefaultIndex();
 
-            Client = new ElasticClient(GetConnectionSettings(defaultIndex));
+            Client = new ElasticClient(ConnectionSettings(defaultIndex));
 
             DeleteDefaultIndex();
         }
@@ -20,7 +20,7 @@ namespace log4net.ElasticSearch.Tests.Infrastructure
 
         public void Dispose()
         {
-            DeleteDefaultIndex();
+            DeleteDefaultIndex();            
         }
 
         static string GetDefaultIndex()
@@ -28,9 +28,9 @@ namespace log4net.ElasticSearch.Tests.Infrastructure
             return string.Format("{0}-{1}", "log_test", DateTime.Now.ToString("yyyy.MM.dd"));
         }
 
-        static ConnectionSettings GetConnectionSettings(string index)
+        static ConnectionSettings ConnectionSettings(string index)
         {
-            var defaultConnectionSettings = new ConnectionSettings(GetElasticSearchUri()).
+            var defaultConnectionSettings = new ConnectionSettings(ElasticSearchUri()).
                 SetDefaultIndex(index).                
                 SetDefaultTypeNameInferrer(t => t.Name).
                 SetDefaultPropertyNameInferrer(p => p);
@@ -42,7 +42,7 @@ namespace log4net.ElasticSearch.Tests.Infrastructure
                              SetProxy(new Uri("http://localhost:8888"), "", "");
         }
 
-        static Uri GetElasticSearchUri()
+        static Uri ElasticSearchUri()
         {
             return new Uri(string.Format("http://{0}:9200", Environment.MachineName));
         }

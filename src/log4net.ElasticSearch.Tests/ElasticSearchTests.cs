@@ -7,11 +7,11 @@ using LogEvent = log4net.ElasticSearch.Models.LogEvent;
 
 namespace log4net.ElasticSearch.Tests
 {
-    public class ElasticSearchTests : IUseFixture<ElasticSearchTestFixture>
+    public class ElasticSearchTests : IUseFixture<ElasticSearchFixture>
     {
         private ElasticClient elasticClient;
 
-        public void SetFixture(ElasticSearchTestFixture fixture)
+        public void SetFixture(ElasticSearchFixture fixture)
         {
             elasticClient = fixture.Client;
         }
@@ -19,13 +19,13 @@ namespace log4net.ElasticSearch.Tests
         [Fact]
         public void Can_insert_record()
         {
-            var results = elasticClient.Index(LogEventBuilder.Default.LogEvent);
+            var indexResponse = elasticClient.Index(LogEventBuilder.Default.LogEvent);
 
-            results.Id.Should().NotBeNull();
+            indexResponse.Id.Should().NotBeNull();
         }
 
         [Fact]
-        public void Can_read_inserted_record()
+        public void Can_read_indexed_document()
         {
             var logEvent = LogEventBuilder.Default.LogEvent;
 
@@ -33,11 +33,11 @@ namespace log4net.ElasticSearch.Tests
 
             Retry.Ignoring<AssertException>(() =>
                 {
-                    var searchResults =
+                    var logEntries =
                         elasticClient.Search<LogEvent>(
-                            s => s.Query(q => q.Term(@event => @event.ClassName, logEvent.ClassName)));
+                            sd => sd.Query(qd => qd.Term(le => le.ClassName, logEvent.ClassName)));
 
-                    searchResults.Total.Should().Be(1);                    
+                    logEntries.Total.Should().Be(1);                    
                 });
         }
 

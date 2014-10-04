@@ -73,7 +73,7 @@
     <Compile Include="Infrastructure\AppSettings.cs" />
     <Compile Include="ElasticSearchAppenderTests.cs" />
     <Compile Include="ElasticSearchTests.cs" />
-    <Compile Include="Infrastructure\ElasticSearchTestFixture.cs" />
+    <Compile Include="Infrastructure\ElasticSearchFixture.cs" />
     <Compile Include="Infrastructure\ExtensionMethods.cs" />
     <Compile Include="Infrastructure\LogEventBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

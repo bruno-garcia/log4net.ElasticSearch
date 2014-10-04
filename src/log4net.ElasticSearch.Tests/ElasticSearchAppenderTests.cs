@@ -8,12 +8,13 @@ using LogEvent = log4net.ElasticSearch.Models.LogEvent;
 
 namespace log4net.ElasticSearch.Tests
 {
-    public class ElasticSearchAppenderTests : IUseFixture<ElasticSearchTestFixture>
+    public class ElasticSearchAppenderTests : IUseFixture<ElasticSearchFixture>
     {
         private static readonly ILog _log = LogManager.GetLogger(typeof(ElasticSearchAppenderTests));
+
         private ElasticClient elasticClient;
 
-        public void SetFixture(ElasticSearchTestFixture fixture)
+        public void SetFixture(ElasticSearchFixture fixture)
         {
             elasticClient = fixture.Client;
         }
@@ -21,15 +22,16 @@ namespace log4net.ElasticSearch.Tests
         [Fact]
         public void Can_create_an_event_from_log4net()
         {
-            var message = Faker.Lorem.Words(1).First();
+            var message = Faker.Lorem.Words(1).Single();
+
             _log.Info(message);
 
             Retry.Ignoring<AssertException>(() =>
             {
-                var searchResults =
-                    elasticClient.Search<LogEvent>(s => s.Query(q => q.Term(@event => @event.Message, message)));
+                var logEntries =
+                    elasticClient.Search<LogEvent>(s => s.Query(qd => qd.Term(le => le.Message, message)));
 
-                searchResults.Total.Should().Be(1);
+                logEntries.Total.Should().Be(1);
             });
         }
 
@@ -39,7 +41,7 @@ namespace log4net.ElasticSearch.Tests
             const string globalPropertyName = "globalProperty";
 
             var globalProperty = Faker.Lorem.Sentence(2);
-            var message = Faker.Lorem.Words(1).First();
+            var message = Faker.Lorem.Words(1).Single();
 
             GlobalContext.Properties[globalPropertyName] = globalProperty;
 
@@ -47,13 +49,14 @@ namespace log4net.ElasticSearch.Tests
 
             Retry.Ignoring<AssertException>(() =>
                 {
-                    var searchResults = elasticClient.Search<LogEvent>(s => s.Query(q => q.Term(@event => @event.Message, message)));
+                    var logEntries =
+                        elasticClient.Search<LogEvent>(sd => sd.Query(qd => qd.Term(le => le.Message, message)));
 
-                    searchResults.Total.Should().Be(1);
+                    logEntries.Total.Should().Be(1);
 
-                    var firstEntry = searchResults.Documents.First();
+                    var actualLogEntry = logEntries.Documents.First();
 
-                    firstEntry.Properties[globalPropertyName].Should().Be(globalProperty);
+                    actualLogEntry.Properties[globalPropertyName].Should().Be(globalProperty);
                 });
         }
 
@@ -63,7 +66,7 @@ namespace log4net.ElasticSearch.Tests
             const string threadPropertyName = "threadProperty";
 
             var threadProperty = Faker.Lorem.Sentence(2);
-            var message = Faker.Lorem.Words(1).First();
+            var message = Faker.Lorem.Words(1).Single();
 
             ThreadContext.Properties[threadPropertyName] = threadProperty;
 
@@ -71,13 +74,14 @@ namespace log4net.ElasticSearch.Tests
 
             Retry.Ignoring<AssertException>(() =>
                 {
-                    var searchResults = elasticClient.Search<LogEvent>(s => s.Query(q => q.Term(@event => @event.Message, message)));
+                    var logEntries =
+                        elasticClient.Search<LogEvent>(sd => sd.Query(qd => qd.Term(le => le.Message, message)));
 
-                    searchResults.Total.Should().Be(1);
+                    logEntries.Total.Should().Be(1);
 
-                    var firstEntry = searchResults.Documents.First();
+                    var actualLogEntry = logEntries.Documents.First();
 
-                    firstEntry.Properties[threadPropertyName].Should().Be(threadProperty);
+                    actualLogEntry.Properties[threadPropertyName].Should().Be(threadProperty);
                 });
         }
 
@@ -85,22 +89,24 @@ namespace log4net.ElasticSearch.Tests
         public void Local_thread_context_properties_cause_error()
         {
             const string localThreadPropertyName = "logicalThreadProperty";
+
             var localTreadProperty = Faker.Lorem.Sentence(2);
-            var message = Faker.Lorem.Words(1).First();
+            var message = Faker.Lorem.Words(1).Single();
 
             LogicalThreadContext.Properties[localThreadPropertyName] = localTreadProperty;
 
             _log.Info(message);
 
             Retry.Ignoring<AssertException>(() =>
-            {
-                var searchResults = elasticClient.Search<LogEvent>(s => s.Query(q => q.Term(@event => @event.Message, message)));
+                {
+                    var logEntries =
+                        elasticClient.Search<LogEvent>(sd => sd.Query(qd => qd.Term(le => le.Message, message)));
 
-                searchResults.Total.Should().Be(1);
+                logEntries.Total.Should().Be(1);
 
-                var firstEntry = searchResults.Documents.First();
+                var actualLogEntry = logEntries.Documents.First();
 
-                firstEntry.Properties[localThreadPropertyName].Should().Be(localTreadProperty);
+                actualLogEntry.Properties[localThreadPropertyName].Should().Be(localTreadProperty);
             });
         }
 
