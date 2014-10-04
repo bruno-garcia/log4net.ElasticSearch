@@ -5,31 +5,42 @@ namespace log4net.ElasticSearch.Tests
 {
     public abstract class ElasticSearchTestSetup : IDisposable
     {
-        private readonly ConnectionSettings elasticSettings;
-        private readonly string testIndex;
-
         protected readonly ElasticClient Client;
+        readonly string defaultIndex;
 
         protected ElasticSearchTestSetup()
         {
-            testIndex = string.Format("{0}-{1}", "log_test", DateTime.Now.ToString("yyyy.MM.dd"));
+            defaultIndex = GetDefaultIndex();
 
-            elasticSettings = new ConnectionSettings(new Uri("http://127.0.0.1:9200"))
-                .SetDefaultIndex(testIndex);
-            
-            Client = new ElasticClient(elasticSettings);
+            Client = new ElasticClient(GetConnectionSettings(defaultIndex));
 
-            DeleteTestIndex();
+            DeleteDefaultIndex();
         }
 
         public void Dispose()
         {
-            DeleteTestIndex();
+            DeleteDefaultIndex();
         }
 
-        void DeleteTestIndex()
+        static string GetDefaultIndex()
         {
-            Client.DeleteIndex(new DeleteIndexRequest(testIndex));
+            return string.Format("{0}-{1}", "log_test", DateTime.Now.ToString("yyyy.MM.dd"));
+        }
+
+        static ConnectionSettings GetConnectionSettings(string index)
+        {
+            var elasticSearchUri = new Uri(string.Format("http://{0}:9200", Environment.MachineName));
+
+            return !AppSettings.Instance.UseFiddler()
+                       ? new ConnectionSettings(elasticSearchUri).SetDefaultIndex(index)
+                       : new ConnectionSettings(elasticSearchUri).SetDefaultIndex(index).
+                                                                  DisableAutomaticProxyDetection(false).
+                                                                  SetProxy(new Uri("http://localhost:8888"), "", "");
+        }
+
+        void DeleteDefaultIndex()
+        {
+            Client.DeleteIndex(new DeleteIndexRequest(defaultIndex));
         }
     }
 }
