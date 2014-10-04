@@ -3,7 +3,7 @@ using Nest;
 
 namespace log4net.ElasticSearch.Tests
 {
-    public abstract class ElasticSearchTestSetup
+    public abstract class ElasticSearchTestSetup : IDisposable
     {
         private readonly ConnectionSettings elasticSettings;
         private readonly string testIndex;
@@ -22,7 +22,12 @@ namespace log4net.ElasticSearch.Tests
             client.DeleteIndex(new DeleteIndexRequest(testIndex));
         }
 
-        protected void DeleteTestIndex()
+        public void Dispose()
+        {
+            DeleteTestIndex();
+        }
+
+        void DeleteTestIndex()
         {
             client.DeleteIndex(new DeleteIndexRequest(testIndex));
         }

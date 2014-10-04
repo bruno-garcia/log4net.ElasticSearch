@@ -6,7 +6,7 @@ using Xunit;
 
 namespace log4net.ElasticSearch.Tests
 {
-    public class ElasticSearchAppenderTests : ElasticSearchTestSetup, IDisposable
+    public class ElasticSearchAppenderTests : ElasticSearchTestSetup
     {
         private static readonly ILog _log = LogManager.GetLogger(typeof(ElasticSearchAppenderTests));
 
@@ -75,11 +75,6 @@ namespace log4net.ElasticSearch.Tests
             var searchResults = client.Search<LogEvent>(s => s.Query(q => q.Term("Message", "loggingtest")));
 
             searchResults.Total.Should().Be(1);            
-        }
-
-        public void Dispose()
-        {
-            DeleteTestIndex();
         }
     }
 }
