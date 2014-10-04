@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
+using FluentAssertions;
 using Xunit;
 
 namespace log4net.ElasticSearch.Tests
@@ -28,7 +29,7 @@ namespace log4net.ElasticSearch.Tests
 
             var results = client.Index(logEvent);
 
-            Assert.NotNull(results.Id);
+            results.Id.Should().NotBeNull();
         }
 
         [Fact(Skip = "xunit weirdness")]
@@ -43,11 +44,13 @@ namespace log4net.ElasticSearch.Tests
 
             var searchResults = client.Search<dynamic>(s => s.Query(q => q.Term("message", "loggingtest")));
 
-            Assert.Equal(1, Convert.ToInt32(searchResults.Total));
+            searchResults.Total.Should().Be(1);
+
             var firstEntry = searchResults.Documents.First();
-            Assert.Equal("global", firstEntry.globalDynamicProperty.ToString());
-            Assert.Equal("thread", firstEntry.threadDynamicProperty.ToString());
-            Assert.Equal("local thread", firstEntry.logicalThreadDynamicProperty.ToString());
+
+            ((string) firstEntry.globalDynamicProperty.ToString()).Should().Be("global");
+            ((string)firstEntry.threadDynamicProperty.ToString()).Should().Be("thread");
+            ((string)firstEntry.logicalThreadDynamicProperty.ToString()).Should().Be("local thread");
         }
 
         [Fact]
@@ -60,7 +63,7 @@ namespace log4net.ElasticSearch.Tests
 
             var searchResults = client.Search<LogEvent>(s => s.Query(q => q.Term("ClassName", "thisclass")));
 
-            Assert.Equal(1, Convert.ToInt32(searchResults.Total));
+            searchResults.Total.Should().Be(1);
         }
 
         [Fact]
@@ -71,8 +74,7 @@ namespace log4net.ElasticSearch.Tests
 
             var searchResults = client.Search<LogEvent>(s => s.Query(q => q.Term("Message", "loggingtest")));
 
-            Assert.Equal(1, Convert.ToInt32(searchResults.Total));
-            
+            searchResults.Total.Should().Be(1);            
         }
 
         public void Dispose()
