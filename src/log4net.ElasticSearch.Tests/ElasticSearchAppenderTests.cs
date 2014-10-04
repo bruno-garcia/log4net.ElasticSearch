@@ -7,12 +7,12 @@ using log4net.ElasticSearch.Tests.Infrastructure;
 
 namespace log4net.ElasticSearch.Tests
 {
-    public class ElasticSearchAppenderTests : IUseFixture<ElasticSearchTestSetup>
+    public class ElasticSearchAppenderTests : IUseFixture<ElasticSearchTestFixture>
     {
         private static readonly ILog _log = LogManager.GetLogger(typeof(ElasticSearchAppenderTests));
         private ElasticClient elasticClient;
 
-        public void SetFixture(ElasticSearchTestSetup fixture)
+        public void SetFixture(ElasticSearchTestFixture fixture)
         {
             elasticClient = fixture.Client;
         }
@@ -31,7 +31,7 @@ namespace log4net.ElasticSearch.Tests
 
             Retry.Ignoring<AssertException>(() =>
                 {
-                    var searchResults = elasticClient.Search<LogEvent>(s => s.Query(q => q.Term(@event => @event.Message, message)));
+                    var searchResults = elasticClient.Search<Models.LogEvent>(s => s.Query(q => q.Term(@event => @event.Message, message)));
 
                     searchResults.Total.Should().Be(1);
 

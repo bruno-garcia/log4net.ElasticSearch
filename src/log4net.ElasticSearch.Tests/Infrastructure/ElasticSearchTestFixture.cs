@@ -5,9 +5,7 @@ namespace log4net.ElasticSearch.Tests.Infrastructure
 {
     public class ElasticSearchTestFixture : IDisposable
     {
-        private readonly string defaultIndex;
-
-        public ElasticClient Client { get; private set; }
+        readonly string defaultIndex;
 
         public ElasticSearchTestFixture()
         {
@@ -17,6 +15,8 @@ namespace log4net.ElasticSearch.Tests.Infrastructure
 
             DeleteDefaultIndex();
         }
+
+        public ElasticClient Client { get; private set; }
 
         public void Dispose()
         {
@@ -30,13 +30,21 @@ namespace log4net.ElasticSearch.Tests.Infrastructure
 
         static ConnectionSettings GetConnectionSettings(string index)
         {
-            var elasticSearchUri = new Uri(string.Format("http://{0}:9200", Environment.MachineName));
+            var defaultConnectionSettings = new ConnectionSettings(GetElasticSearchUri()).
+                SetDefaultIndex(index).                
+                SetDefaultTypeNameInferrer(t => t.Name).
+                SetDefaultPropertyNameInferrer(p => p);
 
             return !AppSettings.Instance.UseFiddler()
-                       ? new ConnectionSettings(elasticSearchUri).SetDefaultIndex(index)
-                       : new ConnectionSettings(elasticSearchUri).SetDefaultIndex(index).
-                                                                  DisableAutomaticProxyDetection(false).
-                                                                  SetProxy(new Uri("http://localhost:8888"), "", "");
+                       ? defaultConnectionSettings
+                       : defaultConnectionSettings.
+                             DisableAutomaticProxyDetection(false).
+                             SetProxy(new Uri("http://localhost:8888"), "", "");
+        }
+
+        static Uri GetElasticSearchUri()
+        {
+            return new Uri(string.Format("http://{0}:9200", Environment.MachineName));
         }
 
         void DeleteDefaultIndex()

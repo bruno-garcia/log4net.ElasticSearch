@@ -6,11 +6,11 @@ using log4net.ElasticSearch.Tests.Infrastructure;
 
 namespace log4net.ElasticSearch.Tests
 {
-    public class ElasticSearchTests : IUseFixture<ElasticSearchTestSetup>
+    public class ElasticSearchTests : IUseFixture<ElasticSearchTestFixture>
     {
         private ElasticClient elasticClient;
 
-        public void SetFixture(ElasticSearchTestSetup fixture)
+        public void SetFixture(ElasticSearchTestFixture fixture)
         {
             elasticClient = fixture.Client;
         }
