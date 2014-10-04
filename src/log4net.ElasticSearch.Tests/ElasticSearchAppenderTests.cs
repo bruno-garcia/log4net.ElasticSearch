@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using FluentAssertions;
 using Xunit;
@@ -13,21 +12,7 @@ namespace log4net.ElasticSearch.Tests
         [Fact]
         public void Can_insert_record()
         {
-            var logEvent = new LogEvent
-                {
-                    ClassName = "IntegrationTestClass",
-                    Domain = "TestDomain",
-                    Exception = "This is a test exception",
-                    FileName = "c:\test\file.txt",
-                    Fix = "none",
-                    FullInfo = "A whole bunch of error info dump",
-                    Identity = "localhost\\user",
-                    Level = "9",
-                    LineNumber = "99",
-                    TimeStamp = DateTime.Now
-                };
-
-            var results = client.Index(logEvent);
+            var results = client.Index(LogEventBuilder.Default.LogEvent);
 
             results.Id.Should().NotBeNull();
         }
