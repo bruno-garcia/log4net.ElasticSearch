@@ -75,6 +75,7 @@
     <Compile Include="LogEvent.cs" />
     <Compile Include="LogEventBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Retry.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

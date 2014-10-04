@@ -1,6 +1,6 @@
-﻿using System.Threading;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Xunit;
+using Xunit.Sdk;
 
 namespace log4net.ElasticSearch.Tests
 {
@@ -19,12 +19,14 @@ namespace log4net.ElasticSearch.Tests
         {
             var logEvent = LogEventBuilder.Default.LogEvent;
 
-            client.Index(logEvent);
-            Thread.Sleep(2000);
+            client.Index(logEvent);            
 
-            var searchResults = client.Search<LogEvent>(s => s.Query(q => q.Term("ClassName", logEvent.ClassName)));
+            Retry.Ignoring<AssertException>(() =>
+                {
+                    var searchResults = client.Search<LogEvent>(s => s.Query(q => q.Term("ClassName", logEvent.ClassName)));
 
-            searchResults.Total.Should().Be(1);
+                    searchResults.Total.Should().Be(1);                    
+                });
         }
 
     }

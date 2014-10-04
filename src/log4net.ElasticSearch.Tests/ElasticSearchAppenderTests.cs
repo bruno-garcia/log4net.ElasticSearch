@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using System.Threading;
 using FluentAssertions;
 using Xunit;
+using Xunit.Sdk;
 
 namespace log4net.ElasticSearch.Tests
 {
@@ -22,17 +22,18 @@ namespace log4net.ElasticSearch.Tests
 
             _log.Info("loggingtest");
 
-            Thread.Sleep(1500);
+            Retry.Ignoring<AssertException>(() =>
+                {
+                    var searchResults = client.Search<dynamic>(s => s.Query(q => q.Term("message", "loggingtest")));
 
-            var searchResults = client.Search<dynamic>(s => s.Query(q => q.Term("message", "loggingtest")));
+                    searchResults.Total.Should().Be(1);
 
-            searchResults.Total.Should().Be(1);
+                    var firstEntry = searchResults.Documents.First();
 
-            var firstEntry = searchResults.Documents.First();
-
-            ((string) firstEntry.globalDynamicProperty.ToString()).Should().Be(globalProperty);
-            ((string)firstEntry.threadDynamicProperty.ToString()).Should().Be(threadProperty);
-            ((string)firstEntry.logicalThreadDynamicProperty.ToString()).Should().Be(localTreadProperty);
+                    ((string)firstEntry.globalDynamicProperty.ToString()).Should().Be(globalProperty);
+                    ((string)firstEntry.threadDynamicProperty.ToString()).Should().Be(threadProperty);
+                    ((string)firstEntry.logicalThreadDynamicProperty.ToString()).Should().Be(localTreadProperty);                    
+                });
         }
 
         [Fact]
@@ -40,11 +41,13 @@ namespace log4net.ElasticSearch.Tests
         {
             const string message = "loggingtest";
             _log.Info(message);
-            Thread.Sleep(2000);
 
-            var searchResults = client.Search<LogEvent>(s => s.Query(q => q.Term("Message", message)));
+            Retry.Ignoring<AssertException>(() =>
+                {
+                    var searchResults = client.Search<LogEvent>(s => s.Query(q => q.Term("Message", message)));
 
-            searchResults.Total.Should().Be(1);            
+                    searchResults.Total.Should().Be(1);                                
+                });
         }
     }
 }
