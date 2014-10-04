@@ -19,7 +19,7 @@ namespace log4net.ElasticSearch.Tests
             
             client = new ElasticClient(elasticSettings);
 
-            client.DeleteIndex(new DeleteIndexRequest(testIndex));
+            DeleteTestIndex();
         }
 
         public void Dispose()
