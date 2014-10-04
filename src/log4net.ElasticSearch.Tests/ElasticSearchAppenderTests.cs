@@ -9,11 +9,6 @@ namespace log4net.ElasticSearch.Tests
     {
         private static readonly ILog _log = LogManager.GetLogger(typeof(ElasticSearchAppenderTests));
 
-        public ElasticSearchAppenderTests()
-        {
-            
-        }
-
         [Fact]
         public void Can_insert_record()
         {

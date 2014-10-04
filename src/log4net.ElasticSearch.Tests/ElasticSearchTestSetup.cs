@@ -3,13 +3,14 @@ using Nest;
 
 namespace log4net.ElasticSearch.Tests
 {
-    public class ElasticSearchTestSetup
+    public abstract class ElasticSearchTestSetup
     {
         private readonly ConnectionSettings elasticSettings;
-        public readonly ElasticClient client;
-        private string testIndex;
+        private readonly string testIndex;
 
-        public ElasticSearchTestSetup()
+        protected readonly ElasticClient client;
+
+        protected ElasticSearchTestSetup()
         {
             testIndex = string.Format("{0}-{1}", "log_test", DateTime.Now.ToString("yyyy.MM.dd"));
 
@@ -21,7 +22,7 @@ namespace log4net.ElasticSearch.Tests
             client.DeleteIndex(new DeleteIndexRequest(testIndex));
         }
 
-        public void DeleteTestIndex()
+        protected void DeleteTestIndex()
         {
             client.DeleteIndex(new DeleteIndexRequest(testIndex));
         }
