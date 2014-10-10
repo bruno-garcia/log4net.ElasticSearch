@@ -19,10 +19,10 @@ namespace log4net.ElasticSearch.Models
   
         public string Message { get; set; }
     
-        public string MessageObject { get; set; }
+        public object MessageObject { get; set; }
       
         public string Exception { get; set; }
-        
+
         public string LoggerName { get; set; }
 
         public string Domain { get; set; }
@@ -50,7 +50,5 @@ namespace log4net.ElasticSearch.Models
         public string ThreadName { get; set; }
 
         public string HostName { get; set; }
-
-       
     }
 }
