@@ -28,7 +28,8 @@ namespace log4net.ElasticSearch.Tests
                     Identity = "localhost\\user",
                     Level = "9",
                     LineNumber = "99",
-                    TimeStamp = DateTime.Now
+                    TimeStamp = DateTime.Now,
+                    MessageObject = new { Object = new object() }
                 };
 
             var results = client.Index(logEvent);

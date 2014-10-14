@@ -22,7 +22,7 @@ namespace log4net.ElasticSearch.Tests
         public string Message { get; set; }
 
         [ElasticProperty(Name = "MessageObject")]
-        public string MessageObject { get; set; }
+        public object MessageObject { get; set; }
 
         [ElasticProperty(Name = "Exception")]
         public string Exception { get; set; }
