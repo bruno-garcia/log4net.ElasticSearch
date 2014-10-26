@@ -44,7 +44,7 @@ namespace log4net.ElasticSearch.Tests
             LogicalThreadContext.Properties["logicalThreadDynamicProperty"] = "local thread";
             _log.Info("loggingtest");
 
-            Thread.Sleep(1500);
+			Flush();
 
             var searchResults = client.Search<dynamic>(s => s.Query(q => q.Term("message", "loggingtest")));
 
@@ -61,7 +61,7 @@ namespace log4net.ElasticSearch.Tests
             var logEvent = new LogEvent {Message = "testmessage", ClassName = "thisclass"};
 
             client.Index(logEvent);
-            Thread.Sleep(2000);
+			Flush();
 
             var searchResults = client.Search<LogEvent>(s => s.Query(q => q.Term("ClassName", "thisclass")));
 
@@ -72,13 +72,18 @@ namespace log4net.ElasticSearch.Tests
         public void Can_create_an_event_from_log4net()
         {
             _log.Info("loggingtest");
-            Thread.Sleep(2000);
+            Flush();
 
             var searchResults = client.Search<LogEvent>(s => s.Query(q => q.Term("Message", "loggingtest")));
 
             Assert.Equal(1, Convert.ToInt32(searchResults.Total));
             
         }
+
+		public void Flush()
+		{
+			client.Flush (s => s.AllIndices ());
+		}
 
         public void Dispose()
         {
