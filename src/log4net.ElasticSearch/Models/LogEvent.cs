@@ -18,7 +18,7 @@ namespace log4net.ElasticSearch.Models
   
         public string Message { get; set; }
     
-        public string MessageObject { get; set; }
+        public object MessageObject { get; set; }
       
         public string Exception { get; set; }
         

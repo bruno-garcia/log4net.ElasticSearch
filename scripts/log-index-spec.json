@@ -16,7 +16,7 @@
                     "type": "string"
                 },
                 "messageObject": {
-                    "type": "string"
+                    "type": "object"
                 },
                 "exception": {
                     "type": "string"
