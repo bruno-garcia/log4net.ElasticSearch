@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Specialized;
+using System.Data.Common;
 using log4net.ElasticSearch.Models;
 
 namespace log4net.ElasticSearch
@@ -15,7 +16,7 @@ namespace log4net.ElasticSearch
 
             try
             {
-                var builder = new System.Data.Common.DbConnectionStringBuilder
+                var builder = new DbConnectionStringBuilder
                     {
                         ConnectionString = connectionString.Replace("{", "\"").Replace("}", "\"")
                     };
@@ -34,11 +35,11 @@ namespace log4net.ElasticSearch
 
                 return
                     new ElasticSearchConnection
-                    {
-                        Server = lookup["Server"],
-                        Port = lookup["Port"],
-                        Index = index
-                    };
+                        {
+                            Server = lookup["Server"],
+                            Port = lookup["Port"],
+                            Index = index
+                        };
             }
             catch
             {

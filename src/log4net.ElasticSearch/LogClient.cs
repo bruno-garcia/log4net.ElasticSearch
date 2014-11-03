@@ -12,8 +12,8 @@ namespace log4net.ElasticSearch
 
     public class Repository : IRepository
     {
-        private readonly HttpWebRequest httpWebRequest;
-        private readonly JavaScriptSerializer serializer;
+        readonly HttpWebRequest httpWebRequest;
+        readonly JavaScriptSerializer serializer;
 
         Repository(HttpWebRequest httpWebRequest, JavaScriptSerializer serializer)
         {            
@@ -47,12 +47,15 @@ namespace log4net.ElasticSearch
 
         private static class JsonWebRequest
         {
+            const string ContentType = "text/json";
+            const string Method = "POST";
+
             public static HttpWebRequest For(ElasticSearchConnection connection)
             {
                 var httpWebRequest = (HttpWebRequest)WebRequest.Create(connection.ToString());
 
-                httpWebRequest.ContentType = "text/json";
-                httpWebRequest.Method = "POST";                
+                httpWebRequest.ContentType = ContentType;
+                httpWebRequest.Method = Method;                
 
                 return httpWebRequest;
             }
