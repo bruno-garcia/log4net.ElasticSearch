@@ -16,7 +16,7 @@ namespace log4net.ElasticSearch
         public LogClient(ElasticsearchConnection connection)
         {
             ServicePointManager.Expect100Continue = false;
-            httpWebRequest = (HttpWebRequest)WebRequest.Create(string.Format("http://{0}:{1}/{2}/LogEvent", 
+            httpWebRequest = (HttpWebRequest)WebRequest.Create(string.Format("http://{0}:{1}/{2}/logEvent", 
                 connection.Server, connection.Port, connection.Index));
             
             httpWebRequest.ContentType = "text/json";
@@ -27,7 +27,7 @@ namespace log4net.ElasticSearch
         /// Create the new event in Elasticsearch by performing a generic http post
         /// </summary>
         /// <param name="logEvent">LogEvent with parameters filled in</param>
-        public void CreateEvent(LogEvent logEvent)
+        public void CreateEvent(logEvent logEvent)
         {
             using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
             {

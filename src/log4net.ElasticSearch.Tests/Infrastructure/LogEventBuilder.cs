@@ -25,7 +25,7 @@ namespace log4net.ElasticSearch.Tests.Infrastructure
             get { return new LogEventBuilder().WithDefaults(); }
         }
 
-        public Models.LogEvent LogEvent
+        public Models.logEvent LogEvent
         {
             get { return this; }
         }
@@ -47,21 +47,21 @@ namespace log4net.ElasticSearch.Tests.Infrastructure
             return this;
         }
 
-        public static implicit operator Models.LogEvent(LogEventBuilder builder)
+        public static implicit operator Models.logEvent(LogEventBuilder builder)
         {
-            return new Models.LogEvent
+            return new Models.logEvent
                 {
-                    ClassName = builder.className,
-                    Domain = builder.domain,
-                    Exception = builder.exception,
-                    FileName = builder.fileName,
-                    Fix = builder.fix,
-                    FullInfo = builder.fullInfo,
-                    Identity = builder.identity,
-                    Level = builder.level,
-                    LineNumber = builder.lineNumber,
-                    TimeStamp = builder.timeStamp.ToString(CultureInfo.InvariantCulture),
-                    Message = builder.message
+                    className = builder.className,
+                    domain = builder.domain,
+                    exception = builder.exception,
+                    fileName = builder.fileName,
+                    fix = builder.fix,
+                    fullInfo = builder.fullInfo,
+                    identity = builder.identity,
+                    level = builder.level,
+                    lineNumber = builder.lineNumber,
+                    timeStamp = builder.timeStamp.ToString(CultureInfo.InvariantCulture),
+                    message = builder.message
                 };
         }
     }
