@@ -4,13 +4,13 @@ using log4net.ElasticSearch.Models;
 
 namespace log4net.ElasticSearch
 {
-    public static class LogEventFactory
+    public static class LogEventBuilder
     {
-        public static LogEvent Create(LoggingEvent loggingEvent)
+        public static LogEvent Build(LoggingEvent loggingEvent)
         {
             var logEvent = new LogEvent
             {
-                Id = new UniqueIdGenerator().GenerateUniqueId(),
+                Id = UniqueIdGenerator.GenerateUniqueId(),
                 LoggerName = loggingEvent.LoggerName,
                 Domain = loggingEvent.Domain,
                 Identity = loggingEvent.Identity,

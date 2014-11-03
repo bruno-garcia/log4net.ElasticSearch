@@ -46,20 +46,17 @@
     <Compile Include="..\log4net.ElasticSearch\AssemblyVersionInfo.cs">
       <Link>AssemblyVersionInfo.cs</Link>
     </Compile>
+    <Compile Include="..\log4net.ElasticSearch\ConnectionBuilder.cs">
+      <Link>ConnectionBuilder.cs</Link>
+    </Compile>
     <Compile Include="..\log4net.ElasticSearch\ElasticSearchAppender.cs">
       <Link>ElasticSearchAppender.cs</Link>
     </Compile>
-    <Compile Include="..\log4net.ElasticSearch\ElasticSearchConnectionBuilder.cs">
-      <Link>ElasticSearchConnectionBuilder.cs</Link>
+    <Compile Include="..\log4net.ElasticSearch\JsonWebRequest.cs">
+      <Link>JsonWebRequest.cs</Link>
     </Compile>
-    <Compile Include="..\log4net.ElasticSearch\LogClient.cs">
-      <Link>LogClient.cs</Link>
-    </Compile>
-    <Compile Include="..\log4net.ElasticSearch\LogEventFactory.cs">
-      <Link>LogEventFactory.cs</Link>
-    </Compile>
-    <Compile Include="..\log4net.ElasticSearch\Models\ElasticsearchConnection.cs">
-      <Link>Models\ElasticsearchConnection.cs</Link>
+    <Compile Include="..\log4net.ElasticSearch\Models\Connection.cs">
+      <Link>Models\Connection.cs</Link>
     </Compile>
     <Compile Include="..\log4net.ElasticSearch\Models\LogEvent.cs">
       <Link>Models\LogEvent.cs</Link>
@@ -67,6 +64,10 @@
     <Compile Include="..\log4net.ElasticSearch\Models\UniqueIdGenerator.cs">
       <Link>Models\UniqueIdGenerator.cs</Link>
     </Compile>
+    <Compile Include="..\log4net.ElasticSearch\Repository.cs">
+      <Link>Repository.cs</Link>
+    </Compile>
+    <Compile Include="LogEventBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

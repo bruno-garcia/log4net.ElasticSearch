@@ -2,9 +2,6 @@
 
 namespace log4net.ElasticSearch.Models
 {
-    /// <summary>
-    /// Base log event type that we will send to Elasticsearch (serialized)
-    /// </summary>
     public class LogEvent
     {
         public LogEvent()

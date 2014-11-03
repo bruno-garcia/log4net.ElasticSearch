@@ -42,23 +42,7 @@ namespace log4net.ElasticSearch
 
         public static IRepository Create(string connectionString)
         {
-            return new Repository(JsonWebRequest.For(ElasticSearchConnectionBuilder.Build(connectionString)), new JavaScriptSerializer());
-        }
-
-        private static class JsonWebRequest
-        {
-            const string ContentType = "text/json";
-            const string Method = "POST";
-
-            public static HttpWebRequest For(ElasticSearchConnection connection)
-            {
-                var httpWebRequest = (HttpWebRequest)WebRequest.Create(connection.ToString());
-
-                httpWebRequest.ContentType = ContentType;
-                httpWebRequest.Method = Method;                
-
-                return httpWebRequest;
-            }
+            return new Repository(JsonWebRequest.For(ConnectionBuilder.Build(connectionString)), new JavaScriptSerializer());
         }
     }
 }

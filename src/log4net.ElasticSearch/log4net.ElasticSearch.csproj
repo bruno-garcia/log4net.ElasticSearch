@@ -45,11 +45,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyVersionInfo.cs" />
-    <Compile Include="ElasticSearchConnectionBuilder.cs" />
+    <Compile Include="ConnectionBuilder.cs" />
     <Compile Include="ElasticSearchAppender.cs" />
-    <Compile Include="LogEventFactory.cs" />
-    <Compile Include="LogClient.cs" />
-    <Compile Include="Models\ElasticsearchConnection.cs" />
+    <Compile Include="JsonWebRequest.cs" />
+    <Compile Include="LogEventBuilder.cs" />
+    <Compile Include="Repository.cs" />
+    <Compile Include="Models\Connection.cs" />
     <Compile Include="Models\LogEvent.cs" />
     <Compile Include="Models\UniqueIdGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -5,9 +5,9 @@ using log4net.ElasticSearch.Models;
 
 namespace log4net.ElasticSearch
 {
-    public static class ElasticSearchConnectionBuilder
+    public static class ConnectionBuilder
     {
-        public static ElasticSearchConnection Build(string connectionString)
+        public static Connection Build(string connectionString)
         {
             try
             {
@@ -29,7 +29,7 @@ namespace log4net.ElasticSearch
                         index = string.Format("{0}-{1}", index, DateTime.Now.ToString("yyyy.MM.dd"));
 
                 return
-                    new ElasticSearchConnection
+                    new Connection
                         {
                             Server = lookup["Server"],
                             Port = lookup["Port"],

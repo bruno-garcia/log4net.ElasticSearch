@@ -40,7 +40,7 @@ namespace log4net.ElasticSearch
             {
                 var client = Repository.Create(ConnectionString);
 
-                var logEvent = LogEventFactory.Create(loggingEvent);
+                var logEvent = LogEventBuilder.Build(loggingEvent);
 
                 client.Add(logEvent);
             }
