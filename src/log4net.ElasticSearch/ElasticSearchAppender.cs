@@ -49,9 +49,9 @@ namespace log4net.ElasticSearch
             logEvent.identity = loggingEvent.Identity;
             logEvent.threadName = loggingEvent.ThreadName;
             logEvent.userName = loggingEvent.UserName;
-            logEvent.messageObject = loggingEvent.MessageObject == null ? "" : loggingEvent.MessageObject.ToString();
+            logEvent.messageObject = loggingEvent.MessageObject ?? new object();
             logEvent.timeStamp = loggingEvent.TimeStamp.ToUniversalTime().ToString("O");
-            logEvent.exception = loggingEvent.ExceptionObject == null ? "" : loggingEvent.ExceptionObject.ToString();
+            logEvent.exception = loggingEvent.ExceptionObject ?? new object();
             logEvent.message = loggingEvent.RenderedMessage;
             logEvent.fix = loggingEvent.Fix.ToString();
             logEvent.hostName = Environment.MachineName;

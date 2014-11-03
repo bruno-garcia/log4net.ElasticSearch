@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using FluentAssertions;
 using Nest;
 using Xunit;
@@ -24,7 +25,7 @@ namespace log4net.ElasticSearch.Tests
         {
             var message = Faker.Lorem.Words(1).Single();
 
-            _log.Info(message);
+            _log.Info(message, new ApplicationException("Something broke"));
 
             Retry.Ignoring<AssertException>(() =>
             {
