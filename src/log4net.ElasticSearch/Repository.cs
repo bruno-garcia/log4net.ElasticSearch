@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Web.Script.Serialization;
 using log4net.ElasticSearch.Models;
@@ -8,7 +9,7 @@ namespace log4net.ElasticSearch
 {
     public interface IRepository
     {
-        void Add(LogEvent logEvent);
+        void Add(IEnumerable<LogEvent> logEvents);
     }
 
     public static class Repository
@@ -29,25 +30,28 @@ namespace log4net.ElasticSearch
                 this.uri = uri;
             }
 
-            public void Add(LogEvent logEvent)
+            public void Add(IEnumerable<LogEvent> logEvents)
             {
-                var httpWebRequest = JsonWebRequest.For(uri);
-
-                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                foreach (var logEvent in logEvents)
                 {
-                    var json = serializer.Serialize(logEvent);
+                    var httpWebRequest = JsonWebRequest.For(uri);
 
-                    streamWriter.Write(json);
-                    streamWriter.Flush();
-
-                    var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-                    httpResponse.Close();
-
-                    if (httpResponse.StatusCode != HttpStatusCode.Created)
+                    using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
                     {
-                        throw new WebException(string.Format("Failed to correctly add {0} to the ElasticSearch index.",
-                                                             logEvent.GetType().Name));
-                    }
+                        var json = serializer.Serialize(logEvent);
+
+                        streamWriter.Write(json);
+                        streamWriter.Flush();
+
+                        var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                        httpResponse.Close();
+
+                        if (httpResponse.StatusCode != HttpStatusCode.Created)
+                        {
+                            throw new WebException(string.Format("Failed to correctly add {0} to the ElasticSearch index.",
+                                                                 logEvents.GetType().Name));
+                        }
+                    }                    
                 }
             }            
         }

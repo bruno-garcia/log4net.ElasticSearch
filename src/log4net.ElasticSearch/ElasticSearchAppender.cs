@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using log4net.Appender;
 using log4net.Core;
@@ -6,11 +7,11 @@ using log4net.ElasticSearch.Models;
 
 namespace log4net.ElasticSearch
 {
-    public class ElasticSearchAppender : AppenderSkeleton
+    public class ElasticSearchAppender : BufferingAppenderSkeleton
     {
         IRepository repository;
 
-        public string ConnectionString { get; set; }
+        public string ConnectionString { get; set; }        
 
         public override void ActivateOptions()
         {
@@ -29,14 +30,14 @@ namespace log4net.ElasticSearch
             repository = Repository.Create(ConnectionString);
         }
 
-        protected override void Append(LoggingEvent loggingEvent)
-        {
+        protected override void SendBuffer(LoggingEvent[] events)
+        {            
             try
             {
-                repository.Add(LogEvent.Create(loggingEvent));
+                repository.Add(events.Select(@event => LogEvent.Create(@event)));
             }
             catch (Exception ex)
-            {                
+            {
                 ErrorHandler.Error(string.Format("Failed to add {0} to ElasticSearch", typeof(LogEvent).Name), ex, ErrorCode.GenericFailure);
             }
         }
