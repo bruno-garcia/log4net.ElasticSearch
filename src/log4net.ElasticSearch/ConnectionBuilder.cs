@@ -4,19 +4,16 @@ using log4net.ElasticSearch.Models;
 
 namespace log4net.ElasticSearch
 {
-    /// <summary>
-    /// Class to support passing in traditional style connection strings and then parsing
-    /// them into ElasticSearch components. We create a generic connection string to use for 
-    /// basic http request
-    /// </summary>
     public class ConnectionBuilder
     {
         public static ElasticsearchConnection BuildElsticSearchConnection(string connectionString)
         {
             try
             {
-                var builder = new System.Data.Common.DbConnectionStringBuilder();
-                builder.ConnectionString = connectionString.Replace("{", "\"").Replace("}", "\"");
+                var builder = new System.Data.Common.DbConnectionStringBuilder
+                    {
+                        ConnectionString = connectionString.Replace("{", "\"").Replace("}", "\"")
+                    };
 
                 var lookup = new StringDictionary();
                 foreach (string key in builder.Keys)

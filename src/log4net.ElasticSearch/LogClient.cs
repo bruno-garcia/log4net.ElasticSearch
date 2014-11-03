@@ -6,9 +6,6 @@ using log4net.ElasticSearch.Models;
 
 namespace log4net.ElasticSearch
 {   
-    /// <summary>
-    /// Generic client class for sending http requests to Elasticsearch. Works w/ older .NET versions
-    /// </summary>
     public class LogClient
     {
         private readonly HttpWebRequest httpWebRequest;
@@ -23,10 +20,6 @@ namespace log4net.ElasticSearch
             httpWebRequest.Method = "POST";
         }
 
-        /// <summary>
-        /// Create the new event in Elasticsearch by performing a generic http post
-        /// </summary>
-        /// <param name="logEvent">LogEvent with parameters filled in</param>
         public void CreateEvent(LogEvent logEvent)
         {
             using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))

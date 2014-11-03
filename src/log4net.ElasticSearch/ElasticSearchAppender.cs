@@ -9,11 +9,7 @@ namespace log4net.ElasticSearch
     {
         public string ConnectionString { get; set; }
 
-        /// <summary>
-        /// Add a log event to the ElasticSearch Repo
-        /// </summary>
-        /// <param name="loggingEvent"></param>
-        protected override void Append(Core.LoggingEvent loggingEvent)
+        protected override void Append(LoggingEvent loggingEvent)
         {
             if (string.IsNullOrEmpty(ConnectionString))
             {
@@ -43,19 +39,21 @@ namespace log4net.ElasticSearch
                 throw new ArgumentNullException("loggingEvent");
             }
 
-            var logEvent = new LogEvent();
-            logEvent.Id = new UniqueIdGenerator().GenerateUniqueId();
-            logEvent.LoggerName = loggingEvent.LoggerName;
-            logEvent.Domain = loggingEvent.Domain;
-            logEvent.Identity = loggingEvent.Identity;
-            logEvent.ThreadName = loggingEvent.ThreadName;
-            logEvent.UserName = loggingEvent.UserName;
-            logEvent.MessageObject = loggingEvent.MessageObject == null ? "" : loggingEvent.MessageObject.ToString();
-            logEvent.TimeStamp = loggingEvent.TimeStamp.ToUniversalTime().ToString("O");
-            logEvent.Exception = loggingEvent.ExceptionObject == null ? "" : loggingEvent.ExceptionObject.ToString();
-            logEvent.Message = loggingEvent.RenderedMessage;
-            logEvent.Fix = loggingEvent.Fix.ToString();
-            logEvent.HostName = Environment.MachineName;
+            var logEvent = new LogEvent
+                {
+                    Id = new UniqueIdGenerator().GenerateUniqueId(),
+                    LoggerName = loggingEvent.LoggerName,
+                    Domain = loggingEvent.Domain,
+                    Identity = loggingEvent.Identity,
+                    ThreadName = loggingEvent.ThreadName,
+                    UserName = loggingEvent.UserName,
+                    MessageObject = loggingEvent.MessageObject == null ? "" : loggingEvent.MessageObject.ToString(),
+                    TimeStamp = loggingEvent.TimeStamp.ToUniversalTime().ToString("O"),
+                    Exception = loggingEvent.ExceptionObject == null ? "" : loggingEvent.ExceptionObject.ToString(),
+                    Message = loggingEvent.RenderedMessage,
+                    Fix = loggingEvent.Fix.ToString(),
+                    HostName = Environment.MachineName
+                };
 
             if (loggingEvent.Level != null)
             {
