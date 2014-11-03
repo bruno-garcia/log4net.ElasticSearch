@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Net;
 using log4net.Appender;
 using log4net.Core;
@@ -8,6 +9,8 @@ namespace log4net.ElasticSearch
 {
     public class ElasticSearchAppender : AppenderSkeleton
     {
+        IRepository repository;
+
         public string ConnectionString { get; set; }
 
         public override void ActivateOptions()
@@ -21,7 +24,10 @@ namespace log4net.ElasticSearch
             catch (Exception ex)
             {
                 ErrorHandler.Error("Valid ConnectionString must be provided", ex, ErrorCode.GenericFailure);
+                return;
             }
+
+            repository = Repository.Create(ConnectionString);
         }
 
         protected override void Append(LoggingEvent loggingEvent)
@@ -38,14 +44,10 @@ namespace log4net.ElasticSearch
 
             try
             {
-                var client = Repository.Create(ConnectionString);
-
-                var logEvent = LogEventBuilder.Build(loggingEvent);
-
-                client.Add(logEvent);
+                repository.Add(LogEvent.Create(loggingEvent));
             }
             catch (Exception ex)
-            {
+            {                
                 ErrorHandler.Error(string.Format("Failed to add {0} to ElasticSearch", typeof(LogEvent).Name), ex, ErrorCode.GenericFailure);
             }
         }

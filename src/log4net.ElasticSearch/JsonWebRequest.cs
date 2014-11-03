@@ -10,7 +10,7 @@ namespace log4net.ElasticSearch
 
         public static HttpWebRequest For(Connection connection)
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create(connection.ToString());
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(connection);
 
             httpWebRequest.ContentType = ContentType;
             httpWebRequest.Method = Method;

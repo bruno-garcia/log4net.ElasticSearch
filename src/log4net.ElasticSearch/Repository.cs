@@ -12,17 +12,19 @@ namespace log4net.ElasticSearch
 
     public class Repository : IRepository
     {
-        readonly HttpWebRequest httpWebRequest;
         readonly JavaScriptSerializer serializer;
+        readonly Connection connection;
 
-        Repository(HttpWebRequest httpWebRequest, JavaScriptSerializer serializer)
+        Repository(JavaScriptSerializer serializer, Connection connection)
         {            
-            this.httpWebRequest = httpWebRequest;
             this.serializer = serializer;
+            this.connection = connection;
         }
 
         public void Add(LogEvent logEvent)
         {
+            var httpWebRequest = JsonWebRequest.For(connection);
+            
             using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
             {
                 var json = serializer.Serialize(logEvent);
@@ -38,11 +40,11 @@ namespace log4net.ElasticSearch
                     throw new WebException(string.Format("Failed to correctly add {0} to the ElasticSearch index.", logEvent.GetType().Name));
                 }
             }
-        }        
+        }
 
         public static IRepository Create(string connectionString)
         {
-            return new Repository(JsonWebRequest.For(ConnectionBuilder.Build(connectionString)), new JavaScriptSerializer());
+            return new Repository(new JavaScriptSerializer(), Connection.Create(connectionString));
         }
     }
 }
