@@ -11,42 +11,45 @@ namespace log4net.ElasticSearch
         void Add(LogEvent logEvent);
     }
 
-    public class Repository : IRepository
+    public static class Repository
     {
-        readonly JavaScriptSerializer serializer;
-        readonly Uri uri;
-
-        Repository(JavaScriptSerializer serializer, Uri uri)
-        {
-            this.serializer = serializer;
-            this.uri = uri;
-        }
-
-        public void Add(LogEvent logEvent)
-        {
-            var httpWebRequest = JsonWebRequest.For(uri);
-
-            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
-            {
-                var json = serializer.Serialize(logEvent);
-
-                streamWriter.Write(json);
-                streamWriter.Flush();
-
-                var httpResponse = (HttpWebResponse) httpWebRequest.GetResponse();
-                httpResponse.Close();
-
-                if (httpResponse.StatusCode != HttpStatusCode.Created)
-                {
-                    throw new WebException(string.Format("Failed to correctly add {0} to the ElasticSearch index.",
-                                                         logEvent.GetType().Name));
-                }
-            }
-        }
-
         public static IRepository Create(string connectionString)
         {
-            return new Repository(new JavaScriptSerializer(), Models.Uri.Create(connectionString));
+            return new SynchronousRepository(new JavaScriptSerializer(), Models.Uri.Create(connectionString));
+        }
+
+        class SynchronousRepository : IRepository
+        {
+            readonly JavaScriptSerializer serializer;
+            readonly Uri uri;
+
+            public SynchronousRepository(JavaScriptSerializer serializer, Uri uri)
+            {
+                this.serializer = serializer;
+                this.uri = uri;
+            }
+
+            public void Add(LogEvent logEvent)
+            {
+                var httpWebRequest = JsonWebRequest.For(uri);
+
+                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                {
+                    var json = serializer.Serialize(logEvent);
+
+                    streamWriter.Write(json);
+                    streamWriter.Flush();
+
+                    var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                    httpResponse.Close();
+
+                    if (httpResponse.StatusCode != HttpStatusCode.Created)
+                    {
+                        throw new WebException(string.Format("Failed to correctly add {0} to the ElasticSearch index.",
+                                                             logEvent.GetType().Name));
+                    }
+                }
+            }            
         }
     }
 }
