@@ -14,21 +14,25 @@ namespace log4net.ElasticSearch
     public class Repository : IRepository
     {
         private readonly HttpWebRequest httpWebRequest;
+        private readonly JavaScriptSerializer serializer;
 
         Repository(ElasticSearchConnection connection)
         {
+            serializer = new JavaScriptSerializer();
+
             ServicePointManager.Expect100Continue = false;
             httpWebRequest = (HttpWebRequest)WebRequest.Create(connection.ToString());
             
             httpWebRequest.ContentType = "text/json";
             httpWebRequest.Method = "POST";
+
         }
 
         public void Add(LogEvent logEvent)
         {
             using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
             {
-                var json = new JavaScriptSerializer().Serialize(logEvent);
+                var json = serializer.Serialize(logEvent);
 
                 streamWriter.Write(json);
                 streamWriter.Flush();

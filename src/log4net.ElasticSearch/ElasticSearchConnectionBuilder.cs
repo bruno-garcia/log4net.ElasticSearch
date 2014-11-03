@@ -8,6 +8,11 @@ namespace log4net.ElasticSearch
     {
         public static ElasticSearchConnection Build(string connectionString)
         {
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                throw new ArgumentException("ConnectionString is null or empty", "connectionString");
+            }
+
             try
             {
                 var builder = new System.Data.Common.DbConnectionStringBuilder

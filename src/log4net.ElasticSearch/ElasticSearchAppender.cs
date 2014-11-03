@@ -9,24 +9,25 @@ namespace log4net.ElasticSearch
         public string ConnectionString { get; set; }
         
         protected override void Append(LoggingEvent loggingEvent)
-        {
-            if (string.IsNullOrEmpty(ConnectionString))
-            {
-                var exception = new InvalidOperationException("Connection string not present.");
-                ErrorHandler.Error("Connection string not included in appender.", exception, ErrorCode.GenericFailure);
-
-                return;
-            }
-            var client = Repository.Create(ConnectionString);
-
-            var logEvent = LogEventFactory.Create(loggingEvent);
+        {            
             try
             {
+                var logEvent = LogEventFactory.Create(loggingEvent);
+
+                var client = Repository.Create(ConnectionString);
                 client.Add(logEvent);
+            }
+            catch (ArgumentNullException ex)
+            {
+                ErrorHandler.Error("Unable to create LogEvent from LoggingEvent", ex, ErrorCode.GenericFailure);
+            }
+            catch (ArgumentException ex)
+            {
+                ErrorHandler.Error("ConnectionString not provided", ex, ErrorCode.GenericFailure);
             }
             catch (InvalidOperationException ex)
             {
-                ErrorHandler.Error("Invalid connection to ElasticSearch", ex, ErrorCode.GenericFailure);
+                ErrorHandler.Error("ConnectionString is invalid", ex, ErrorCode.GenericFailure);
             }
         }
     }
