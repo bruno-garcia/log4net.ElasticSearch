@@ -12,48 +12,45 @@ namespace log4net.ElasticSearch
         void Add(IEnumerable<LogEvent> logEvents);
     }
 
-    public static class Repository
+    public class Repository : IRepository
     {
+        readonly JavaScriptSerializer serializer;
+        readonly Uri uri;
+
         public static IRepository Create(string connectionString)
         {
-            return new SynchronousRepository(new JavaScriptSerializer(), Models.Uri.Create(connectionString));
+            return new Repository(new JavaScriptSerializer(), Models.Uri.Create(connectionString));
         }
 
-        class SynchronousRepository : IRepository
+        Repository(JavaScriptSerializer serializer, Uri uri)
         {
-            readonly JavaScriptSerializer serializer;
-            readonly Uri uri;
+            this.serializer = serializer;
+            this.uri = uri;
+        }
 
-            public SynchronousRepository(JavaScriptSerializer serializer, Uri uri)
+        public void Add(IEnumerable<LogEvent> logEvents)
+        {
+            foreach (var logEvent in logEvents)
             {
-                this.serializer = serializer;
-                this.uri = uri;
-            }
+                var httpWebRequest = JsonWebRequest.For(uri);
 
-            public void Add(IEnumerable<LogEvent> logEvents)
-            {
-                foreach (var logEvent in logEvents)
+                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
                 {
-                    var httpWebRequest = JsonWebRequest.For(uri);
+                    var json = serializer.Serialize(logEvent);
 
-                    using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                    streamWriter.Write(json);
+                    streamWriter.Flush();
+
+                    var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                    httpResponse.Close();
+
+                    if (httpResponse.StatusCode != HttpStatusCode.Created)
                     {
-                        var json = serializer.Serialize(logEvent);
-
-                        streamWriter.Write(json);
-                        streamWriter.Flush();
-
-                        var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-                        httpResponse.Close();
-
-                        if (httpResponse.StatusCode != HttpStatusCode.Created)
-                        {
-                            throw new WebException(string.Format("Failed to correctly add {0} to the ElasticSearch index.",
-                                                                 logEvents.GetType().Name));
-                        }
-                    }                    
+                        throw new WebException(string.Format("Failed to correctly add {0} to the ElasticSearch index.",
+                                                             logEvents.GetType().Name));
+                    }
                 }
-            }            
+            }
         }
     }
 }

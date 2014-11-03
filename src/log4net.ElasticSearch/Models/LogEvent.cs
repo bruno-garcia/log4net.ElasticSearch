@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using log4net.Core;
 
 namespace log4net.ElasticSearch.Models
@@ -48,8 +49,13 @@ namespace log4net.ElasticSearch.Models
         public string ThreadName { get; set; }
 
         public string HostName { get; set; }
+                
+        public static IEnumerable<LogEvent> CreateMany(IEnumerable<LoggingEvent> loggingEvents)
+        {
+            return loggingEvents.Select(@event => Create(@event));
+        }
 
-        public static LogEvent Create(LoggingEvent loggingEvent)
+        static LogEvent Create(LoggingEvent loggingEvent)
         {
             var logEvent = new LogEvent
             {
@@ -67,7 +73,7 @@ namespace log4net.ElasticSearch.Models
                 HostName = Environment.MachineName,
                 Level = loggingEvent.Level == null ? null : loggingEvent.Level.DisplayName
             };
-            
+
             if (loggingEvent.LocationInformation != null)
             {
                 logEvent.ClassName = loggingEvent.LocationInformation.ClassName;
@@ -81,7 +87,7 @@ namespace log4net.ElasticSearch.Models
 
             return logEvent;
         }
-
+        
         static void AddProperties(LoggingEvent loggingEvent, LogEvent logEvent)
         {
             var properties = loggingEvent.GetProperties();

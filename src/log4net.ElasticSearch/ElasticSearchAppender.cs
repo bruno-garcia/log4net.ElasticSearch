@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using log4net.Appender;
 using log4net.Core;
 using log4net.ElasticSearch.Models;
@@ -9,9 +11,17 @@ namespace log4net.ElasticSearch
 {
     public class ElasticSearchAppender : BufferingAppenderSkeleton
     {
+        readonly ManualResetEvent workQueueEmptyEvent;
+
+        int queuedCallbackCount;
         IRepository repository;
 
-        public string ConnectionString { get; set; }        
+        public ElasticSearchAppender()
+        {
+            workQueueEmptyEvent = new ManualResetEvent(true);
+        }
+
+        public string ConnectionString { get; set; }
 
         public override void ActivateOptions()
         {
@@ -31,17 +41,50 @@ namespace log4net.ElasticSearch
         }
 
         protected override void SendBuffer(LoggingEvent[] events)
-        {            
+        {
+            BeginAsyncSend();
+            if (ThreadPool.QueueUserWorkItem(SendBufferCallback, events))
+                return;
+            EndAsyncSend();
+            ErrorHandler.Error("ElasticSearchAppender [" + Name + "] failed to ThreadPool.QueueUserWorkItem logging events in SendBuffer.");
+        }
+
+        protected override void OnClose()
+        {
+            if (workQueueEmptyEvent.WaitOne(30000, false))
+                return;
+            ErrorHandler.Error("ElasticSearchAppender [" + Name + "] failed to send all queued events before close, in OnClose.");
+        }
+
+        private void BeginAsyncSend()
+        {
+            workQueueEmptyEvent.Reset();
+            Interlocked.Increment(ref queuedCallbackCount);
+        }
+
+        private void SendBufferCallback(object state)
+        {
             try
             {
-                repository.Add(events.Select(@event => LogEvent.Create(@event)));
+                repository.Add(LogEvent.CreateMany((IEnumerable<LoggingEvent>) state));
             }
             catch (Exception ex)
             {
-                ErrorHandler.Error(string.Format("Failed to add {0} to ElasticSearch", typeof(LogEvent).Name), ex, ErrorCode.GenericFailure);
+                ErrorHandler.Error("Failed in SendBufferCallback", ex);
+            }
+            finally
+            {
+                EndAsyncSend();
             }
         }
 
+        private void EndAsyncSend()
+        {
+            if (Interlocked.Decrement(ref queuedCallbackCount) > 0)
+                return;
+            workQueueEmptyEvent.Set();
+        }
+        
         static void Validate(string connectionString)
         {
             if (connectionString == null)
