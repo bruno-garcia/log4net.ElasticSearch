@@ -2,6 +2,7 @@
 using System.Net;
 using log4net.Appender;
 using log4net.Core;
+using log4net.ElasticSearch.Models;
 
 namespace log4net.ElasticSearch
 {
@@ -12,32 +13,61 @@ namespace log4net.ElasticSearch
         public override void ActivateOptions()
         {
             ServicePointManager.Expect100Continue = false;
+
+            try
+            {
+                Validate(ConnectionString);
+            }
+            catch (Exception ex)
+            {
+                ErrorHandler.Error("Valid ConnectionString must be provided", ex, ErrorCode.GenericFailure);
+            }
         }
-        
+
         protected override void Append(LoggingEvent loggingEvent)
         {
             try
             {
+                Validate(loggingEvent);
+            }
+            catch (Exception ex)
+            {
+                ErrorHandler.Error(string.Format("{0} must not be null", typeof(LoggingEvent).Name), ex, ErrorCode.GenericFailure);
+                return;
+            }
+
+            try
+            {
+                var client = Repository.Create(ConnectionString);
+
                 var logEvent = LogEventFactory.Create(loggingEvent);
 
-                var client = Repository.Create(ConnectionString);
                 client.Add(logEvent);
             }
-            catch (ArgumentNullException ex)
+            catch (Exception ex)
             {
-                ErrorHandler.Error("Unable to create LogEvent from LoggingEvent", ex, ErrorCode.GenericFailure);
+                ErrorHandler.Error(string.Format("Failed to add {0} to ElasticSearch", typeof(LogEvent).Name), ex, ErrorCode.GenericFailure);
             }
-            catch (ArgumentException ex)
+        }
+
+        static void Validate(string connectionString)
+        {
+            if (connectionString == null)
             {
-                ErrorHandler.Error("ConnectionString not provided", ex, ErrorCode.GenericFailure);
+                throw new ArgumentNullException("connectionString");
             }
-            catch (WebException ex)
+
+            if (connectionString.Length == 0)
             {
-                ErrorHandler.Error("Failed to add log entry to ElasticSearch", ex, ErrorCode.GenericFailure);
+                throw new ArgumentException("connectionString is empty", "connectionString");
             }
-            catch (InvalidOperationException ex)
+        }
+
+        static void Validate(LoggingEvent loggingEvent)
+        {
+            if (loggingEvent == null)
             {
-                ErrorHandler.Error("ConnectionString is invalid", ex, ErrorCode.GenericFailure);
+                throw new ArgumentNullException("loggingEvent");
             }
         }
     }

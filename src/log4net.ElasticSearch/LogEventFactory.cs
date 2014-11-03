@@ -8,11 +8,6 @@ namespace log4net.ElasticSearch
     {
         public static LogEvent Create(LoggingEvent loggingEvent)
         {
-            if (loggingEvent == null)
-            {
-                throw new ArgumentNullException("loggingEvent");
-            }
-
             var logEvent = new LogEvent
             {
                 Id = new UniqueIdGenerator().GenerateUniqueId(),

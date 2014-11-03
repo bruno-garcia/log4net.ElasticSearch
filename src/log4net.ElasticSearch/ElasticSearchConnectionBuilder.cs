@@ -9,11 +9,6 @@ namespace log4net.ElasticSearch
     {
         public static ElasticSearchConnection Build(string connectionString)
         {
-            if (string.IsNullOrEmpty(connectionString))
-            {
-                throw new ArgumentException("ConnectionString is null or empty", "connectionString");
-            }
-
             try
             {
                 var builder = new DbConnectionStringBuilder
@@ -41,9 +36,9 @@ namespace log4net.ElasticSearch
                             Index = index
                         };
             }
-            catch
+            catch (Exception ex)
             {
-                throw new InvalidOperationException("Not a valid connection string");
+                throw new ArgumentException(string.Format("'{0}' is not a valid connection string", connectionString), "connectionString", ex);
             }
         }
     }
