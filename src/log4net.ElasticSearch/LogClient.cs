@@ -5,12 +5,17 @@ using System.Web.Script.Serialization;
 using log4net.ElasticSearch.Models;
 
 namespace log4net.ElasticSearch
-{   
-    public class LogClient
+{
+    public interface IRepository
+    {
+        void Add(LogEvent logEvent);
+    }
+
+    public class Repository : IRepository
     {
         private readonly HttpWebRequest httpWebRequest;
 
-        public LogClient(ElasticsearchConnection connection)
+        Repository(ElasticSearchConnection connection)
         {
             ServicePointManager.Expect100Continue = false;
             httpWebRequest = (HttpWebRequest)WebRequest.Create(string.Format("http://{0}:{1}/{2}/LogEvent", 
@@ -20,11 +25,11 @@ namespace log4net.ElasticSearch
             httpWebRequest.Method = "POST";
         }
 
-        public void CreateEvent(LogEvent logEvent)
+        public void Add(LogEvent logEvent)
         {
             using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
             {
-                string json = new JavaScriptSerializer().Serialize(logEvent);
+                var json = new JavaScriptSerializer().Serialize(logEvent);
 
                 streamWriter.Write(json);
                 streamWriter.Flush();
@@ -38,6 +43,11 @@ namespace log4net.ElasticSearch
                     throw new InvalidOperationException("Failed to correctly add the event to the Elasticsearch index.");
                 }
             }
+        }        
+
+        public static IRepository Create(string connectionString)
+        {
+            return new Repository(ElasticSearchConnectionBuilder.Build(connectionString));
         }
     }
 }

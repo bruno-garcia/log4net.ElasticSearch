@@ -45,8 +45,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyVersionInfo.cs" />
-    <Compile Include="ConnectionBuilder.cs" />
+    <Compile Include="ElasticSearchConnectionBuilder.cs" />
     <Compile Include="ElasticSearchAppender.cs" />
+    <Compile Include="LogEventFactory.cs" />
     <Compile Include="LogClient.cs" />
     <Compile Include="Models\ElasticsearchConnection.cs" />
     <Compile Include="Models\LogEvent.cs" />

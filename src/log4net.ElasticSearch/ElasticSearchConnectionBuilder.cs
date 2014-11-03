@@ -4,9 +4,9 @@ using log4net.ElasticSearch.Models;
 
 namespace log4net.ElasticSearch
 {
-    public class ConnectionBuilder
+    public static class ElasticSearchConnectionBuilder
     {
-        public static ElasticsearchConnection BuildElsticSearchConnection(string connectionString)
+        public static ElasticSearchConnection Build(string connectionString)
         {
             try
             {
@@ -23,13 +23,12 @@ namespace log4net.ElasticSearch
 
                 var index = lookup["Index"];
 
-                // If the user asked for rolling logs, setup the index by day
                 if (!string.IsNullOrEmpty(lookup["rolling"]))
                     if (lookup["rolling"] == "true")
                         index = string.Format("{0}-{1}", index, DateTime.Now.ToString("yyyy.MM.dd"));
 
                 return
-                    new ElasticsearchConnection
+                    new ElasticSearchConnection
                     {
                         Server = lookup["Server"],
                         Port = lookup["Port"],
