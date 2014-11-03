@@ -8,6 +8,11 @@ namespace log4net.ElasticSearch
     public class ElasticSearchAppender : AppenderSkeleton
     {
         public string ConnectionString { get; set; }
+
+        public override void ActivateOptions()
+        {
+            ServicePointManager.Expect100Continue = false;
+        }
         
         protected override void Append(LoggingEvent loggingEvent)
         {
