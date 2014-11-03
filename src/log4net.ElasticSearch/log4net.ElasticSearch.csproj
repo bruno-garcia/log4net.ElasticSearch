@@ -48,7 +48,7 @@
     <Compile Include="ElasticSearchAppender.cs" />
     <Compile Include="JsonWebRequest.cs" />
     <Compile Include="Repository.cs" />
-    <Compile Include="Models\Connection.cs" />
+    <Compile Include="Models\Uri.cs" />
     <Compile Include="Models\LogEvent.cs" />
     <Compile Include="Models\UniqueIdGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

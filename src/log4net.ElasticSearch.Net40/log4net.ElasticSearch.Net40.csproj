@@ -52,14 +52,14 @@
     <Compile Include="..\log4net.ElasticSearch\JsonWebRequest.cs">
       <Link>JsonWebRequest.cs</Link>
     </Compile>
-    <Compile Include="..\log4net.ElasticSearch\Models\Connection.cs">
-      <Link>Models\Connection.cs</Link>
-    </Compile>
     <Compile Include="..\log4net.ElasticSearch\Models\LogEvent.cs">
       <Link>Models\LogEvent.cs</Link>
     </Compile>
     <Compile Include="..\log4net.ElasticSearch\Models\UniqueIdGenerator.cs">
       <Link>Models\UniqueIdGenerator.cs</Link>
+    </Compile>
+    <Compile Include="..\log4net.ElasticSearch\Models\Uri.cs">
+      <Link>Models\Uri.cs</Link>
     </Compile>
     <Compile Include="..\log4net.ElasticSearch\Repository.cs">
       <Link>Repository.cs</Link>

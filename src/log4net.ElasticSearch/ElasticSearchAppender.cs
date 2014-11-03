@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Net;
 using log4net.Appender;
 using log4net.Core;
@@ -34,16 +33,6 @@ namespace log4net.ElasticSearch
         {
             try
             {
-                Validate(loggingEvent);
-            }
-            catch (Exception ex)
-            {
-                ErrorHandler.Error(string.Format("{0} must not be null", typeof(LoggingEvent).Name), ex, ErrorCode.GenericFailure);
-                return;
-            }
-
-            try
-            {
                 repository.Add(LogEvent.Create(loggingEvent));
             }
             catch (Exception ex)
@@ -62,14 +51,6 @@ namespace log4net.ElasticSearch
             if (connectionString.Length == 0)
             {
                 throw new ArgumentException("connectionString is empty", "connectionString");
-            }
-        }
-
-        static void Validate(LoggingEvent loggingEvent)
-        {
-            if (loggingEvent == null)
-            {
-                throw new ArgumentNullException("loggingEvent");
             }
         }
     }

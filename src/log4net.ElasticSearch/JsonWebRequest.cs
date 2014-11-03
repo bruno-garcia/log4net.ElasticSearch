@@ -1,5 +1,5 @@
-﻿using System.Net;
-using log4net.ElasticSearch.Models;
+﻿using System;
+using System.Net;
 
 namespace log4net.ElasticSearch
 {
@@ -8,9 +8,9 @@ namespace log4net.ElasticSearch
         const string ContentType = "text/json";
         const string Method = "POST";
 
-        public static HttpWebRequest For(Connection connection)
+        public static HttpWebRequest For(Uri uri)
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create(connection);
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(uri);
 
             httpWebRequest.ContentType = ContentType;
             httpWebRequest.Method = Method;

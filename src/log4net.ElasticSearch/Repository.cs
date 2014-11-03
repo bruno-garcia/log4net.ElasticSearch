@@ -2,6 +2,7 @@
 using System.Net;
 using System.Web.Script.Serialization;
 using log4net.ElasticSearch.Models;
+using Uri = System.Uri;
 
 namespace log4net.ElasticSearch
 {
@@ -13,18 +14,18 @@ namespace log4net.ElasticSearch
     public class Repository : IRepository
     {
         readonly JavaScriptSerializer serializer;
-        readonly Connection connection;
+        readonly Uri uri;
 
-        Repository(JavaScriptSerializer serializer, Connection connection)
-        {            
+        Repository(JavaScriptSerializer serializer, Uri uri)
+        {
             this.serializer = serializer;
-            this.connection = connection;
+            this.uri = uri;
         }
 
         public void Add(LogEvent logEvent)
         {
-            var httpWebRequest = JsonWebRequest.For(connection);
-            
+            var httpWebRequest = JsonWebRequest.For(uri);
+
             using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
             {
                 var json = serializer.Serialize(logEvent);
@@ -32,19 +33,20 @@ namespace log4net.ElasticSearch
                 streamWriter.Write(json);
                 streamWriter.Flush();
 
-                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-                httpResponse.Close();                
+                var httpResponse = (HttpWebResponse) httpWebRequest.GetResponse();
+                httpResponse.Close();
 
                 if (httpResponse.StatusCode != HttpStatusCode.Created)
                 {
-                    throw new WebException(string.Format("Failed to correctly add {0} to the ElasticSearch index.", logEvent.GetType().Name));
+                    throw new WebException(string.Format("Failed to correctly add {0} to the ElasticSearch index.",
+                                                         logEvent.GetType().Name));
                 }
             }
         }
 
         public static IRepository Create(string connectionString)
         {
-            return new Repository(new JavaScriptSerializer(), Connection.Create(connectionString));
+            return new Repository(new JavaScriptSerializer(), Models.Uri.Create(connectionString));
         }
     }
 }
