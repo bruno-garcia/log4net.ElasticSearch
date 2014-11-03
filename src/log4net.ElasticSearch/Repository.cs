@@ -30,6 +30,7 @@ namespace log4net.ElasticSearch
 
         public void Add(IEnumerable<LogEvent> logEvents)
         {
+            //TODO - hoping the guys who know ES can provide guidance for bulk operations
             foreach (var logEvent in logEvents)
             {
                 var httpWebRequest = JsonWebRequest.For(uri);
