@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using log4net.Appender;
 using log4net.Core;
 
@@ -9,7 +10,7 @@ namespace log4net.ElasticSearch
         public string ConnectionString { get; set; }
         
         protected override void Append(LoggingEvent loggingEvent)
-        {            
+        {
             try
             {
                 var logEvent = LogEventFactory.Create(loggingEvent);
@@ -24,6 +25,10 @@ namespace log4net.ElasticSearch
             catch (ArgumentException ex)
             {
                 ErrorHandler.Error("ConnectionString not provided", ex, ErrorCode.GenericFailure);
+            }
+            catch (WebException ex)
+            {
+                ErrorHandler.Error("Failed to add log entry to ElasticSearch", ex, ErrorCode.GenericFailure);
             }
             catch (InvalidOperationException ex)
             {

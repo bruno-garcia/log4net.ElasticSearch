@@ -43,7 +43,7 @@ namespace log4net.ElasticSearch
 
                 if (httpResponse.StatusCode != HttpStatusCode.Created)
                 {
-                    throw new InvalidOperationException("Failed to correctly add the event to the Elasticsearch index.");
+                    throw new WebException("Failed to correctly add the event to the Elasticsearch index.");
                 }
             }
         }        
