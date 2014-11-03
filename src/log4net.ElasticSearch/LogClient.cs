@@ -18,8 +18,7 @@ namespace log4net.ElasticSearch
         Repository(ElasticSearchConnection connection)
         {
             ServicePointManager.Expect100Continue = false;
-            httpWebRequest = (HttpWebRequest)WebRequest.Create(string.Format("http://{0}:{1}/{2}/LogEvent", 
-                connection.Server, connection.Port, connection.Index));
+            httpWebRequest = (HttpWebRequest)WebRequest.Create(connection.ToString());
             
             httpWebRequest.ContentType = "text/json";
             httpWebRequest.Method = "POST";

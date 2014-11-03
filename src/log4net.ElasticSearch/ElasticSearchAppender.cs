@@ -7,7 +7,7 @@ namespace log4net.ElasticSearch
     public class ElasticSearchAppender : AppenderSkeleton
     {
         public string ConnectionString { get; set; }
-
+        
         protected override void Append(LoggingEvent loggingEvent)
         {
             if (string.IsNullOrEmpty(ConnectionString))
