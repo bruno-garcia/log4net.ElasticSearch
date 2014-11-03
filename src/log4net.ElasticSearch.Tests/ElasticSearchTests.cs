@@ -3,7 +3,7 @@ using Nest;
 using Xunit;
 using Xunit.Sdk;
 using log4net.ElasticSearch.Tests.Infrastructure;
-using LogEvent = log4net.ElasticSearch.Models.LogEvent;
+using logEvent = log4net.ElasticSearch.Models.logEvent;
 
 namespace log4net.ElasticSearch.Tests
 {
@@ -34,8 +34,8 @@ namespace log4net.ElasticSearch.Tests
             Retry.Ignoring<AssertException>(() =>
                 {
                     var logEntries =
-                        elasticClient.Search<LogEvent>(
-                            sd => sd.Query(qd => qd.Term(le => le.ClassName, logEvent.ClassName)));
+                        elasticClient.Search<logEvent>(
+                            sd => sd.Query(qd => qd.Term(le => le.className, logEvent.className)));
 
                     logEntries.Total.Should().Be(1);                    
                 });

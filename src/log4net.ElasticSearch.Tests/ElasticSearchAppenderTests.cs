@@ -4,7 +4,7 @@ using Nest;
 using Xunit;
 using Xunit.Sdk;
 using log4net.ElasticSearch.Tests.Infrastructure;
-using LogEvent = log4net.ElasticSearch.Models.LogEvent;
+using logEvent = log4net.ElasticSearch.Models.logEvent;
 
 namespace log4net.ElasticSearch.Tests
 {
@@ -29,7 +29,7 @@ namespace log4net.ElasticSearch.Tests
             Retry.Ignoring<AssertException>(() =>
             {
                 var logEntries =
-                    elasticClient.Search<LogEvent>(s => s.Query(qd => qd.Term(le => le.Message, message)));
+                    elasticClient.Search<logEvent>(s => s.Query(qd => qd.Term(le => le.message, message)));
 
                 logEntries.Total.Should().Be(1);
             });
@@ -50,13 +50,13 @@ namespace log4net.ElasticSearch.Tests
             Retry.Ignoring<AssertException>(() =>
                 {
                     var logEntries =
-                        elasticClient.Search<LogEvent>(sd => sd.Query(qd => qd.Term(le => le.Message, message)));
+                        elasticClient.Search<logEvent>(sd => sd.Query(qd => qd.Term(le => le.message, message)));
 
                     logEntries.Total.Should().Be(1);
 
                     var actualLogEntry = logEntries.Documents.First();
 
-                    actualLogEntry.Properties[globalPropertyName].Should().Be(globalProperty);
+                    actualLogEntry.properties[globalPropertyName].Should().Be(globalProperty);
                 });
         }
 
@@ -75,13 +75,13 @@ namespace log4net.ElasticSearch.Tests
             Retry.Ignoring<AssertException>(() =>
                 {
                     var logEntries =
-                        elasticClient.Search<LogEvent>(sd => sd.Query(qd => qd.Term(le => le.Message, message)));
+                        elasticClient.Search<logEvent>(sd => sd.Query(qd => qd.Term(le => le.message, message)));
 
                     logEntries.Total.Should().Be(1);
 
                     var actualLogEntry = logEntries.Documents.First();
 
-                    actualLogEntry.Properties[threadPropertyName].Should().Be(threadProperty);
+                    actualLogEntry.properties[threadPropertyName].Should().Be(threadProperty);
                 });
         }
 
@@ -100,13 +100,13 @@ namespace log4net.ElasticSearch.Tests
             Retry.Ignoring<AssertException>(() =>
                 {
                     var logEntries =
-                        elasticClient.Search<LogEvent>(sd => sd.Query(qd => qd.Term(le => le.Message, message)));
+                        elasticClient.Search<logEvent>(sd => sd.Query(qd => qd.Term(le => le.message, message)));
 
                 logEntries.Total.Should().Be(1);
 
                 var actualLogEntry = logEntries.Documents.First();
 
-                actualLogEntry.Properties[localThreadPropertyName].Should().Be(localTreadProperty);
+                actualLogEntry.properties[localThreadPropertyName].Should().Be(localTreadProperty);
             });
         }
 

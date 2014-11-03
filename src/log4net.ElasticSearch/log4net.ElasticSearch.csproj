@@ -49,8 +49,7 @@
     <Compile Include="ElasticSearchAppender.cs" />
     <Compile Include="LogClient.cs" />
     <Compile Include="Models\ElasticsearchConnection.cs" />
-    <Compile Include="Models\LogEvent.cs" />
-    <Compile Include="Models\UniqueIdGenerator.cs" />
+    <Compile Include="Models\logEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
