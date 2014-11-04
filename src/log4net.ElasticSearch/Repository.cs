@@ -17,11 +17,6 @@ namespace log4net.ElasticSearch
         readonly JavaScriptSerializer serializer;
         readonly Uri uri;
 
-        public static IRepository Create(string connectionString)
-        {
-            return new Repository(new JavaScriptSerializer(), Models.Uri.Create(connectionString));
-        }
-
         Repository(JavaScriptSerializer serializer, Uri uri)
         {
             this.serializer = serializer;
@@ -30,28 +25,32 @@ namespace log4net.ElasticSearch
 
         public void Add(IEnumerable<LogEvent> logEvents)
         {
-            //TODO - hoping the guys who know ES can provide guidance for bulk operations
-            foreach (var logEvent in logEvents)
-            {
-                var httpWebRequest = JsonWebRequest.For(uri);
-
-                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            logEvents.Do(logEvent =>
                 {
-                    var json = serializer.Serialize(logEvent);
+                    var httpWebRequest = JsonWebRequest.For(uri);
 
-                    streamWriter.Write(json);
-                    streamWriter.Flush();
-
-                    var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-                    httpResponse.Close();
-
-                    if (httpResponse.StatusCode != HttpStatusCode.Created)
+                    using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
                     {
-                        throw new WebException(string.Format("Failed to correctly add {0} to the ElasticSearch index.",
-                                                             logEvents.GetType().Name));
+                        var json = serializer.Serialize(logEvent);
+
+                        streamWriter.Write(json);
+                        streamWriter.Flush();
+
+                        var httpResponse = (HttpWebResponse) httpWebRequest.GetResponse();
+                        httpResponse.Close();
+
+                        if (httpResponse.StatusCode != HttpStatusCode.Created)
+                        {
+                            throw new WebException(
+                                "Failed to correctly add {0} to the ElasticSearch index.".With(logEvents.GetType().Name));
+                        }
                     }
-                }
-            }
+                });
+        }
+
+        public static IRepository Create(string connectionString)
+        {
+            return new Repository(new JavaScriptSerializer(), Models.Uri.Create(connectionString));
         }
     }
 }

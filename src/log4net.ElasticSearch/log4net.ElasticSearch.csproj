@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="AssemblyVersionInfo.cs" />
     <Compile Include="ElasticSearchAppender.cs" />
+    <Compile Include="ExtensionMethods.cs" />
     <Compile Include="JsonWebRequest.cs" />
     <Compile Include="Repository.cs" />
     <Compile Include="Models\Uri.cs" />

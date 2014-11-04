@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading;
 using log4net.Appender;
@@ -46,14 +45,14 @@ namespace log4net.ElasticSearch
             if (ThreadPool.QueueUserWorkItem(SendBufferCallback, events))
                 return;
             EndAsyncSend();
-            ErrorHandler.Error("ElasticSearchAppender [" + Name + "] failed to ThreadPool.QueueUserWorkItem logging events in SendBuffer.");
+            ErrorHandler.Error("ElasticSearchAppender [{0}] failed to ThreadPool.QueueUserWorkItem logging events in SendBuffer.".With(Name));
         }
 
         protected override void OnClose()
         {
             if (workQueueEmptyEvent.WaitOne(30000, false))
                 return;
-            ErrorHandler.Error("ElasticSearchAppender [" + Name + "] failed to send all queued events before close, in OnClose.");
+            ErrorHandler.Error("ElasticSearchAppender [{0}] failed to send all queued events before close, in OnClose.".With(Name));
         }
 
         private void BeginAsyncSend()
@@ -97,5 +96,5 @@ namespace log4net.ElasticSearch
                 throw new ArgumentException("connectionString is empty", "connectionString");
             }
         }
-    }
+    }    
 }
