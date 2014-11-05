@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using log4net.Appender;
@@ -42,7 +43,7 @@ namespace log4net.ElasticSearch
         protected override void SendBuffer(LoggingEvent[] events)
         {
             BeginAsyncSend();
-            if (ThreadPool.QueueUserWorkItem(SendBufferCallback, events))
+            if (ThreadPool.QueueUserWorkItem(SendBufferCallback, LogEvent.CreateMany(events)))
                 return;
             EndAsyncSend();
             ErrorHandler.Error("ElasticSearchAppender [{0}] failed to ThreadPool.QueueUserWorkItem logging events in SendBuffer.".With(Name));
@@ -65,7 +66,7 @@ namespace log4net.ElasticSearch
         {
             try
             {
-                repository.Add(LogEvent.CreateMany((IEnumerable<LoggingEvent>) state));
+                repository.Add((IEnumerable<LogEvent>) state);
             }
             catch (Exception ex)
             {
