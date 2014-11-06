@@ -1,86 +1,100 @@
 ﻿using System;
-using log4net.ElasticSearch.Models;
+using System.Collections.Generic;
+using System.Net;
+using System.Threading;
 using log4net.Appender;
 using log4net.Core;
+using log4net.ElasticSearch.Models;
 
 namespace log4net.ElasticSearch
 {
-    public class ElasticSearchAppender : AppenderSkeleton
+    public class ElasticSearchAppender : BufferingAppenderSkeleton
     {
+        readonly ManualResetEvent workQueueEmptyEvent;
+
+        int queuedCallbackCount;
+        IRepository repository;
+
+        public ElasticSearchAppender()
+        {
+            workQueueEmptyEvent = new ManualResetEvent(true);
+        }
+
         public string ConnectionString { get; set; }
 
-        /// <summary>
-        /// Add a log event to the ElasticSearch Repo
-        /// </summary>
-        /// <param name="loggingEvent"></param>
-        protected override void Append(Core.LoggingEvent loggingEvent)
+        public override void ActivateOptions()
         {
-            if (string.IsNullOrEmpty(ConnectionString))
-            {
-                var exception = new InvalidOperationException("Connection string not present.");
-                ErrorHandler.Error("Connection string not included in appender.", exception, ErrorCode.GenericFailure);
+            ServicePointManager.Expect100Continue = false;
 
-                return;
-            }
-            var settings = ConnectionBuilder.BuildElsticSearchConnection(ConnectionString);
-            var client = new LogClient(settings);
-
-            var logEvent = CreateLogEvent(loggingEvent);
             try
             {
-                client.CreateEvent(logEvent);
+                Validate(ConnectionString);
             }
-            catch (InvalidOperationException ex)
+            catch (Exception ex)
             {
-                ErrorHandler.Error("Invalid connection to ElasticSearch", ex, ErrorCode.GenericFailure);
+                ErrorHandler.Error("Valid ConnectionString must be provided", ex, ErrorCode.GenericFailure);
+                return;
             }
+
+            repository = Repository.Create(ConnectionString);
         }
 
-        private static logEvent CreateLogEvent(LoggingEvent loggingEvent)
+        protected override void SendBuffer(LoggingEvent[] events)
         {
-            if (loggingEvent == null)
-            {
-                throw new ArgumentNullException("loggingEvent");
-            }
-
-            var logEvent = new logEvent();
-            logEvent.loggerName = loggingEvent.LoggerName;
-            logEvent.domain = loggingEvent.Domain;
-            logEvent.identity = loggingEvent.Identity;
-            logEvent.threadName = loggingEvent.ThreadName;
-            logEvent.userName = loggingEvent.UserName;
-            logEvent.messageObject = loggingEvent.MessageObject ?? new object();
-            logEvent.timeStamp = loggingEvent.TimeStamp.ToUniversalTime().ToString("O");
-            logEvent.exception = loggingEvent.ExceptionObject ?? new object();
-            logEvent.message = loggingEvent.RenderedMessage;
-            logEvent.fix = loggingEvent.Fix.ToString();
-            logEvent.hostName = Environment.MachineName;
-
-            if (loggingEvent.Level != null)
-            {
-                logEvent.level = loggingEvent.Level.DisplayName;
-            }
-
-            if (loggingEvent.LocationInformation != null)
-            {
-                logEvent.className = loggingEvent.LocationInformation.ClassName;
-                logEvent.fileName = loggingEvent.LocationInformation.FileName;
-                logEvent.lineNumber = loggingEvent.LocationInformation.LineNumber;
-                logEvent.fullInfo = loggingEvent.LocationInformation.FullInfo;
-                logEvent.methodName = loggingEvent.LocationInformation.MethodName;
-            }
-
-            var properties = loggingEvent.GetProperties();
-           
-            foreach (var propertyKey in properties.GetKeys())
-            {
-                logEvent.properties.Add(propertyKey, properties[propertyKey].ToString());
-            }
-
-            // Add a "@timestamp" field to match the logstash format
-            logEvent.properties.Add("@timestamp", loggingEvent.TimeStamp.ToUniversalTime().ToString("O")); 
-
-            return logEvent;
+            BeginAsyncSend();
+            if (ThreadPool.QueueUserWorkItem(SendBufferCallback, logEvent.CreateMany(events)))
+                return;
+            EndAsyncSend();
+            ErrorHandler.Error("ElasticSearchAppender [{0}] failed to ThreadPool.QueueUserWorkItem logging events in SendBuffer.".With(Name));
         }
-    }
+
+        protected override void OnClose()
+        {
+            if (workQueueEmptyEvent.WaitOne(30000, false))
+                return;
+            ErrorHandler.Error("ElasticSearchAppender [{0}] failed to send all queued events before close, in OnClose.".With(Name));
+        }
+
+        private void BeginAsyncSend()
+        {
+            workQueueEmptyEvent.Reset();
+            Interlocked.Increment(ref queuedCallbackCount);
+        }
+
+        private void SendBufferCallback(object state)
+        {
+            try
+            {
+                repository.Add((IEnumerable<logEvent>) state);
+            }
+            catch (Exception ex)
+            {
+                ErrorHandler.Error("Failed in SendBufferCallback", ex);
+            }
+            finally
+            {
+                EndAsyncSend();
+            }
+        }
+
+        private void EndAsyncSend()
+        {
+            if (Interlocked.Decrement(ref queuedCallbackCount) > 0)
+                return;
+            workQueueEmptyEvent.Set();
+        }
+        
+        static void Validate(string connectionString)
+        {
+            if (connectionString == null)
+            {
+                throw new ArgumentNullException("connectionString");
+            }
+
+            if (connectionString.Length == 0)
+            {
+                throw new ArgumentException("connectionString is empty", "connectionString");
+            }
+        }
+    }    
 }

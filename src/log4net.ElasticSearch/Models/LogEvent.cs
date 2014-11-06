@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using log4net.Core;
 
 namespace log4net.ElasticSearch.Models
 {
-    /// <summary>
-    /// Base log event type that we will send to Elasticsearch (serialized)
-    /// </summary>
     public class logEvent
     {
         public logEvent()
@@ -16,9 +16,9 @@ namespace log4net.ElasticSearch.Models
   
         public string message { get; set; }
     
-        public object messageObject { get; set; }
+        public string messageObject { get; set; }
       
-        public object exception { get; set; }
+        public string exception { get; set; }
         
         public string loggerName { get; set; }
 
@@ -47,7 +47,55 @@ namespace log4net.ElasticSearch.Models
         public string threadName { get; set; }
 
         public string hostName { get; set; }
+                
+        public static IEnumerable<logEvent> CreateMany(IEnumerable<LoggingEvent> loggingEvents)
+        {
+            return loggingEvents.Select(@event => Create(@event));
+        }
 
-       
+        static logEvent Create(LoggingEvent loggingEvent)
+        {
+            var logEvent = new logEvent
+            {
+                loggerName = loggingEvent.LoggerName,
+                domain = loggingEvent.Domain,
+                identity = loggingEvent.Identity,
+                threadName = loggingEvent.ThreadName,
+                userName = loggingEvent.UserName,
+                messageObject = loggingEvent.MessageObject == null ? "" : loggingEvent.MessageObject.ToString(),
+                timeStamp = loggingEvent.TimeStamp.ToUniversalTime().ToString("O"),
+                exception = loggingEvent.ExceptionObject == null ? "" : loggingEvent.ExceptionObject.ToString(),
+                message = loggingEvent.RenderedMessage,
+                fix = loggingEvent.Fix.ToString(),
+                hostName = Environment.MachineName,
+                level = loggingEvent.Level == null ? null : loggingEvent.Level.DisplayName
+            };
+
+            if (loggingEvent.LocationInformation != null)
+            {
+                logEvent.className = loggingEvent.LocationInformation.ClassName;
+                logEvent.fileName = loggingEvent.LocationInformation.FileName;
+                logEvent.lineNumber = loggingEvent.LocationInformation.LineNumber;
+                logEvent.fullInfo = loggingEvent.LocationInformation.FullInfo;
+                logEvent.methodName = loggingEvent.LocationInformation.MethodName;
+            }
+
+            AddProperties(loggingEvent, logEvent);
+
+            return logEvent;
+        }
+        
+        static void AddProperties(LoggingEvent loggingEvent, logEvent logEvent)
+        {
+            var properties = loggingEvent.GetProperties();
+
+            foreach (var propertyKey in properties.GetKeys())
+            {
+                logEvent.properties.Add(propertyKey, properties[propertyKey].ToString());
+            }
+
+            // Add a "@timestamp" field to match the logstash format
+            logEvent.properties.Add("@timestamp", loggingEvent.TimeStamp.ToUniversalTime().ToString("O"));
+        }
     }
 }
