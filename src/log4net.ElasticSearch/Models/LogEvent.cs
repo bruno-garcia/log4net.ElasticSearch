@@ -16,9 +16,9 @@ namespace log4net.ElasticSearch.Models
   
         public string message { get; set; }
     
-        public string messageObject { get; set; }
+        public object messageObject { get; set; }
       
-        public string exception { get; set; }
+        public object exception { get; set; }
         
         public string loggerName { get; set; }
 
@@ -62,9 +62,9 @@ namespace log4net.ElasticSearch.Models
                 identity = loggingEvent.Identity,
                 threadName = loggingEvent.ThreadName,
                 userName = loggingEvent.UserName,
-                messageObject = loggingEvent.MessageObject == null ? "" : loggingEvent.MessageObject.ToString(),
+                messageObject = loggingEvent.MessageObject == null ? new object() : loggingEvent.MessageObject,
                 timeStamp = loggingEvent.TimeStamp.ToUniversalTime().ToString("O"),
-                exception = loggingEvent.ExceptionObject == null ? "" : loggingEvent.ExceptionObject.ToString(),
+                exception = loggingEvent.ExceptionObject == null ? new object() : loggingEvent.ExceptionObject,
                 message = loggingEvent.RenderedMessage,
                 fix = loggingEvent.Fix.ToString(),
                 hostName = Environment.MachineName,
