@@ -5,82 +5,79 @@ using log4net.Core;
 
 namespace log4net.ElasticSearch.Models
 {
-    public class LogEvent
+    public class logEvent
     {
-        public LogEvent()
+        public logEvent()
         {
-            Properties = new Dictionary<string, string>();
+            properties = new Dictionary<string, string>();
         }
 
-        public string Id { get; set; }
-
-        public string TimeStamp { get; set; }
+        public string timeStamp { get; set; }
   
-        public string Message { get; set; }
+        public string message { get; set; }
     
-        public string MessageObject { get; set; }
+        public string messageObject { get; set; }
       
-        public string Exception { get; set; }
+        public string exception { get; set; }
         
-        public string LoggerName { get; set; }
+        public string loggerName { get; set; }
 
-        public string Domain { get; set; }
+        public string domain { get; set; }
 
-        public string Identity { get; set; }
+        public string identity { get; set; }
 
-        public string Level { get; set; }
+        public string level { get; set; }
 
-        public string ClassName { get; set; }
+        public string className { get; set; }
 
-        public string FileName { get; set; }
+        public string fileName { get; set; }
 
-        public string LineNumber { get; set; }
+        public string lineNumber { get; set; }
 
-        public string FullInfo { get; set; }
+        public string fullInfo { get; set; }
 
-        public string MethodName { get; set; }
+        public string methodName { get; set; }
 
-        public string Fix { get; set; }
+        public string fix { get; set; }
 
-        public IDictionary<string, string> Properties { get; set; }
+        public IDictionary<string, string> properties { get; set; }
 
-        public string UserName { get; set; }
+        public string userName { get; set; }
 
-        public string ThreadName { get; set; }
+        public string threadName { get; set; }
 
-        public string HostName { get; set; }
+        public string hostName { get; set; }
                 
-        public static IEnumerable<LogEvent> CreateMany(IEnumerable<LoggingEvent> loggingEvents)
+        public static IEnumerable<logEvent> CreateMany(IEnumerable<LoggingEvent> loggingEvents)
         {
             return loggingEvents.Select(@event => Create(@event));
         }
 
-        static LogEvent Create(LoggingEvent loggingEvent)
+        static logEvent Create(LoggingEvent loggingEvent)
         {
-            var logEvent = new LogEvent
+            var logEvent = new logEvent
             {
-                Id = UniqueIdGenerator.GenerateUniqueId(),
-                LoggerName = loggingEvent.LoggerName,
-                Domain = loggingEvent.Domain,
-                Identity = loggingEvent.Identity,
-                ThreadName = loggingEvent.ThreadName,
-                UserName = loggingEvent.UserName,
-                MessageObject = loggingEvent.MessageObject == null ? "" : loggingEvent.MessageObject.ToString(),
-                TimeStamp = loggingEvent.TimeStamp.ToUniversalTime().ToString("O"),
-                Exception = loggingEvent.ExceptionObject == null ? "" : loggingEvent.ExceptionObject.ToString(),
-                Message = loggingEvent.RenderedMessage,
-                Fix = loggingEvent.Fix.ToString(),
-                HostName = Environment.MachineName,
-                Level = loggingEvent.Level == null ? null : loggingEvent.Level.DisplayName
+                loggerName = loggingEvent.LoggerName,
+                domain = loggingEvent.Domain,
+                identity = loggingEvent.Identity,
+                threadName = loggingEvent.ThreadName,
+                userName = loggingEvent.UserName,
+                messageObject = loggingEvent.MessageObject == null ? "" : loggingEvent.MessageObject.ToString(),
+                timeStamp = loggingEvent.TimeStamp.ToUniversalTime().ToString("O"),
+                exception = loggingEvent.ExceptionObject == null ? "" : loggingEvent.ExceptionObject.ToString(),
+                message = loggingEvent.RenderedMessage,
+                fix = loggingEvent.Fix.ToString(),
+                hostName = Environment.MachineName,
+                level = loggingEvent.Level == null ? null : loggingEvent.Level.DisplayName
             };
 
             if (loggingEvent.LocationInformation != null)
             {
-                logEvent.ClassName = loggingEvent.LocationInformation.ClassName;
-                logEvent.FileName = loggingEvent.LocationInformation.FileName;
-                logEvent.LineNumber = loggingEvent.LocationInformation.LineNumber;
-                logEvent.FullInfo = loggingEvent.LocationInformation.FullInfo;
-                logEvent.MethodName = loggingEvent.LocationInformation.MethodName;
+                logEvent.className = loggingEvent.LocationInformation.ClassName;
+                logEvent.fileName = loggingEvent.LocationInformation.FileName;
+                logEvent.lineNumber = loggingEvent.LocationInformation.LineNumber;
+                logEvent.fullInfo = loggingEvent.LocationInformation.FullInfo;
+                logEvent.methodName = loggingEvent.LocationInformation.MethodName;
             }
 
             AddProperties(loggingEvent, logEvent);
@@ -88,17 +85,17 @@ namespace log4net.ElasticSearch.Models
             return logEvent;
         }
         
-        static void AddProperties(LoggingEvent loggingEvent, LogEvent logEvent)
+        static void AddProperties(LoggingEvent loggingEvent, logEvent logEvent)
         {
             var properties = loggingEvent.GetProperties();
 
             foreach (var propertyKey in properties.GetKeys())
             {
-                logEvent.Properties.Add(propertyKey, properties[propertyKey].ToString());
+                logEvent.properties.Add(propertyKey, properties[propertyKey].ToString());
             }
 
             // Add a "@timestamp" field to match the logstash format
-            logEvent.Properties.Add("@timestamp", loggingEvent.TimeStamp.ToUniversalTime().ToString("O"));
+            logEvent.properties.Add("@timestamp", loggingEvent.TimeStamp.ToUniversalTime().ToString("O"));
         }
     }
 }

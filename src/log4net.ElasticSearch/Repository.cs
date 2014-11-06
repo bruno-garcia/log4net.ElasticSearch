@@ -9,7 +9,7 @@ namespace log4net.ElasticSearch
 {
     public interface IRepository
     {
-        void Add(IEnumerable<LogEvent> logEvents);
+        void Add(IEnumerable<logEvent> logEvents);
     }
 
     public class Repository : IRepository
@@ -23,7 +23,7 @@ namespace log4net.ElasticSearch
             this.uri = uri;
         }
 
-        public void Add(IEnumerable<LogEvent> logEvents)
+        public void Add(IEnumerable<logEvent> logEvents)
         {
             logEvents.Do(logEvent =>
                 {

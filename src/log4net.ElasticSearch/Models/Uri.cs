@@ -19,7 +19,7 @@ namespace log4net.ElasticSearch.Models
 
         public static implicit operator System.Uri(Uri uri)
         {
-            return new System.Uri(string.Format("http://{0}:{1}/{2}/LogEvent", uri.server, uri.port, uri.index));
+            return new System.Uri(string.Format("http://{0}:{1}/{2}/logEvent", uri.server, uri.port, uri.index));
         }
 
         public static Uri Create(string connectionString)
