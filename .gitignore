@@ -106,7 +106,6 @@ UpgradeLog*.XML
 
 # Nuget file(s)
 *.nupkg
-
 packages
 !packages/repositories.config
 
