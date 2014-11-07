@@ -1,5 +1,5 @@
 before_build:
-	- nuget restore src\log4net.ElasticSearch.sln
+ - nuget restore src\log4net.ElasticSearch.sln
 install:
-    	- choco install elastic
+ - choco install elastic
 
