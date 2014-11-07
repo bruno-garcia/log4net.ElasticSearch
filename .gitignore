@@ -109,5 +109,5 @@ UpgradeLog*.XML
 packages
 !packages/repositories.config
 
-# vagrant...
+# vagrant
 .vagrant
