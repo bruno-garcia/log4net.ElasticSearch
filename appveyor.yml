@@ -2,5 +2,5 @@ install:
     - choco install elastic
 
 before_build:
-  	- nuget restore
+	- nuget restore
 
