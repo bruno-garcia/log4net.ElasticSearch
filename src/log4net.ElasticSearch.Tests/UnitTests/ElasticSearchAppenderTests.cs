@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net.Sockets;
 using System.Threading;
 using FluentAssertions;
@@ -104,6 +105,21 @@ namespace log4net.ElasticSearch.Tests.UnitTests
                            .Should()
                            .BeTrue("appender shouldn't log on calling thread");
                 });
+        }
+
+        [Fact]
+        public void Repository_exceptions_dont_bubble_up()
+        {
+            fixture.SetUp();
+            fixture.Appender.BufferSize = 1;
+
+            fixture.Repository.OnAddThrow<SocketException>();
+
+            Action logErrorWhenElasticSearch =
+                () =>
+                fixture.Appender.AppendAndClose(LoggingEventsBuilder.MultiplesOf(fixture.Appender.BufferSize).ToArray());
+
+            logErrorWhenElasticSearch.ShouldNotThrow();
         }
 
         [Fact]

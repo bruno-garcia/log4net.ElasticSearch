@@ -82,6 +82,7 @@
     <Compile Include="UnitTests\Stubs\ErrorHandlerStub.cs" />
     <Compile Include="UnitTests\ExtensionMethods.cs" />
     <Compile Include="UnitTests\Stubs\RepositoryStub.cs" />
+    <Compile Include="UnitTests\TestableAppender.cs" />
     <Compile Include="UnitTests\UnitTestFixture.cs" />
   </ItemGroup>
   <ItemGroup>

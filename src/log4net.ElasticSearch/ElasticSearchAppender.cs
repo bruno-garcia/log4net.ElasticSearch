@@ -14,19 +14,12 @@ namespace log4net.ElasticSearch
 
         const int DefaultOnCloseTimeout = 30000;
         readonly ManualResetEvent workQueueEmptyEvent;
-        readonly Func<string, IRepository> createRepository;
 
         int queuedCallbackCount;
         IRepository repository;
 
         public ElasticSearchAppender()
-            : this(s => Repository.Create(s))
         {
-        }
-
-        public ElasticSearchAppender(Func<string, IRepository> createRepository)
-        {
-            this.createRepository = createRepository;
             workQueueEmptyEvent = new ManualResetEvent(true);
             OnCloseTimeout = DefaultOnCloseTimeout;
         }
@@ -50,7 +43,12 @@ namespace log4net.ElasticSearch
                 return;
             }
 
-            repository = createRepository(ConnectionString);            
+            repository = CreateRepository(ConnectionString);            
+        }
+
+        protected virtual IRepository CreateRepository(string connectionString)
+        {
+            return Repository.Create(connectionString);
         }
 
         protected override void SendBuffer(LoggingEvent[] events)

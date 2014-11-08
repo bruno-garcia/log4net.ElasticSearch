@@ -13,7 +13,7 @@ namespace log4net.ElasticSearch.Tests.UnitTests
             Repository = new RepositoryStub();
             ErrorHandler = new ErrorHandlerStub();
 
-            Appender = new ElasticSearchAppender(s => Repository)
+            Appender = new TestableAppender(Repository)
                 {
                     Lossy = false,
                     BufferSize = BufferSize,
