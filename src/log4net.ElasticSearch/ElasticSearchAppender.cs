@@ -34,6 +34,8 @@ namespace log4net.ElasticSearch
 
         public override void ActivateOptions()
         {
+            base.ActivateOptions();
+
             ServicePointManager.Expect100Continue = false;
 
             try
@@ -46,7 +48,7 @@ namespace log4net.ElasticSearch
                 return;
             }
 
-            repository = createRepository(ConnectionString);
+            repository = createRepository(ConnectionString);            
         }
 
         protected override void SendBuffer(LoggingEvent[] events)
@@ -60,6 +62,8 @@ namespace log4net.ElasticSearch
 
         protected override void OnClose()
         {
+            base.OnClose();
+
             if (workQueueEmptyEvent.WaitOne(OnCloseTimeout, false))
                 return;
             ErrorHandler.Error("ElasticSearchAppender [{0}] failed to send all queued events before close, in OnClose.".With(Name));

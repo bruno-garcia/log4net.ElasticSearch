@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using log4net.Core;
+using log4net.Util;
 
 namespace log4net.ElasticSearch
 {
@@ -17,5 +20,29 @@ namespace log4net.ElasticSearch
         {
             return string.Format(self, args);
         }
+
+        public static IEnumerable<KeyValuePair<string, string>> Properties(this LoggingEvent self)
+        {
+            return self.GetProperties().AsPairs();
+        }
+
+        static IEnumerable<KeyValuePair<string, string>> AsPairs(this ReadOnlyPropertiesDictionary self)
+        {
+            return self.GetKeys().Select(key => Pair.For(key, self[key].ToStringOrNull()));
+        }
+
+        static string ToStringOrNull(this object self)
+        {
+            return self != null ? self.ToString() : null;
+        }
     }
+
+    public static class Pair
+    {
+        public static KeyValuePair<TKey, TValue> For<TKey, TValue>(TKey key, TValue value)
+        {
+            return new KeyValuePair<TKey, TValue>(key, value);
+        }
+    }
+
 }

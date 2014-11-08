@@ -11,12 +11,17 @@ namespace log4net.ElasticSearch.Tests.Infrastructure.Builders
 
         public static IEnumerable<LoggingEvent> LessThan(int buffer)
         {
-            return OfSize(Random.Next(buffer));
+            return OfSize(Random.Next(1, buffer));
         }
 
-        static IEnumerable<LoggingEvent> OfSize(int size)
+        public static IEnumerable<LoggingEvent> OfSize(int size)
         {
-            return Enumerable.Range(0, size - 1).Select(i => NewEvent);
+            return Enumerable.Range(0, size).Select(i => NewEvent);
+        }
+
+        public static IEnumerable<LoggingEvent> GreaterThan(int buffer)
+        {
+            return OfSize(Random.Next(buffer, buffer + 10));
         }
 
         static LoggingEvent NewEvent
