@@ -10,6 +10,8 @@ namespace log4net.ElasticSearch
 {
     public class ElasticSearchAppender : BufferingAppenderSkeleton
     {
+        static readonly string AppenderType = typeof (ElasticSearchAppender).Name;
+
         const int DefaultOnCloseTimeout = 30000;
         readonly ManualResetEvent workQueueEmptyEvent;
         readonly Func<string, IRepository> createRepository;
@@ -18,7 +20,7 @@ namespace log4net.ElasticSearch
         IRepository repository;
 
         public ElasticSearchAppender()
-            : this(cs => Repository.Create(cs))
+            : this(s => Repository.Create(s))
         {
         }
 
@@ -44,7 +46,7 @@ namespace log4net.ElasticSearch
             }
             catch (Exception ex)
             {
-                ErrorHandler.Error("Valid ConnectionString must be provided", ex, ErrorCode.GenericFailure);
+                HandleError("Failed to validate ConnectionString in ActivateOptions", ex);
                 return;
             }
 
@@ -57,7 +59,7 @@ namespace log4net.ElasticSearch
             if (ThreadPool.QueueUserWorkItem(SendBufferCallback, logEvent.CreateMany(events)))
                 return;
             EndAsyncSend();
-            ErrorHandler.Error("ElasticSearchAppender [{0}] failed to ThreadPool.QueueUserWorkItem logging events in SendBuffer.".With(Name));
+            HandleError("Failed to ThreadPool.QueueUserWorkItem logging events in SendBuffer");
         }
 
         protected override void OnClose()
@@ -66,7 +68,7 @@ namespace log4net.ElasticSearch
 
             if (workQueueEmptyEvent.WaitOne(OnCloseTimeout, false))
                 return;
-            ErrorHandler.Error("ElasticSearchAppender [{0}] failed to send all queued events before close, in OnClose.".With(Name));
+            HandleError("Failed to send all queued events in OnClose");
         }
 
         private void BeginAsyncSend()
@@ -83,7 +85,7 @@ namespace log4net.ElasticSearch
             }
             catch (Exception ex)
             {
-                ErrorHandler.Error("Failed in SendBufferCallback", ex);
+                HandleError("Failed to addd logEvents to {0} in SendBufferCallback".With(repository.GetType().Name), ex);
             }
             finally
             {
@@ -97,7 +99,17 @@ namespace log4net.ElasticSearch
                 return;
             workQueueEmptyEvent.Set();
         }
-        
+
+        void HandleError(string message)
+        {
+            ErrorHandler.Error("{0} [{1}]: {2}.".With(AppenderType, Name, message));
+        }
+
+        void HandleError(string message, Exception ex)
+        {
+            ErrorHandler.Error("{0} [{1}]: {2}.".With(AppenderType, Name, message), ex, ErrorCode.GenericFailure);
+        }
+
         static void Validate(string connectionString)
         {
             if (connectionString == null)

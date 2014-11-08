@@ -1,4 +1,5 @@
 ﻿using System;
+using log4net.ElasticSearch.Tests.UnitTests.Stubs;
 
 namespace log4net.ElasticSearch.Tests.UnitTests
 {
@@ -7,23 +8,27 @@ namespace log4net.ElasticSearch.Tests.UnitTests
         const string ConnectionString = "Server=localhost;Index=log_test;Port=9200;rolling=true";
         const int BufferSize = 100;
 
-        public void Initialise()
+        public void SetUp()
         {
-            RepositoryStub = new RepositoryStub();
+            Repository = new RepositoryStub();
+            ErrorHandler = new ErrorHandlerStub();
 
-            Appender = new ElasticSearchAppender(s => RepositoryStub)
+            Appender = new ElasticSearchAppender(s => Repository)
                 {
                     Lossy = false,
                     BufferSize = BufferSize,
-                    ConnectionString = ConnectionString
+                    ConnectionString = ConnectionString,
+                    ErrorHandler = ErrorHandler
                 };
 
             Appender.ActivateOptions();
         }
 
-        public RepositoryStub RepositoryStub { get; set; }
+        public ElasticSearchAppender Appender { get; private set; }
 
-        public ElasticSearchAppender Appender { get; set; }
+        public RepositoryStub Repository { get; private set; }
+
+        public ErrorHandlerStub ErrorHandler { get; private set; }
 
         public void Dispose() {}
     }

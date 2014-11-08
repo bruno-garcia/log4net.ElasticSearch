@@ -13,7 +13,7 @@ namespace log4net.ElasticSearch
     }
 
     public class Repository : IRepository
-    {        
+    {
         readonly Uri uri;
 
         Repository(Uri uri)
@@ -22,14 +22,14 @@ namespace log4net.ElasticSearch
         }
 
         public void Add(IEnumerable<logEvent> logEvents)
-        {
+        {            
             var serializer = new JavaScriptSerializer();
 
             logEvents.Do(logEvent =>
                 {
                     var httpWebRequest = JsonWebRequest.For(uri);
 
-                    using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                    using (var streamWriter = GetRequestStream(httpWebRequest))
                     {
                         var json = serializer.Serialize(logEvent);
 
@@ -41,11 +41,16 @@ namespace log4net.ElasticSearch
 
                         if (httpResponse.StatusCode != HttpStatusCode.Created)
                         {
-                            throw new WebException(
-                                "Failed to correctly add {0} to the ElasticSearch index.".With(logEvent.GetType().Name));
+                            throw new WebException("Failed to correctly add {0} to the ElasticSearch index.".With(logEvent.GetType().Name));
                         }
                     }
                 });
+
+        }
+
+        static StreamWriter GetRequestStream(WebRequest httpWebRequest)
+        {
+            return new StreamWriter(httpWebRequest.GetRequestStream());
         }
 
         public static IRepository Create(string connectionString)
