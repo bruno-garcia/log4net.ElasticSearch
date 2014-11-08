@@ -10,17 +10,27 @@ namespace log4net.ElasticSearch
 {
     public class ElasticSearchAppender : BufferingAppenderSkeleton
     {
+        const int DefaultOnCloseTimeout = 30000;
         readonly ManualResetEvent workQueueEmptyEvent;
+        readonly Func<string, IRepository> createRepository;
 
         int queuedCallbackCount;
         IRepository repository;
 
         public ElasticSearchAppender()
+            : this(cs => Repository.Create(cs))
         {
+        }
+
+        public ElasticSearchAppender(Func<string, IRepository> createRepository)
+        {
+            this.createRepository = createRepository;
             workQueueEmptyEvent = new ManualResetEvent(true);
+            OnCloseTimeout = DefaultOnCloseTimeout;
         }
 
         public string ConnectionString { get; set; }
+        public int OnCloseTimeout { get; set; }
 
         public override void ActivateOptions()
         {
@@ -36,7 +46,7 @@ namespace log4net.ElasticSearch
                 return;
             }
 
-            repository = Repository.Create(ConnectionString);
+            repository = createRepository(ConnectionString);
         }
 
         protected override void SendBuffer(LoggingEvent[] events)
@@ -50,7 +60,7 @@ namespace log4net.ElasticSearch
 
         protected override void OnClose()
         {
-            if (workQueueEmptyEvent.WaitOne(30000, false))
+            if (workQueueEmptyEvent.WaitOne(OnCloseTimeout, false))
                 return;
             ErrorHandler.Error("ElasticSearchAppender [{0}] failed to send all queued events before close, in OnClose.".With(Name));
         }
