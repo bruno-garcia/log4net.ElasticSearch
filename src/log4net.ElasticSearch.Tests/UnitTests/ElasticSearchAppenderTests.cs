@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using FluentAssertions;
 using Xunit;
 using Xunit.Sdk;
@@ -77,6 +78,27 @@ namespace log4net.ElasticSearch.Tests.UnitTests
             Retry.Ignoring<AssertException>(() => fixture.RepositoryStub.LogEntries.TotalCount()
                                                                 .Should()
                                                                 .Be(loggingEvents.Count(), "all events should be logged by the time the buffer closes"));
+        }
+
+        [Fact]
+        public void Appender_logs_on_sepearate_threads()
+        {
+            fixture.Initialise();
+
+            var loggingEvents = LoggingEventsBuilder.OfSize(fixture.Appender.BufferSize * 3).ToArray();
+            
+            fixture.Appender.DoAppend(loggingEvents);
+            fixture.Appender.Close();
+
+            Retry.Ignoring<AssertException>(() =>
+                {
+                    fixture.RepositoryStub.LogEntries.TotalCount()
+                           .Should()
+                           .Be(loggingEvents.Count(), "all long entries should be sent to ElasticSearch");
+
+                    fixture.RepositoryStub.LogEntriesByThread.Select(pair => pair.Key)
+                           .All(i => i != Thread.CurrentThread.ManagedThreadId).Should().BeTrue("appender shouldn't log on calling thread");
+                });
         }
 
         public void SetFixture(UnitTestFixture data)
