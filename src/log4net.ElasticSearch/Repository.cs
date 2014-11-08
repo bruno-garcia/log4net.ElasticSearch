@@ -23,17 +23,13 @@ namespace log4net.ElasticSearch
 
         public void Add(IEnumerable<logEvent> logEvents)
         {            
-            var serializer = new JavaScriptSerializer();
-
             logEvents.Do(logEvent =>
                 {
                     var httpWebRequest = JsonWebRequest.For(uri);
 
                     using (var streamWriter = GetRequestStream(httpWebRequest))
                     {
-                        var json = serializer.Serialize(logEvent);
-
-                        streamWriter.Write(json);
+                        streamWriter.Write(logEvent.ToJson());
                         streamWriter.Flush();
 
                         var httpResponse = (HttpWebResponse) httpWebRequest.GetResponse();
