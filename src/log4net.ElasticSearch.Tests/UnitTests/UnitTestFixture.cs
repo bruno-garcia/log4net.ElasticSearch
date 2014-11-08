@@ -8,7 +8,7 @@ namespace log4net.ElasticSearch.Tests.UnitTests
         const string ConnectionString = "Server=localhost;Index=log_test;Port=9200;rolling=true";
         const int BufferSize = 100;
 
-        public void SetUp()
+        public void SetUp(bool? failSend = null, bool? failClose = null)
         {
             Repository = new RepositoryStub();
             ErrorHandler = new ErrorHandlerStub();
@@ -18,7 +18,9 @@ namespace log4net.ElasticSearch.Tests.UnitTests
                     Lossy = false,
                     BufferSize = BufferSize,
                     ConnectionString = ConnectionString,
-                    ErrorHandler = ErrorHandler
+                    ErrorHandler = ErrorHandler,
+                    FailSend = failSend,
+                    FailClose = failClose
                 };
 
             Appender.ActivateOptions();

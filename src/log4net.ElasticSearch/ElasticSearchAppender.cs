@@ -46,27 +46,35 @@ namespace log4net.ElasticSearch
             repository = CreateRepository(ConnectionString);            
         }
 
-        protected virtual IRepository CreateRepository(string connectionString)
-        {
-            return Repository.Create(connectionString);
-        }
-
         protected override void SendBuffer(LoggingEvent[] events)
         {
             BeginAsyncSend();
-            if (ThreadPool.QueueUserWorkItem(SendBufferCallback, logEvent.CreateMany(events)))
-                return;
+            if (TryAsyncSend(events)) return;
             EndAsyncSend();
-            HandleError("Failed to ThreadPool.QueueUserWorkItem logging events in SendBuffer");
+            HandleError("Failed to async send logging events in SendBuffer");
         }
 
         protected override void OnClose()
         {
             base.OnClose();
 
-            if (workQueueEmptyEvent.WaitOne(OnCloseTimeout, false))
-                return;
+            if (TryWaitAsyncSendFinish()) return;
             HandleError("Failed to send all queued events in OnClose");
+        }
+
+        protected virtual IRepository CreateRepository(string connectionString)
+        {
+            return Repository.Create(connectionString);
+        }
+
+        protected virtual bool TryAsyncSend(IEnumerable<LoggingEvent> events)
+        {
+            return ThreadPool.QueueUserWorkItem(SendBufferCallback, logEvent.CreateMany(events));
+        }
+
+        protected virtual bool TryWaitAsyncSendFinish()
+        {
+            return workQueueEmptyEvent.WaitOne(OnCloseTimeout, false);
         }
 
         private void BeginAsyncSend()

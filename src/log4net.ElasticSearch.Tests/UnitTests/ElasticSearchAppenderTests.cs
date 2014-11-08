@@ -139,6 +139,34 @@ namespace log4net.ElasticSearch.Tests.UnitTests
                        .BeTrue("repository errors should be handled by appender ErrorHandler"));
         }
 
+        [Fact]
+        public void Error_is_logged_if_thread_unavailable_to_send_log_entries_to_ElasticSearch()
+        {
+            fixture.SetUp(true);
+
+            fixture.Appender.AppendAndClose(LoggingEventsBuilder.MultiplesOf(fixture.Appender.BufferSize).ToArray());
+
+            Retry.Ignoring<AssertException>(
+                () =>
+                fixture.ErrorHandler.Messages.Any()
+                       .Should()
+                       .BeTrue("thread pool errors should be handled by appender ErrorHandler"));
+        } 
+
+        [Fact]
+        public void Error_is_logged_if_messages_arent_sent_to_ElasticSearch_before_timeout_during_close()
+        {
+            fixture.SetUp(failClose:true);
+
+            fixture.Appender.AppendAndClose(LoggingEventsBuilder.MultiplesOf(fixture.Appender.BufferSize).ToArray());
+
+            Retry.Ignoring<AssertException>(
+                () =>
+                fixture.ErrorHandler.Messages.Any()
+                       .Should()
+                       .BeTrue("thread pool errors should be handled by appender ErrorHandler"));
+        } 
+
         public void SetFixture(UnitTestFixture data)
         {
             fixture = data;
