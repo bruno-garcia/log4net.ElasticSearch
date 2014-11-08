@@ -24,11 +24,6 @@ namespace log4net.ElasticSearch.Tests.Infrastructure.Builders
             return OfSize(Random.Next(buffer, buffer + 10));
         }
 
-        public static IEnumerable<LoggingEvent> MultiplesOf(int size)
-        {
-            return OfSize(size * Random.Next(2, 10));
-        }
-
         static LoggingEvent NewEvent
         {
             get { return new LoggingEvent(new LoggingEventData()); }
