@@ -25,7 +25,7 @@ namespace log4net.ElasticSearch.Tests.IntegrationTests
         {
             var message = Faker.Lorem.Words(1).Single();
 
-            _log.Info(message, new ApplicationException("Something broke"));
+            _log.Info(message, new ApplicationException(Faker.Lorem.Words(1).Single()));
 
             Retry.Ignoring<AssertException>(() =>
             {
