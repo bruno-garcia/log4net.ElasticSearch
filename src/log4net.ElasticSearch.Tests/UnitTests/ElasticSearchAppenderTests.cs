@@ -10,166 +10,170 @@ using log4net.ElasticSearch.Tests.Infrastructure.Builders;
 
 namespace log4net.ElasticSearch.Tests.UnitTests
 {
-    public class ElasticSearchAppenderTests : IUseFixture<UnitTestFixture>
+    public class ElasticSearchAppenderTests
     {
-        UnitTestFixture fixture;
-
         [Fact]
         public void When_number_of_LogEvents_is_less_than_Buffer_nothing_is_sent_to_ElasticSearch()
         {
-            fixture.SetUp();
+            using (var context = UnitTestContext.Create())
+            {
+                context.Appender.DoAppend(LoggingEventsBuilder.LessThan(context.Appender.BufferSize).ToArray());
 
-            fixture.Appender.DoAppend(LoggingEventsBuilder.LessThan(fixture.Appender.BufferSize).ToArray());
-
-            fixture.Repository.LogEntries.TotalCount()
-                   .Should()
-                   .Be(0, "nothing should be logged when the buffer limit hasn't been reached");
+                context.Repository.LogEntries.TotalCount()
+                       .Should()
+                       .Be(0, "nothing should be logged when the buffer limit hasn't been reached");                
+            }
         }
 
         [Fact]
         public void When_number_of_LogEvents_equals_Buffer_nothing_is_sent_to_ElasticSearch()
         {
-            fixture.SetUp();
+            using (var context = UnitTestContext.Create())
+            {
+                context.Appender.DoAppend(LoggingEventsBuilder.OfSize(context.Appender.BufferSize).ToArray());
 
-            fixture.Appender.DoAppend(LoggingEventsBuilder.OfSize(fixture.Appender.BufferSize).ToArray());
-
-            Retry.Ignoring<AssertException>(() => fixture.Repository.LogEntries.TotalCount()
-                                                         .Should()
-                                                         .Be(0,
-                                                             "nothing should be logged when the buffer limit hasn't been exceeded"));
+                Retry.Ignoring<AssertException>(() => context.Repository.LogEntries.TotalCount()
+                                                             .Should()
+                                                             .Be(0,
+                                                                 "nothing should be logged when the buffer limit hasn't been exceeded"));
+            }
         } 
 
         [Fact]
         public void When_number_of_LogEvents_exceeds_Buffer_by_1_then_Buffer_is_sent_to_ElasticSearch()
         {
-            fixture.SetUp();
-            
-            var loggingEvents = LoggingEventsBuilder.OfSize(fixture.Appender.BufferSize + 1).ToArray();         
+            using (var context = UnitTestContext.Create())
+            {
+                var loggingEvents = LoggingEventsBuilder.OfSize(context.Appender.BufferSize + 1).ToArray();
 
-            fixture.Appender.DoAppend(loggingEvents);
+                context.Appender.DoAppend(loggingEvents);
 
-            Retry.Ignoring<AssertException>(() => fixture.Repository.LogEntries.TotalCount()
-                                                         .Should()
-                                                         .Be(loggingEvents.Count(),
-                                                             "buffer should be sent to ElasticSearch"));
+                Retry.Ignoring<AssertException>(() => context.Repository.LogEntries.TotalCount()
+                                                             .Should()
+                                                             .Be(loggingEvents.Count(),
+                                                                 "buffer should be sent to ElasticSearch"));
+            }            
         }
 
         [Fact]
         public void When_number_of_LogEvents_greatly_exceeds_Buffer_then_Buffer_is_sent_to_ElasticSearch()
         {
-            fixture.SetUp();
+            using (var context = UnitTestContext.Create())
+            {
+                var loggingEvents = LoggingEventsBuilder.GreaterThan(context.Appender.BufferSize + 1).ToArray();
 
-            var loggingEvents = LoggingEventsBuilder.GreaterThan(fixture.Appender.BufferSize + 1).ToArray();         
+                context.Appender.DoAppend(loggingEvents);
 
-            fixture.Appender.DoAppend(loggingEvents);
+                Retry.Ignoring<AssertException>(() => context.Repository.LogEntries.TotalCount()
+                                                             .Should()
+                                                             .Be(context.Appender.BufferSize + 1,
+                                                                 "buffer should be sent to ElasticSearch"));
+            }            
 
-            Retry.Ignoring<AssertException>(() => fixture.Repository.LogEntries.TotalCount()
-                                                         .Should()
-                                                         .Be(fixture.Appender.BufferSize + 1,
-                                                             "buffer should be sent to ElasticSearch"));
         }
 
         [Fact]
         public void When_number_of_LogEvents_greatly_exceeds_Buffer_then_remaining_entries_are_sent_to_ElasticSearch_when_Appender_closes()
         {
-            fixture.SetUp();
+            using (var context = UnitTestContext.Create())
+            {
+                var loggingEvents = LoggingEventsBuilder.GreaterThan(context.Appender.BufferSize + 1).ToArray();
 
-            var loggingEvents = LoggingEventsBuilder.GreaterThan(fixture.Appender.BufferSize + 1).ToArray();
-            
-            fixture.Appender.DoAppend(loggingEvents);
-            fixture.Appender.Close();
+                context.Appender.DoAppend(loggingEvents);
+                context.Appender.Close();
 
-            Retry.Ignoring<AssertException>(() => fixture.Repository.LogEntries.TotalCount()
-                                                         .Should()
-                                                         .Be(loggingEvents.Count(),
-                                                             "all events should be logged by the time the buffer closes"));
+                Retry.Ignoring<AssertException>(() => context.Repository.LogEntries.TotalCount()
+                                                             .Should()
+                                                             .Be(loggingEvents.Count(),
+                                                                 "all events should be logged by the time the buffer closes"));
+            }            
+
         }
 
         [Fact]
         public void Appender_logs_on_sepearate_threads()
         {
-            fixture.SetUp();
+            using (var context = UnitTestContext.Create())
+            {
+                var loggingEvents = LoggingEventsBuilder.MultiplesOf(context.Appender.BufferSize).ToArray();
 
-            var loggingEvents = LoggingEventsBuilder.MultiplesOf(fixture.Appender.BufferSize).ToArray();
+                context.Appender.AppendAndClose(loggingEvents);
 
-            fixture.Appender.AppendAndClose(loggingEvents);
-
-            Retry.Ignoring<AssertException>(() =>
+                Retry.Ignoring<AssertException>(() =>
                 {
-                    fixture.Repository.LogEntries.TotalCount()
+                    context.Repository.LogEntries.TotalCount()
                            .Should()
                            .Be(loggingEvents.Count(), "all long entries should be sent to ElasticSearch");
 
-                    fixture.Repository.LogEntriesByThread.Select(pair => pair.Key)
+                    context.Repository.LogEntriesByThread.Select(pair => pair.Key)
                            .All(i => i != Thread.CurrentThread.ManagedThreadId)
                            .Should()
                            .BeTrue("appender shouldn't log on calling thread");
                 });
+            }            
         }
 
         [Fact]
         public void Repository_exceptions_dont_bubble_up()
         {
-            fixture.SetUp();
-            fixture.Appender.BufferSize = 1;
+            using (var context = UnitTestContext.Create(1))
+            {
+                context.Repository.OnAddThrow<SocketException>();
 
-            fixture.Repository.OnAddThrow<SocketException>();
+                Action logErrorWhenElasticSearch =
+                    () =>
+                    context.Appender.AppendAndClose(LoggingEventsBuilder.MultiplesOf(context.Appender.BufferSize).ToArray());
 
-            Action logErrorWhenElasticSearch =
-                () =>
-                fixture.Appender.AppendAndClose(LoggingEventsBuilder.MultiplesOf(fixture.Appender.BufferSize).ToArray());
-
-            logErrorWhenElasticSearch.ShouldNotThrow();
+                logErrorWhenElasticSearch.ShouldNotThrow();
+            }
         }
 
         [Fact]
         public void Repository_exceptions_are_handled_by_appender_ErrorHandler()
         {
-            fixture.SetUp();
+            using (var context = UnitTestContext.Create())
+            {
+                var socketException = new SocketException();
+                context.Repository.OnAddThrow(socketException);
 
-            var socketException = new SocketException();
-            fixture.Repository.OnAddThrow(socketException);
+                context.Appender.AppendAndClose(LoggingEventsBuilder.MultiplesOf(context.Appender.BufferSize).ToArray());
 
-            fixture.Appender.AppendAndClose(LoggingEventsBuilder.MultiplesOf(fixture.Appender.BufferSize).ToArray());
-
-            Retry.Ignoring<AssertException>(
-                () =>
-                fixture.ErrorHandler.Exceptions.Contains(socketException)
-                       .Should()
-                       .BeTrue("repository errors should be handled by appender ErrorHandler"));
+                Retry.Ignoring<AssertException>(
+                    () =>
+                    context.ErrorHandler.Exceptions.Contains(socketException)
+                           .Should()
+                           .BeTrue("repository errors should be handled by appender ErrorHandler"));
+            }
         }
 
         [Fact]
         public void Error_is_logged_if_thread_unavailable_to_send_log_entries_to_ElasticSearch()
         {
-            fixture.SetUp(true);
+            using (var context = UnitTestContext.Create(failSend: true))
+            {
+                context.Appender.AppendAndClose(LoggingEventsBuilder.MultiplesOf(context.Appender.BufferSize).ToArray());
 
-            fixture.Appender.AppendAndClose(LoggingEventsBuilder.MultiplesOf(fixture.Appender.BufferSize).ToArray());
-
-            Retry.Ignoring<AssertException>(
-                () =>
-                fixture.ErrorHandler.Messages.Any()
-                       .Should()
-                       .BeTrue("thread pool errors should be handled by appender ErrorHandler"));
+                Retry.Ignoring<AssertException>(
+                    () =>
+                    context.ErrorHandler.Messages.Any()
+                           .Should()
+                           .BeTrue("thread pool errors should be handled by appender ErrorHandler"));
+            }
         } 
 
         [Fact]
         public void Error_is_logged_if_messages_arent_sent_to_ElasticSearch_before_timeout_during_close()
         {
-            fixture.SetUp(failClose:true);
+            using (var context = UnitTestContext.Create(failClose: true))
+            {
+                context.Appender.AppendAndClose(LoggingEventsBuilder.MultiplesOf(context.Appender.BufferSize).ToArray());
 
-            fixture.Appender.AppendAndClose(LoggingEventsBuilder.MultiplesOf(fixture.Appender.BufferSize).ToArray());
-
-            Retry.Ignoring<AssertException>(
-                () =>
-                fixture.ErrorHandler.Messages.Any()
-                       .Should()
-                       .BeTrue("thread pool errors should be handled by appender ErrorHandler"));
+                Retry.Ignoring<AssertException>(
+                    () =>
+                    context.ErrorHandler.Messages.Any()
+                           .Should()
+                           .BeTrue("thread pool errors should be handled by appender ErrorHandler"));
+            }
         } 
-
-        public void SetFixture(UnitTestFixture data)
-        {
-            fixture = data;
-        }
     }
 }

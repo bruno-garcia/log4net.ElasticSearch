@@ -83,7 +83,7 @@
     <Compile Include="UnitTests\ExtensionMethods.cs" />
     <Compile Include="UnitTests\Stubs\RepositoryStub.cs" />
     <Compile Include="UnitTests\TestableAppender.cs" />
-    <Compile Include="UnitTests\UnitTestFixture.cs" />
+    <Compile Include="UnitTests\UnitTestContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
