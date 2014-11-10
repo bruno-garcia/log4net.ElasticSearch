@@ -2,16 +2,17 @@
 using Nest;
 using Xunit;
 using Xunit.Sdk;
+using log4net.ElasticSearch.Models;
 using log4net.ElasticSearch.Tests.Infrastructure;
-using logEvent = log4net.ElasticSearch.Models.logEvent;
+using log4net.ElasticSearch.Tests.Infrastructure.Builders;
 
-namespace log4net.ElasticSearch.Tests
+namespace log4net.ElasticSearch.Tests.IntegrationTests
 {
-    public class ElasticSearchTests : IUseFixture<ElasticSearchFixture>
+    public class ElasticSearchTests : IUseFixture<IntegrationTestFixture>
     {
         private ElasticClient elasticClient;
 
-        public void SetFixture(ElasticSearchFixture fixture)
+        public void SetFixture(IntegrationTestFixture fixture)
         {
             elasticClient = fixture.Client;
         }
@@ -19,7 +20,7 @@ namespace log4net.ElasticSearch.Tests
         [Fact]
         public void Can_insert_record()
         {
-            var indexResponse = elasticClient.Index(Infrastructure.LogEventBuilder.Default.LogEvent);
+            var indexResponse = elasticClient.Index(LogEventBuilder.Default.LogEvent);
 
             indexResponse.Id.Should().NotBeNull();
         }
@@ -27,7 +28,7 @@ namespace log4net.ElasticSearch.Tests
         [Fact]
         public void Can_read_indexed_document()
         {
-            var logEvent = Infrastructure.LogEventBuilder.Default.LogEvent;
+            var logEvent = LogEventBuilder.Default.LogEvent;
 
             elasticClient.Index(logEvent);            
 

@@ -10,6 +10,9 @@ namespace log4net.ElasticSearch
 {
     public class ElasticSearchAppender : BufferingAppenderSkeleton
     {
+        static readonly string AppenderType = typeof (ElasticSearchAppender).Name;
+
+        const int DefaultOnCloseTimeout = 30000;
         readonly ManualResetEvent workQueueEmptyEvent;
 
         int queuedCallbackCount;
@@ -18,12 +21,16 @@ namespace log4net.ElasticSearch
         public ElasticSearchAppender()
         {
             workQueueEmptyEvent = new ManualResetEvent(true);
+            OnCloseTimeout = DefaultOnCloseTimeout;
         }
 
         public string ConnectionString { get; set; }
+        public int OnCloseTimeout { get; set; }
 
         public override void ActivateOptions()
         {
+            base.ActivateOptions();
+
             ServicePointManager.Expect100Continue = false;
 
             try
@@ -32,27 +39,42 @@ namespace log4net.ElasticSearch
             }
             catch (Exception ex)
             {
-                ErrorHandler.Error("Valid ConnectionString must be provided", ex, ErrorCode.GenericFailure);
+                HandleError("Failed to validate ConnectionString in ActivateOptions", ex);
                 return;
             }
 
-            repository = Repository.Create(ConnectionString);
+            repository = CreateRepository(ConnectionString);            
         }
 
         protected override void SendBuffer(LoggingEvent[] events)
         {
             BeginAsyncSend();
-            if (ThreadPool.QueueUserWorkItem(SendBufferCallback, logEvent.CreateMany(events)))
-                return;
+            if (TryAsyncSend(events)) return;
             EndAsyncSend();
-            ErrorHandler.Error("ElasticSearchAppender [{0}] failed to ThreadPool.QueueUserWorkItem logging events in SendBuffer.".With(Name));
+            HandleError("Failed to async send logging events in SendBuffer");
         }
 
         protected override void OnClose()
         {
-            if (workQueueEmptyEvent.WaitOne(30000, false))
-                return;
-            ErrorHandler.Error("ElasticSearchAppender [{0}] failed to send all queued events before close, in OnClose.".With(Name));
+            base.OnClose();
+
+            if (TryWaitAsyncSendFinish()) return;
+            HandleError("Failed to send all queued events in OnClose");
+        }
+
+        protected virtual IRepository CreateRepository(string connectionString)
+        {
+            return Repository.Create(connectionString);
+        }
+
+        protected virtual bool TryAsyncSend(IEnumerable<LoggingEvent> events)
+        {
+            return ThreadPool.QueueUserWorkItem(SendBufferCallback, logEvent.CreateMany(events));
+        }
+
+        protected virtual bool TryWaitAsyncSendFinish()
+        {
+            return workQueueEmptyEvent.WaitOne(OnCloseTimeout, false);
         }
 
         private void BeginAsyncSend()
@@ -69,7 +91,7 @@ namespace log4net.ElasticSearch
             }
             catch (Exception ex)
             {
-                ErrorHandler.Error("Failed in SendBufferCallback", ex);
+                HandleError("Failed to addd logEvents to {0} in SendBufferCallback".With(repository.GetType().Name), ex);
             }
             finally
             {
@@ -83,7 +105,17 @@ namespace log4net.ElasticSearch
                 return;
             workQueueEmptyEvent.Set();
         }
-        
+
+        void HandleError(string message)
+        {
+            ErrorHandler.Error("{0} [{1}]: {2}.".With(AppenderType, Name, message));
+        }
+
+        void HandleError(string message, Exception ex)
+        {
+            ErrorHandler.Error("{0} [{1}]: {2}.".With(AppenderType, Name, message), ex, ErrorCode.GenericFailure);
+        }
+
         static void Validate(string connectionString)
         {
             if (connectionString == null)

@@ -4,18 +4,18 @@ using FluentAssertions;
 using Nest;
 using Xunit;
 using Xunit.Sdk;
+using log4net.ElasticSearch.Models;
 using log4net.ElasticSearch.Tests.Infrastructure;
-using logEvent = log4net.ElasticSearch.Models.logEvent;
 
-namespace log4net.ElasticSearch.Tests
+namespace log4net.ElasticSearch.Tests.IntegrationTests
 {
-    public class ElasticSearchAppenderTests : IUseFixture<ElasticSearchFixture>
+    public class ElasticSearchAppenderTests : IUseFixture<IntegrationTestFixture>
     {
         private static readonly ILog _log = LogManager.GetLogger(typeof(ElasticSearchAppenderTests));
 
         private ElasticClient elasticClient;
 
-        public void SetFixture(ElasticSearchFixture fixture)
+        public void SetFixture(IntegrationTestFixture fixture)
         {
             elasticClient = fixture.Client;
         }
@@ -25,7 +25,7 @@ namespace log4net.ElasticSearch.Tests
         {
             var message = Faker.Lorem.Words(1).Single();
 
-            _log.Info(message, new ApplicationException("Something broke"));
+            _log.Info(message, new ApplicationException(Faker.Lorem.Words(1).Single()));
 
             Retry.Ignoring<AssertException>(() =>
             {

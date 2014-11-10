@@ -1,13 +1,13 @@
 ﻿using System;
 using Nest;
 
-namespace log4net.ElasticSearch.Tests.Infrastructure
+namespace log4net.ElasticSearch.Tests.IntegrationTests
 {
-    public class ElasticSearchFixture : IDisposable
+    public class IntegrationTestFixture : IDisposable
     {
         readonly string defaultIndex;
 
-        public ElasticSearchFixture()
+        public IntegrationTestFixture()
         {
             defaultIndex = GetDefaultIndex();
 
