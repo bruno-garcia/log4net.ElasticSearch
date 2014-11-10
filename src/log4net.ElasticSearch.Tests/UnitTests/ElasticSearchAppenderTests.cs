@@ -24,6 +24,8 @@ namespace log4net.ElasticSearch.Tests.UnitTests
             fixture.Repository.LogEntries.TotalCount()
                    .Should()
                    .Be(0, "nothing should be logged when the buffer limit hasn't been reached");
+
+            fixture.TearDown();
         }
 
         [Fact]
@@ -37,6 +39,8 @@ namespace log4net.ElasticSearch.Tests.UnitTests
                                                          .Should()
                                                          .Be(0,
                                                              "nothing should be logged when the buffer limit hasn't been exceeded"));
+
+            fixture.TearDown();
         } 
 
         [Fact]
@@ -52,6 +56,8 @@ namespace log4net.ElasticSearch.Tests.UnitTests
                                                          .Should()
                                                          .Be(loggingEvents.Count(),
                                                              "buffer should be sent to ElasticSearch"));
+
+            fixture.TearDown();
         }
 
         [Fact]
@@ -67,6 +73,8 @@ namespace log4net.ElasticSearch.Tests.UnitTests
                                                          .Should()
                                                          .Be(fixture.Appender.BufferSize + 1,
                                                              "buffer should be sent to ElasticSearch"));
+
+            fixture.TearDown();
         }
 
         [Fact]
@@ -83,6 +91,8 @@ namespace log4net.ElasticSearch.Tests.UnitTests
                                                          .Should()
                                                          .Be(loggingEvents.Count(),
                                                              "all events should be logged by the time the buffer closes"));
+
+            fixture.TearDown();
         }
 
         [Fact]
@@ -105,6 +115,8 @@ namespace log4net.ElasticSearch.Tests.UnitTests
                            .Should()
                            .BeTrue("appender shouldn't log on calling thread");
                 });
+
+            fixture.TearDown();
         }
 
         [Fact]
@@ -120,6 +132,8 @@ namespace log4net.ElasticSearch.Tests.UnitTests
                 fixture.Appender.AppendAndClose(LoggingEventsBuilder.MultiplesOf(fixture.Appender.BufferSize).ToArray());
 
             logErrorWhenElasticSearch.ShouldNotThrow();
+
+            fixture.TearDown();
         }
 
         [Fact]
@@ -137,6 +151,8 @@ namespace log4net.ElasticSearch.Tests.UnitTests
                 fixture.ErrorHandler.Exceptions.Contains(socketException)
                        .Should()
                        .BeTrue("repository errors should be handled by appender ErrorHandler"));
+
+            fixture.TearDown();
         }
 
         [Fact]
@@ -151,6 +167,8 @@ namespace log4net.ElasticSearch.Tests.UnitTests
                 fixture.ErrorHandler.Messages.Any()
                        .Should()
                        .BeTrue("thread pool errors should be handled by appender ErrorHandler"));
+
+            fixture.TearDown();
         } 
 
         [Fact]
@@ -165,6 +183,8 @@ namespace log4net.ElasticSearch.Tests.UnitTests
                 fixture.ErrorHandler.Messages.Any()
                        .Should()
                        .BeTrue("thread pool errors should be handled by appender ErrorHandler"));
+
+            fixture.TearDown();
         } 
 
         public void SetFixture(UnitTestFixture data)

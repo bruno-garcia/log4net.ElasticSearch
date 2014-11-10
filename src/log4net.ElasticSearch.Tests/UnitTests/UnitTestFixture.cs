@@ -26,6 +26,11 @@ namespace log4net.ElasticSearch.Tests.UnitTests
             Appender.ActivateOptions();
         }
 
+        public void TearDown()
+        {
+            Appender.Flush();
+        }
+
         public ElasticSearchAppender Appender { get; private set; }
 
         public RepositoryStub Repository { get; private set; }
