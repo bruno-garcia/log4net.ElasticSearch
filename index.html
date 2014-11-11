@@ -40,7 +40,7 @@
     <h1 class="font-bree-serif">log4net.Elasticsearch</h1>
     <p class="font-open-sans-normal">Full featured asynchronous Elasticsearch appender for log4net.</p>
     
-    <p class="jumbo"> <a href="#" class="btn btn-inverse btn-large font-open-sans-normal"><strong>View on GitHub</strong></a> <a href="#" class="btn btn-success btn-large font-open-sans-normal"><strong>Nuget Package </strong><small>(v1.2.1)</small></a> </p>
+    <p class="jumbo"> <a href="https://github.com/jptoto/log4net.ElasticSearch" target="_blank" class="btn btn-inverse btn-large font-open-sans-normal"><strong>View on GitHub</strong></a> <a href="http://www.nuget.org/packages/log4net.ElasticSearch/" target="_blank" class="btn btn-success btn-large font-open-sans-normal"><strong>Nuget Package </strong><small>(v2.0.0)</small></a> </p>
     
    
   </div><!--end container-->  
@@ -52,7 +52,6 @@
       <div class="tabbable">
         <ul class="nav nav-tabs" id="pluginTab">
           <li class="active"><a href="#overview">Overview</a></li>
-          <li><a href="#examples">Examples</a></li>
           <li><a href="#howtouse">How To Use</a></li>
           <li><a href="#documentation">Documentation</a></li>
           <li><a href="#faq">FAQ</a></li>
@@ -68,37 +67,37 @@
           <div class="tab-pane active" id="overview">
             <h1 class="font-bree-serif align-center">High level feature list</h1>
             <div class="row features">
-              <div class="span4"> <i class="feature-icon icon-th"></i>
+              <div class="span4"> <i class="feature-icon icon-ok"></i>
                 <h3>.NET 4+ &amp; Mono Support</h3>
-                <p>log4net.Elasticsearch will support .NET 4, 4.5.x, and Mono out of the box.</p>
+                <p>log4net.Elasticsearch supports .NET 4, 4.5.x, and Mono/Xamarin out of the box.</p>
               </div>
               <!--end span4-->
               <div class="span4"> <i class="feature-icon icon-resize-full"></i>
-                <h3>Responsive</h3>
-                <p>Montes faucibus viverra enim egestas nibh placerat pellentesque dignissim vehicula amet eget nascetur lacus sed, nam nonummy diam, hendrerit.</p>
+                <h3>Asynchronous</h3>
+                <p>Fully asynchronous to avoid application slow downs. Buffer size is fully tunable and lossy option will ensure resource consumption constraints.</p>
               </div>
               <!--end span4-->
-              <div class="span4"> <i class="feature-icon icon-twitter"></i>
-                <h3>Made With Bootstrap</h3>
-                <p>Montes faucibus viverra enim egestas nibh placerat pellentesque dignissim vehicula amet eget nascetur lacus sed, nam nonummy diam, hendrerit.</p>
+              <div class="span4"> <i class="feature-icon icon-zoom-in"></i>
+                <h3>Elasticsearch Conventions</h3>
+                <p>Built with Elasticsearch conventions in mind including camelCase types and properties.</p>
               </div>
               <!--end span4-->
             </div>
             <!--end row-->
             <div class="row features">
-              <div class="span4"> <i class="feature-icon icon-list-ol"></i>
-                <h3>Google Code Prettify</h3>
-                <p>Montes faucibus viverra enim egestas nibh placerat pellentesque dignissim vehicula amet eget nascetur lacus sed, nam nonummy diam, hendrerit.</p>
+              <div class="span4"> <i class="feature-icon icon-tasks"></i>
+                <h3>Rolling Indices</h3>
+                <p>Log to one index or create a new index each day and expire as needed.</p>
               </div>
               <!--end span4-->
-              <div class="span4"> <i class="feature-icon icon-font"></i>
-                <h3>Google Web Font</h3>
-                <p>Montes faucibus viverra enim egestas nibh placerat pellentesque dignissim vehicula amet eget nascetur lacus sed, nam nonummy diam, hendrerit.</p>
+              <div class="span4"> <i class="feature-icon icon-heart-empty"></i>
+                <h3>Open Source</h3>
+                <p>Licensed under MIT. Contributions are more than welcome!</p>
               </div>
               <!--end span4-->
-              <div class="span4"> <i class="feature-icon icon-flag"></i>
-                <h3>Font Awesome Icons</h3>
-                <p>Montes faucibus viverra enim egestas nibh placerat pellentesque dignissim vehicula amet eget nascetur lacus sed, nam nonummy diam, hendrerit.</p>
+              <div class="span4"> <i class="feature-icon icon-cog"></i>
+                <h3>Nuget</h3>
+                <p>Latest packages are always available on <a href="http://www.nuget.org/packages/log4net.ElasticSearch/" target="_blank">Nuget</a>. Zero dependencies (besides log4net, of course).</p>
               </div>
               <!--end span4-->
             </div>
@@ -107,67 +106,24 @@
      
           </div>
           <!--end overview-content-->
-          <!-- 
-          =====================================
-          Examples
-          =====================================
-          -->
-          <div class="tab-pane" id="examples">
-          <h2 class="font-bree-serif">Example Heading</h2>
-            <p>Some Description about the example if needed</p>
-            <div class="row">
-             <div class="span6">
-                <ul class="thumbnails">
-                  <li class="span4"> <a href="#" class="thumbnail"> <img src="http://placehold.it/360x268" alt=""> </a> </li>
-                  <li class="span2"> <a href="#" class="thumbnail"> <img src="http://placehold.it/160x120" alt=""> </a> </li>
-                  <li class="span2"> <a href="#" class="thumbnail"> <img src="http://placehold.it/160x120" alt=""> </a> </li>
-                  <li class="span2"> <a href="#" class="thumbnail"> <img src="http://placehold.it/160x120" alt=""> </a> </li>
-                  <li class="span2"> <a href="#" class="thumbnail"> <img src="http://placehold.it/160x120" alt=""> </a> </li>
-                  <li class="span2"> <a href="#" class="thumbnail"> <img src="http://placehold.it/160x120" alt=""> </a> </li>
-                </ul>
-              </div>
-              <!--end span6-->
-              <div class="span6">
-              	<section class="sec-header">
-                <h3 class="font-bree-serif">The Markup</h3>
-<pre class="prettyprint linenums">&lt;ul class="thumbnails"&gt;
-&lt;li class="span4"&gt; &lt;a href="#" class="thumbnail"&gt; &lt;img src="http://placehold.it/360x268" alt=""&gt; &lt;/a&gt; &lt;/li&gt;
-....
-&lt;/ul&gt;
-</pre>
-			</section>
-            <section class="sec-header">
-			<h3 class="font-bree-serif">CSS</h3>
-<pre class="prettyprint linenums">
-thumbnails {
-  margin-left: -20px;
-  list-style: none;
-  *zoom: 1;
-}
-.thumbnails > li {
-  float: left;
-  margin-bottom: 18px;
-  margin-left: 20px;
-}
-...
-</pre>
-              </section>
-              </div><!--end span6-->             
-            </div><!--end row-->
-          </div><!--end examples-content-->
+
           <!-- 
           =====================================
           How to Use Tab Content
           =====================================
           -->
           <div class="tab-pane" id="howtouse">
-                    	<section class="sec-header">
-                <h3 class="font-bree-serif">Link Css</h3>
-                <p>Move the <strong>plugin CSS</strong> file to your server and link to it in the <code><abbr title="<head>">head</abbr></code> section of your document.</p>
-				<pre class="prettyprint linenums">&lt;link rel="stylesheet" href="yourplugin.css" /&gt;</pre>
-			</section>
             <section class="sec-header">
-                <h3 class="font-bree-serif">Link JS</h3>
+                <h3 class="font-bree-serif">1. Install from Nuget</h3>
+                <p>In Visual Studio, open the Package Manager console and issue the install command:</p>
+<pre class="prettyprint linenums">
+Install-Package log4net.ElasticSearch
+OR
+Install-Package log4net.ElasticSearch -InstallPrerelease (will install latest pre-release version)</pre>
+
+			     </section>
+            <section class="sec-header">
+                <h3 class="font-bree-serif">1. Configure log4net</h3>
                 <p>Move the <strong>plugin JS</strong> file to your server and link to it before the closing <code><abbr title="<body>">body</abbr></code> tag.</p>
                 <p>Please note that you must include jQuery (v1.7 or later) before the slider JS file.</p>
 				<pre class="prettyprint linenums">
@@ -481,7 +437,7 @@ $(document).ready(function () {
       </div><!--end tabbable-->
       
       <div class="well align-center">
-        	<h4>For any queries or issues. <a href="#">Submit issues</a> on github or Contact me <a href="mailto:">plugin-support@gmail.com</a></h4>
+        	<h4>For any queries or issues: <a href="https://github.com/jptoto/log4net.ElasticSearch/issues" target="_blanks">Submit issues</a> on github.</h4>
       </div><!--end well-->
     </div><!--end span12-->
   </div><!--end row-->
@@ -491,7 +447,7 @@ $(document).ready(function () {
       <div class="container">
       <div class="row">
           <div class="span6">
-            <p>&copy; Plugin-Documentation Theme. All Rights Reserved</p>
+            <p>&copy; log4net.Elasticsearch</p>
           </div>
           <div class="span2 offset4">
           <p><a href="#" id="top">Go To Top</a></p>
