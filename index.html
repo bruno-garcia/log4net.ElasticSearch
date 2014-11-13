@@ -53,10 +53,8 @@
         <ul class="nav nav-tabs" id="pluginTab">
           <li class="active"><a href="#overview">Overview</a></li>
           <li><a href="#howtouse">How To Use</a></li>
-          <li><a href="#documentation">Documentation</a></li>
-          <li><a href="#faq">FAQ</a></li>
-          <li><a href="#roadmap">Roadmap and changelog</a></li>
-          <li><a href="#" class="tip" title="Link to your Github account">Submit Issues</a></li>
+          <li><a href="#roadmap">Changelog</a></li>
+          <li><a href="#contributors">Contributors</a></li>
         </ul>
         <div class="tab-content">
         <!-- 
@@ -115,205 +113,74 @@
           <div class="tab-pane" id="howtouse">
             <section class="sec-header">
                 <h3 class="font-bree-serif">1. Install from Nuget</h3>
-                <p>In Visual Studio, open the Package Manager console and issue the install command:</p>
+                <p>In Visual Studio, open the Package Manager console and issue the install command: (If you haven't already installed log4net, Nuget will automatically install it as a dependency)</p>
 <pre class="prettyprint linenums">
-Install-Package log4net.ElasticSearch
-OR
-Install-Package log4net.ElasticSearch -InstallPrerelease (will install latest pre-release version)</pre>
-
+Install-Package log4net.ElasticSearch</pre>
 			     </section>
             <section class="sec-header">
-                <h3 class="font-bree-serif">1. Configure log4net</h3>
-                <p>Move the <strong>plugin JS</strong> file to your server and link to it before the closing <code><abbr title="<body>">body</abbr></code> tag.</p>
-                <p>Please note that you must include jQuery (v1.7 or later) before the slider JS file.</p>
+                <h3 class="font-bree-serif">2. Configure log4net</h3>
+                <p>log4net has a lot of configuration options and you should read the <a href="http://logging.apache.org/log4net/release/manual/configuration.html"> full documentation at the log4net site</a>. Below will cover what you need to get started using log4net.ElasticSearch today.</p>
+                <p>Using the <strong>App.config</strong> method of configuring log4net, add the below code to your file. (For ASP.NET, edit <strong>web.config</strong>)</p>
 				<pre class="prettyprint linenums">
-&lt;script src="jquery-1.7.1.min.js"&gt;&lt;/script&gt;
-&lt;script src="jquery.yourplugin.min.js"&gt;&lt;/script&gt;
+&lt;?xml version="1.0"?&gt;
+&lt;configuration&gt;
+    &lt;configSections&gt;
+        &lt;section name="log4net" type="log4net.Config.Log4NetConfigurationSectionHandler, log4net" /&gt;
+    &lt;/configSections&gt;
+    &lt;startup&gt;
+        &lt;supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.0"/&gt;
+    &lt;/startup&gt;
+    &lt;log4net&gt;
+        &lt;appender name="ElasticSearchAppender" type="log4net.ElasticSearch.ElasticSearchAppender, log4net.ElasticSearch"&gt;
+        &lt;!-- for .NET 40 &lt;appender name="ElasticSearchAppender" type="log4net.ElasticSearch.ElasticSearchAppender, log4net.ElasticSearch.Net40"&gt;--&gt;
+            &lt;layout type="log4net.Layout.PatternLayout,log4net"&gt;
+                &lt;param name="ConversionPattern" value="%d{ABSOLUTE} %-5p %c{1}:%L - %m%n" /&gt;
+            &lt;/layout&gt;
+            &lt;connectionString value="Server=localhost;Index=log;Port=9200;rolling=true"/&gt;
+            &lt;lossy value="false" /&gt;
+            &lt;bufferSize value="100" /&gt;
+            &lt;evaluator type="log4net.Core.LevelEvaluator"&gt;
+                &lt;threshold value="ERROR"/&gt;
+            &lt;/evaluator&gt;
+        &lt;/appender&gt;
+        &lt;root&gt;
+            &lt;level value="ALL"/&gt;
+            &lt;appender-ref ref="ElasticSearchAppender" /&gt;
+        &lt;/root&gt;
+    &lt;/log4net&gt;
+&lt;/configuration&gt;
 </pre>
 			</section>
             <section class="sec-header">
-                <h3 class="font-bree-serif">The Markup</h3>
-                <p>Add the following markup</p>
-                <pre class="prettyprint linenums">&lt;ul class="thumbnails"&gt;
-&lt;li class="span4"&gt; &lt;a href="#" class="thumbnail"&gt; &lt;img src="http://placehold.it/360x268" alt=""&gt; &lt;/a&gt; &lt;/li&gt;
-....
-&lt;/ul&gt;
-</pre>
+                <h3 class="font-bree-serif">An Explanation of Properties</h3>
+                <pre class="prettyprint linenums">&lt;connectionString value="Server=localhost;Index=log;Port=9200;rolling=true"/&gt;</pre>
+                <p>The <strong>connectionString</strong> property contains the 4 important parameters: Server, Index, Port, and rolling.</p>
+                <ul>
+                  <li><strong>Server</strong>: The host name or IP address of your Elasticsearch server</li>
+                  <li><strong>Index</strong>: The name of the index in Elasticsearch you want your logs to go to</li>
+                  <li><strong>Port</strong>: The port Elasticsearch is running on, usually 9200</li>
+                  <li><strong>rolling</strong>: Set this value to <code>true</code> if you want log4net.ElasticSearch to create a new index for each day</li>
+                </ul>
+                <pre class="prettyprint linenums">&lt;lossy value="false" /&gt;</pre>
+                <p>log4net.ElasticSearch uses a buffer to collect events and then flush them to the Elasticsearch server on a background thread. Setting this value to <code>true</code> will cause log4net.Elasticsearch to begin discarding events if the buffer is full and has not been flushed. This could happen if the Elasticsearch server becomes unresponsive or goes offline. If application performance is paramount, set this to <code>true</code> so that events are discarded from the buffer but the logging is not blocking application performance. If logging each event is more important than application performance, set this to <code>false</code>.</p>
+                <pre class="prettyprint linenums">&lt;bufferSize value="100" /&gt;</pre>
+                <p>The <strong>bufferSize</strong> tells log4net.ElasticSearch how many events to store before flushing to the Elasticsearch server. You should experiment with this figure but generally if you have a high volume application with lots of logging you can set this figure higher. If you log very infrequently, set this number lower so that the buffer is flushed often enough to see the events show up in Elasticsearch.</p>
+                <pre class="prettyprint linenums">&lt;evaluator type="log4net.Core.LevelEvaluator"&gt;
+  &lt;threshold value="ERROR"/&gt;
+&lt;/evaluator&gt;</pre>
+                <p>The <strong>evaluator</strong> is a final check for events that are about to be discarded in a <strong>lossy</strong> setup. If the level of the event is equal to or greater than the evaluator that is set, the buffer will trigger and an attempt will be made to log it to the Elasticsearch server.</p>
 </section>
 <section class="sec-header">
-                <h3 class="font-bree-serif">Call Plugin</h3>
-                <p>Just before the closing <code><abbr title="<body>">body</abbr></code> tag (after any JS file includes), call the plugin with code below:</p>
-                <pre class="prettyprint linenums">
-&lt;script&gt;
-$(document).ready(function () {
-	$('.selector').yourPlugin();
-});
-&lt;/script&gt;
-</pre>
+                <h3 class="font-bree-serif">3. Configuring Your Project</h3>
+                <p>For non ASP.NET projects, at the end of your AssemblyInfo.cs file, add the following line:</p>
+                <code>[assembly: log4net.Config.XmlConfigurator(Watch = true)]</code>
+                <p />
+                <p>For ASP.NET projects, in either <code>ApplicationStart()</code> or other startup task class method, add:</p>
+                <code>log4net.Config.XmlConfigurator.Configure();</code>
 </section>
           </div><!--end howtouse-content-->
-          <!-- 
-          =====================================
-          Documentation Tab Content
-          =====================================
-          -->
-          <div class="tab-pane" id="documentation">
-             <section class="sec-header">
-                <h3 class="font-bree-serif">Plugin Settings</h3>
-                <p>Plugin accepts settings from an object of key/value pairs, and can be assigned to any HTML element.</p>
-                <table class="table table-bordered settings">
-                <thead>
-                <tr>
-                	<th><strong>Property</strong></th>
-                    <th><strong>Default</strong></th>
-                    <th><strong>Description</strong></th>
-                </tr>
-                </thead>
-                <tbody>
-                	<tr>
-                        <td>Property1</td>
-                        <td>Default Value</td>
-                        <td>some description about this</td>
-                    </tr>
-                    <tr>
-                        <td>Property2</td>
-                        <td>"Default String"</td>
-                        <td>some description about this</td>
-                    </tr>
-                    <tr>
-                        <td>Property3</td>
-                        <td>false</td>
-                        <td>some description about this</td>
-                    </tr>
-                    <tr>
-                        <td>Property4</td>
-                        <td>Default Value</td>
-                        <td>some description about this</td>
-                    </tr>
-                    <tr>
-                        <td>Property5</td>
-                        <td>"Default String"</td>
-                        <td>some description about this</td>
-                    </tr>
-                    <tr>
-                        <td>Property6</td>
-                        <td>false</td>
-                        <td>some description about this</td>
-                    </tr>
-                </tbody>
-                </table>
-                
-           </section>
-          </div><!--end documentation-content-->
-          <!-- 
-          =====================================
-          FAQ Tab Content
-          =====================================
-          -->
-          <div class="tab-pane" id="faq">
-          <section class="sec-header">
-              <h3 class="font-bree-serif">FAQ <small>Option1</small></h3>
-              <div class="row">
-              <div class="span3">
-              <div class="well">
-             	<ul class="nav nav-pills nav-stacked">
-                  <li class="active"><a href="#">Category 1</a></li>
-                  <li><a href="#">Category 2</a></li>
-                  <li><a href="#">Category 3</a></li>
-                  <li><a href="#">Category 4</a></li>
-                  <li><a href="#">Category 5</a></li>
-                </ul>
-                </div><!--end well-->
-              </div><!--end span3-->
-              <div class="span9">
-              <form class="well form-search">
-              <input type="text" class="span7" style="margin: 0 auto;" data-provide="typeahead" data-items="4" data-source="[&quot;keyword1&quot;,&quot;keyword2&quot;]">
-              <button type="submit" class="btn btn-success">Search</button>
-              </form>
-                  <div class="accordion" id="faq-accordion">             
-                    <div class="accordion-group">
-                      <div class="accordion-heading">
-                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
-                          Question #1
-                        </a>
-                      </div>
-                      <div id="collapseOne" class="accordion-body collapse in">
-                        <div class="accordion-inner">
-                          Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                        </div>
-                      </div>
-                    </div>
-                    <div class="accordion-group">
-                      <div class="accordion-heading">
-                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
-                          Question Item #2
-                        </a>
-                      </div>
-                      <div id="collapseTwo" class="accordion-body collapse">
-                        <div class="accordion-inner">
-                          Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                        </div>
-                      </div>
-                    </div>
-                    <div class="accordion-group">
-                      <div class="accordion-heading">
-                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseThree">
-                          Question Item #3
-                        </a>
-                      </div>
-                      <div id="collapseThree" class="accordion-body collapse">
-                        <div class="accordion-inner">
-                          Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                        </div>
-                      </div>
-                    </div>
-                  </div><!--end accordion-->
-              </div><!--end span9-->
-              </div><!--end row-->
-            </section>  
-            
-              <section class="sec-header">
-              <h3 class="font-bree-serif">FAQ <small>Option2</small></h3>
-                  <div class="accordion" id="faq-accordion1">             
-                    <div class="accordion-group">
-                      <div class="accordion-heading">
-                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse1">
-                          Question #1
-                        </a>
-                      </div>
-                      <div id="collapse1" class="accordion-body collapse in">
-                        <div class="accordion-inner">
-                          Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                        </div>
-                      </div>
-                    </div>
-                    <div class="accordion-group">
-                      <div class="accordion-heading">
-                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse2">
-                          Question Item #2
-                        </a>
-                      </div>
-                      <div id="collapse2" class="accordion-body collapse">
-                        <div class="accordion-inner">
-                          Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                        </div>
-                      </div>
-                    </div>
-                    <div class="accordion-group">
-                      <div class="accordion-heading">
-                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse3">
-                          Question Item #3
-                        </a>
-                      </div>
-                      <div id="collapse3" class="accordion-body collapse">
-                        <div class="accordion-inner">
-                          Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                        </div>
-                      </div>
-                    </div>
-                  </div><!--end accordion-->
-            </section>
-          </div><!--end faq-content-->
+
+
            <!-- 
           =====================================
           Roadmap and changelog Tab Content
@@ -321,61 +188,23 @@ $(document).ready(function () {
           -->
           <div class="tab-pane" id="roadmap">
             <section class="sec-header">
-              <h3 class="font-bree-serif">Roadmap</h3>
-              <p>For more up-to-date information on release dates for these versions, please refer to the <a href="#" class="tip" title="Link to your Github Account">Issues Milestones</a>.</p>
-              <table class="table table-bordered">
-                  <thead>
-                      <tr>
-                          <th><strong>Version</strong></th>
-                          <th><strong>Description</strong></th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                  <tr>
-                      <td>1.0.3</td>
-                      <td>Description about this version goes here</td>                  
-                  </tr>
-                  <tr>
-                      <td>1.0.2</td>
-                      <td>Description about this version goes here</td>                  
-                  </tr>
-                  <tr>
-                      <td>1.0.1</td>
-                      <td>Description about this version goes here</td>                  
-                  </tr>
-                  <tr>
-                      <td>1.0.0</td>
-                      <td>Description about this version goes here</td>                  
-                  </tr>
-                  
-                  </tbody>
-              </table>
-            </section>
-            
-            <section class="sec-header">
               <h3 class="font-bree-serif">Changelog</h3>              
               <div class="accordion" id="changelog-accordion">             
                     <div class="accordion-group">
                       <div class="accordion-heading">
                         <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseaa">
-                          <strong>1.0.3 (June 1, 2012)</strong>
+                          <strong>2.0.0  (November 17, 2014)</strong>
                         </a>
                       </div>
                       <div id="collapseaa" class="accordion-body collapse in">
                         <div class="accordion-inner">
-                           <h5>CSS Changes</h5>
+                           <h5>Feature Release</h5>
                               <ul>
-                                  <li>Some description about the changes</li>
-                                  <li>Some description about the changes</li>
-                                  <li>Some description about the changes</li>
-                                  <li>Some description about the changes</li>
-                                  <li>Some description about the changes</li>
-                              </ul>
-                              <h5>Javascript Changes</h5>
-                              <ul>
-                                  <li>Some description about the changes</li>
-                                  <li>Some description about the changes</li>
-                                  <li>Some description about the changes</li>
+                                  <li>Change to BufferingAppenderSkeleton in log4net</li>
+                                  <li>Full asynchronous support with buffering and lossy options</li>
+                                  <li>camelCase properties for Elasticsearch conventions</li>
+                                  <li>Vagrant build file</li>
+                                  <li>Bugfixes</li>
                               </ul>
                         </div>
                       </div>
@@ -383,24 +212,14 @@ $(document).ready(function () {
                     <div class="accordion-group">
                       <div class="accordion-heading">
                         <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseab">
-                          <strong>1.0.2 (April 1, 2012)</strong>
+                          <strong>1.2.1  (September 24, 2014)</strong>
                         </a>
                       </div>
                       <div id="collapseab" class="accordion-body collapse">
                         <div class="accordion-inner">
-                           <h5>HTML Changes</h5>
+                           <h5>Bug Fixes</h5>
                               <ul>
-                                  <li>Some description about the changes</li>
-                                  <li>Some description about the changes</li>
-                                  <li>Some description about the changes</li>
-                                  <li>Some description about the changes</li>
-                                  <li>Some description about the changes</li>
-                              </ul>
-                              <h5>Javascript Changes</h5>
-                              <ul>
-                                  <li>Some description about the changes</li>
-                                  <li>Some description about the changes</li>
-                                  <li>Some description about the changes</li>
+                                  <li>Close HttpWebRequest explicitly</li>
                               </ul>
                         </div>
                       </div>
@@ -408,24 +227,18 @@ $(document).ready(function () {
                     <div class="accordion-group">
                       <div class="accordion-heading">
                         <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseac">
-                          <strong>1.0.1 (March 1, 2012)</strong>
+                          <strong>1.2.0  (August 21, 2014)</strong>
                         </a>
                       </div>
                       <div id="collapseac" class="accordion-body collapse">
                         <div class="accordion-inner">
-                           <h5>HTML Changes</h5>
+                           <h5>Feature Release</h5>
                               <ul>
-                                  <li>Some description about the changes</li>
-                                  <li>Some description about the changes</li>
-                                  <li>Some description about the changes</li>
-                                  <li>Some description about the changes</li>
-                                  <li>Some description about the changes</li>
-                              </ul>
-                              <h5>Javascript Changes</h5>
-                              <ul>
-                                  <li>Some description about the changes</li>
-                                  <li>Some description about the changes</li>
-                                  <li>Some description about the changes</li>
+                                  <li>Remove NEST and Json.NET deps</li>
+                                  <li>Change datetime format to be more consistent with Elasticsearch convention</li>
+                                  <li>Reverted to a strong class type to make searching within Elasticsearch for events easier</li>
+                                  <li>Added a @timestamp field to the extended properties to make searching in Kibana easier</li>
+                                  <li>Modified the rolling timestamp index format to use YYYY.MM.DD instead of YYYY-MM-DD, also to match standard ES/logstash format</li>
                               </ul>
                         </div>
                       </div>
@@ -433,6 +246,31 @@ $(document).ready(function () {
                   </div><!--end accordion-->
             </section>
           </div><!--end roadmap-content-->
+
+          <!-- 
+          =====================================
+          Contributors
+          =====================================
+          -->
+          <div class="tab-pane" id="contributors">
+            <section class="sec-header">
+                <h3 class="font-bree-serif">Contributors</h3>
+                <ul>
+                  <li><a href="http://github.com/jptoto" target="_blank">JP Toto</a></li>
+                  <li><a href="http://github.com/jc74" target="_blank">Joe Campbell</a></li>
+                  <li><a href="http://github.com/mastoj" target="_blank">Tomas Jansson</a></li>
+                  <li><a href="http://github.com/kjersti" target="_blank">Kjersti Berg</a></li>
+                  <li><a href="http://github.com/wallymathieu" target="_blank">Oskar Gewalli</a></li>
+                  <li><a href="http://github.com/Yavari" target="_blank">Payam Yavari</a></li>
+                  <li><a href="http://github.com/hippasus" target="_blank">Hippasus, Chu</a></li>
+                  <li><a href="http://github.com/nickcanz" target="_blank">Nick Canzoneri</a></li>
+                  <li><a href="http://github.com/mpdreamz" target="_blank">Martijn Laarman</a></li>
+                  
+                </ul>
+
+            </section>
+          </div><!-- end contributors -->
+            
           </div><!--end tab-content-->
       </div><!--end tabbable-->
       
