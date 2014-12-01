@@ -37,13 +37,6 @@ namespace log4net.ElasticSearch.Models
                     lookup[key] = Convert.ToString(builder[key]);
                 }
 
-                // Check to see if there is an override to point to a different ES server
-                var serverOvrride = LogicalThreadContext.Properties["ElasticsearchServer"] ??
-                                       ThreadContext.Properties["ElasticsearchServer"] ??
-                                       GlobalContext.Properties["ElasticsearchServer"];
-
-                var server = serverOvrride ?? lookup["Server"];
-
                 var index = lookup["Index"];
 
                 if (!string.IsNullOrEmpty(lookup["rolling"]))
@@ -51,7 +44,7 @@ namespace log4net.ElasticSearch.Models
                         index = string.Format("{0}-{1}", index, DateTime.Now.ToString("yyyy.MM.dd"));
 
                 return
-                    new Uri(server.ToString(), lookup["Port"], index);
+                    new Uri(lookup["Server"], lookup["Port"], index);
             }
             catch (Exception ex)
             {
