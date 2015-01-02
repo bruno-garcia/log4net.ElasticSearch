@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyVersionInfo.cs" />
+    <Compile Include="Clock.cs" />
     <Compile Include="ElasticSearchAppender.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="HttpClient.cs" />

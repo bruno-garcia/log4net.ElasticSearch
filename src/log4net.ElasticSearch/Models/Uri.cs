@@ -37,7 +37,7 @@ namespace log4net.ElasticSearch.Models
             var index = connectionStringParts[Keys.Index];
 
             return IsRollingIndex(connectionStringParts)
-                       ? "{0}-{1}".With(index, DateTime.UtcNow.ToString("yyyy.MM.dd"))
+                       ? "{0}-{1}".With(index, Clock.Date.ToString("yyyy.MM.dd"))
                        : index;
         }
 

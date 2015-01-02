@@ -46,6 +46,9 @@
     <Compile Include="..\log4net.ElasticSearch\AssemblyVersionInfo.cs">
       <Link>AssemblyVersionInfo.cs</Link>
     </Compile>
+    <Compile Include="..\log4net.ElasticSearch\Clock.cs">
+      <Link>Clock.cs</Link>
+    </Compile>
     <Compile Include="..\log4net.ElasticSearch\ElasticSearchAppender.cs">
       <Link>ElasticSearchAppender.cs</Link>
     </Compile>

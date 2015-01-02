@@ -84,6 +84,7 @@
     <Compile Include="UnitTests\Stubs\RepositoryStub.cs" />
     <Compile Include="UnitTests\TestableAppender.cs" />
     <Compile Include="UnitTests\UnitTestContext.cs" />
+    <Compile Include="UnitTests\UriTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
