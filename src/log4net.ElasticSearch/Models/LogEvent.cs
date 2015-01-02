@@ -50,7 +50,7 @@ namespace log4net.ElasticSearch.Models
                 
         public static IEnumerable<logEvent> CreateMany(IEnumerable<LoggingEvent> loggingEvents)
         {
-            return loggingEvents.Select(@event => Create(@event));
+            return loggingEvents.Select(@event => Create(@event)).ToArray();
         }
 
         static logEvent Create(LoggingEvent loggingEvent)
@@ -62,9 +62,9 @@ namespace log4net.ElasticSearch.Models
                 identity = loggingEvent.Identity,
                 threadName = loggingEvent.ThreadName,
                 userName = loggingEvent.UserName,
-                messageObject = loggingEvent.MessageObject == null ? new object() : loggingEvent.MessageObject,
+                messageObject = loggingEvent.MessageObject ?? new object(),
                 timeStamp = loggingEvent.TimeStamp.ToUniversalTime().ToString("O"),
-                exception = loggingEvent.ExceptionObject == null ? new object() : loggingEvent.ExceptionObject,
+                exception = loggingEvent.ExceptionObject ?? new object(),
                 message = loggingEvent.RenderedMessage,
                 fix = loggingEvent.Fix.ToString(),
                 hostName = Environment.MachineName,
@@ -87,15 +87,13 @@ namespace log4net.ElasticSearch.Models
         
         static void AddProperties(LoggingEvent loggingEvent, logEvent logEvent)
         {
-            var properties = loggingEvent.GetProperties();
+            loggingEvent.Properties().Union(AppenderPropertiesFor(loggingEvent)).
+                         Do(pair => logEvent.properties.Add(pair));
+        }
 
-            foreach (var propertyKey in properties.GetKeys())
-            {
-                logEvent.properties.Add(propertyKey, properties[propertyKey].ToString());
-            }
-
-            // Add a "@timestamp" field to match the logstash format
-            logEvent.properties.Add("@timestamp", loggingEvent.TimeStamp.ToUniversalTime().ToString("O"));
+        static IEnumerable<KeyValuePair<string, string>> AppenderPropertiesFor(LoggingEvent loggingEvent)
+        {
+            yield return Pair.For("@timestamp", loggingEvent.TimeStamp.ToUniversalTime().ToString("O"));
         }
     }
 }
