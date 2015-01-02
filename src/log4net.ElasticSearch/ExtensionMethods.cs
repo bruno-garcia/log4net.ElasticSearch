@@ -34,7 +34,7 @@ namespace log4net.ElasticSearch
             return new JavaScriptSerializer().Serialize(self);
         }
 
-        public static StringDictionary GetParts(this string self)
+        public static StringDictionary Parts(this string self)
         {
             var connectionStringBuilder = new DbConnectionStringBuilder
             {
@@ -46,6 +46,7 @@ namespace log4net.ElasticSearch
             {
                 stringDictionary[key] = Convert.ToString(connectionStringBuilder[key]);
             }
+
             return stringDictionary;
         }
 

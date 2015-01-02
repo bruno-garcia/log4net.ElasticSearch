@@ -25,7 +25,7 @@ namespace log4net.ElasticSearch.Models
         {
             try
             {
-                var parts = connectionString.GetParts();
+                var parts = connectionString.Parts();
 
                 var index = GetIndex(parts);
 
