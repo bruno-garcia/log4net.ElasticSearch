@@ -7,7 +7,7 @@ namespace log4net.ElasticSearch.Tests.Infrastructure.Builders
 {
     public static class LoggingEventsBuilder
     {
-        private static readonly Random Random = new Random();
+        static readonly Random Random = new Random();
 
         public static IEnumerable<LoggingEvent> LessThan(int buffer)
         {

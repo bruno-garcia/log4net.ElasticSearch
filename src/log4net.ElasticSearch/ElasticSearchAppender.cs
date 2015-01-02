@@ -10,9 +10,8 @@ namespace log4net.ElasticSearch
 {
     public class ElasticSearchAppender : BufferingAppenderSkeleton
     {
-        static readonly string AppenderType = typeof (ElasticSearchAppender).Name;
-
         const int DefaultOnCloseTimeout = 30000;
+        static readonly string AppenderType = typeof (ElasticSearchAppender).Name;
         readonly ManualResetEvent workQueueEmptyEvent;
 
         int queuedCallbackCount;
@@ -43,7 +42,7 @@ namespace log4net.ElasticSearch
                 return;
             }
 
-            repository = CreateRepository(ConnectionString);            
+            repository = CreateRepository(ConnectionString);
         }
 
         protected override void SendBuffer(LoggingEvent[] events)
@@ -77,13 +76,13 @@ namespace log4net.ElasticSearch
             return workQueueEmptyEvent.WaitOne(OnCloseTimeout, false);
         }
 
-        private void BeginAsyncSend()
+        void BeginAsyncSend()
         {
             workQueueEmptyEvent.Reset();
             Interlocked.Increment(ref queuedCallbackCount);
         }
 
-        private void SendBufferCallback(object state)
+        void SendBufferCallback(object state)
         {
             try
             {
@@ -99,7 +98,7 @@ namespace log4net.ElasticSearch
             }
         }
 
-        private void EndAsyncSend()
+        void EndAsyncSend()
         {
             if (Interlocked.Decrement(ref queuedCallbackCount) > 0)
                 return;
@@ -128,5 +127,5 @@ namespace log4net.ElasticSearch
                 throw new ArgumentException("connectionString is empty", "connectionString");
             }
         }
-    }    
+    }
 }

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using System.Web.Script.Serialization;
 using log4net.ElasticSearch.Models;
 using Uri = System.Uri;
 

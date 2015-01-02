@@ -13,7 +13,7 @@ namespace log4net.ElasticSearch.Tests.IntegrationTests
             return self.GetOrDefault("UseFiddler", "false").ToBool();
         }
 
-        private static string GetOrDefault(this NameValueCollection self, string key, string @default)
+        static string GetOrDefault(this NameValueCollection self, string key, string @default)
         {
             return self[key] ?? @default;
         }

@@ -11,9 +11,9 @@ namespace log4net.ElasticSearch.Tests.IntegrationTests
 {
     public class ElasticSearchAppenderTests : IUseFixture<IntegrationTestFixture>
     {
-        private static readonly ILog _log = LogManager.GetLogger(typeof(ElasticSearchAppenderTests));
+        static readonly ILog _log = LogManager.GetLogger(typeof(ElasticSearchAppenderTests));
 
-        private ElasticClient elasticClient;
+        ElasticClient elasticClient;
 
         public void SetFixture(IntegrationTestFixture fixture)
         {

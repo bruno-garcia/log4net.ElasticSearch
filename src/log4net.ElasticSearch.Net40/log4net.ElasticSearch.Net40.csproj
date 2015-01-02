@@ -61,6 +61,9 @@
     <Compile Include="..\log4net.ElasticSearch\Models\Uri.cs">
       <Link>Models\Uri.cs</Link>
     </Compile>
+    <Compile Include="..\log4net.ElasticSearch\Pair.cs">
+      <Link>Pair.cs</Link>
+    </Compile>
     <Compile Include="..\log4net.ElasticSearch\Repository.cs">
       <Link>Repository.cs</Link>
     </Compile>

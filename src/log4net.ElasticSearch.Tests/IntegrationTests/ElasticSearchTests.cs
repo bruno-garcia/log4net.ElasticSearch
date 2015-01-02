@@ -10,7 +10,7 @@ namespace log4net.ElasticSearch.Tests.IntegrationTests
 {
     public class ElasticSearchTests : IUseFixture<IntegrationTestFixture>
     {
-        private ElasticClient elasticClient;
+        ElasticClient elasticClient;
 
         public void SetFixture(IntegrationTestFixture fixture)
         {
