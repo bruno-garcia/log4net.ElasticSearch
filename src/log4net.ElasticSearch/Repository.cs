@@ -1,8 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.IO;
-using System.Net;
 using log4net.ElasticSearch.Models;
-using Uri = System.Uri;
 
 namespace log4net.ElasticSearch
 {
@@ -14,43 +11,27 @@ namespace log4net.ElasticSearch
     public class Repository : IRepository
     {
         readonly Uri uri;
+        readonly IHttpClient httpClient;
 
-        Repository(Uri uri)
+        Repository(Uri uri, IHttpClient httpClient)
         {
             this.uri = uri;
+            this.httpClient = httpClient;
         }
 
         public void Add(IEnumerable<logEvent> logEvents)
-        {            
-            logEvents.Do(logEvent =>
-                {
-                    var httpWebRequest = JsonWebRequest.For(uri);
-
-                    using (var streamWriter = GetRequestStream(httpWebRequest))
-                    {
-                        streamWriter.Write(logEvent.ToJson());
-                        streamWriter.Flush();
-
-                        var httpResponse = (HttpWebResponse) httpWebRequest.GetResponse();
-                        httpResponse.Close();
-
-                        if (httpResponse.StatusCode != HttpStatusCode.Created)
-                        {
-                            throw new WebException("Failed to correctly add {0} to the ElasticSearch index.".With(logEvent.GetType().Name));
-                        }
-                    }
-                });
-
-        }
-
-        static StreamWriter GetRequestStream(WebRequest httpWebRequest)
         {
-            return new StreamWriter(httpWebRequest.GetRequestStream());
+            logEvents.Do(logEvent => httpClient.Post(uri, logEvent));
         }
 
         public static IRepository Create(string connectionString)
         {
-            return new Repository(Models.Uri.Create(connectionString));
+            return Create(connectionString, new HttpClient());
+        }
+
+        static IRepository Create(string connectionString, IHttpClient httpClient)
+        {
+            return new Repository(Uri.For(connectionString), httpClient);
         }
     }
 }

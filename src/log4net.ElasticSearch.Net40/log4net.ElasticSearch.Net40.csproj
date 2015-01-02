@@ -52,8 +52,8 @@
     <Compile Include="..\log4net.ElasticSearch\ExtensionMethods.cs">
       <Link>ExtensionMethods.cs</Link>
     </Compile>
-    <Compile Include="..\log4net.ElasticSearch\JsonWebRequest.cs">
-      <Link>JsonWebRequest.cs</Link>
+    <Compile Include="..\log4net.ElasticSearch\HttpClient.cs">
+      <Link>HttpClient.cs</Link>
     </Compile>
     <Compile Include="..\log4net.ElasticSearch\Models\logEvent.cs">
       <Link>Models\logEvent.cs</Link>
