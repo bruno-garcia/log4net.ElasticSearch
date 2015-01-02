@@ -75,7 +75,6 @@
     <Compile Include="IntegrationTests\ElasticSearchAppenderTests.cs" />
     <Compile Include="IntegrationTests\ElasticSearchTests.cs" />
     <Compile Include="IntegrationTests\IntegrationTestFixture.cs" />
-    <Compile Include="Infrastructure\ExtensionMethods.cs" />
     <Compile Include="Infrastructure\Builders\LogEventBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Infrastructure\Retry.cs" />

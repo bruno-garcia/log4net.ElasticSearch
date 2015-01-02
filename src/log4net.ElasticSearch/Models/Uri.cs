@@ -26,31 +26,32 @@ namespace log4net.ElasticSearch.Models
         {
             try
             {
-                var builder = new DbConnectionStringBuilder
-                    {
-                        ConnectionString = connectionString.Replace("{", "\"").Replace("}", "\"")
-                    };
+                var parts = connectionString.GetParts();
 
-                var lookup = new StringDictionary();
-                foreach (string key in builder.Keys)
-                {
-                    lookup[key] = Convert.ToString(builder[key]);
-                }
+                var index = GetIndex(parts);
 
-                var index = lookup["Index"];
-
-                if (!string.IsNullOrEmpty(lookup["rolling"]))
-                    if (lookup["rolling"] == "true")
-                        index = string.Format("{0}-{1}", index, DateTime.Now.ToString("yyyy.MM.dd"));
-
-                return
-                    new Uri(lookup["Server"], lookup["Port"], index);
+                return new Uri(parts["Server"], parts["Port"], index);
             }
             catch (Exception ex)
             {
-                throw new ArgumentException(string.Format("'{0}' is not a valid connection string", connectionString),
+                throw new ArgumentException("'{0}' is not a valid connection string".With(connectionString),
                                             "connectionString", ex);
             }
+        }
+
+        static string GetIndex(StringDictionary parts)
+        {
+            var index = parts["Index"];
+
+            if (ShouldUseRollingIndex(parts))
+                index = "{0}-{1}".With(index, DateTime.Now.ToString("yyyy.MM.dd"));
+
+            return index;
+        }
+
+        static bool ShouldUseRollingIndex(StringDictionary parts)
+        {
+            return parts.Contains("rolling") && parts["rolling"].ToBool();
         }
     }
 }
