@@ -31,5 +31,14 @@ namespace log4net.ElasticSearch.Tests.UnitTests
             Uri uri = uriBuilder;
             uri.Scheme.Should().Be("http");
         }
+
+        [Fact]
+        public void When_a_user_and_password_are_provided_it_should_create_a_URI_with_user_password()
+        {
+            string ConnectionString = "Scheme=https;User=user1;Pwd=password1;Server=localhost;Index=log_test;Port=9200;rolling=true";
+            var uriBuilder = log4net.ElasticSearch.Models.Uri.Create(ConnectionString);
+            Uri uri = uriBuilder;
+            uri.UserInfo.Should().Be("user1:password1");
+        }
     }
 }

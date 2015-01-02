@@ -8,20 +8,31 @@ namespace log4net.ElasticSearch.Models
     {
         readonly string index;
         readonly string port;
-        readonly string scheme;
         readonly string server;
 
-        Uri(string scheme, string server, string port, string index)
+        readonly string scheme;
+        readonly string user;
+        readonly string password;
+
+        Uri(string server, string port, string index, string scheme, string user, string password)
         {
-            this.scheme = scheme;
             this.server = server;
             this.port = port;
             this.index = index;
+
+            this.scheme = scheme;
+            this.user = user;
+            this.password = password;
         }
 
         public static implicit operator System.Uri(Uri uri)
         {
-            return new System.Uri(string.Format("{0}://{1}:{2}/{3}/logEvent", uri.scheme, uri.server, uri.port, uri.index));
+            if (string.IsNullOrWhiteSpace(uri.user) || string.IsNullOrWhiteSpace(uri.password))
+            {
+                return new System.Uri(string.Format("{0}://{1}:{2}/{3}/logEvent", uri.scheme, uri.server, uri.port, uri.index));    
+            }
+
+            return new System.Uri(string.Format("{0}://{1}:{2}@{3}:{4}/{5}/logEvent", uri.scheme, uri.user, uri.password, uri.server, uri.port, uri.index));
         }
 
         public static Uri Create(string connectionString)
@@ -50,8 +61,10 @@ namespace log4net.ElasticSearch.Models
                 }
 
                 var scheme = lookup["Scheme"] ?? "http";
+                var user = lookup["User"] ?? string.Empty;
+                var password = lookup["Pwd"] ?? string.Empty;
 
-                return new Uri(scheme, lookup["Server"], lookup["Port"], index);
+                return new Uri(lookup["Server"], lookup["Port"], index, scheme, user, password);
             }
             catch (Exception ex)
             {
