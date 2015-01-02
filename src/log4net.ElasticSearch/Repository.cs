@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using log4net.ElasticSearch.Infrastructure;
 using log4net.ElasticSearch.Models;
 
 namespace log4net.ElasticSearch
@@ -29,7 +30,7 @@ namespace log4net.ElasticSearch
             return Create(connectionString, new HttpClient());
         }
 
-        static IRepository Create(string connectionString, IHttpClient httpClient)
+        public static IRepository Create(string connectionString, IHttpClient httpClient)
         {
             return new Repository(Uri.For(connectionString), httpClient);
         }

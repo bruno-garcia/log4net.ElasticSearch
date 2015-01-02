@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace log4net.ElasticSearch
+namespace log4net.ElasticSearch.Infrastructure
 {
     public static class Clock
     {
@@ -18,7 +18,7 @@ namespace log4net.ElasticSearch
             return new AnonymousDisposable(() => Unfreeze());
         }
 
-        static DateTime Now
+        public static DateTime Now
         {
             get { return frozen.HasValue ? frozen.Value : DateTime.UtcNow; }
         }
@@ -26,21 +26,6 @@ namespace log4net.ElasticSearch
         static void Unfreeze()
         {
             frozen = null;
-        }
-
-        private class AnonymousDisposable : IDisposable
-        {
-            readonly Action action;
-
-            public AnonymousDisposable(Action action)
-            {
-                this.action = action;
-            }
-
-            public void Dispose()
-            {
-                action();
-            }
-        }
+        }    
     }
 }

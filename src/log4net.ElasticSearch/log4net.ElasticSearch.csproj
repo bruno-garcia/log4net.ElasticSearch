@@ -44,11 +44,12 @@
     <Reference Include="System.Data" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Infrastructure\AnonymousDisposable.cs" />
     <Compile Include="AssemblyVersionInfo.cs" />
-    <Compile Include="Clock.cs" />
+    <Compile Include="Infrastructure\Clock.cs" />
     <Compile Include="ElasticSearchAppender.cs" />
     <Compile Include="ExtensionMethods.cs" />
-    <Compile Include="HttpClient.cs" />
+    <Compile Include="Infrastructure\HttpClient.cs" />
     <Compile Include="Repository.cs" />
     <Compile Include="Models\Uri.cs" />
     <Compile Include="Models\logEvent.cs" />

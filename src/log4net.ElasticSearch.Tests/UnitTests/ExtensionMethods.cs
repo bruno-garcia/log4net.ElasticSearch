@@ -22,5 +22,10 @@ namespace log4net.ElasticSearch.Tests.UnitTests
         {
             return (T) self;
         }
+
+        public static T Second<T>(this IEnumerable<T> self)
+        {
+            return self.Skip(1).First();
+        }
     }
 }

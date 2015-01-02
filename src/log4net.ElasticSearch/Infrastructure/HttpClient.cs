@@ -2,7 +2,7 @@
 using System.IO;
 using System.Net;
 
-namespace log4net.ElasticSearch
+namespace log4net.ElasticSearch.Infrastructure
 {
     public interface IHttpClient
     {
