@@ -8,10 +8,12 @@ namespace log4net.ElasticSearch.Models
     {
         readonly string index;
         readonly string port;
+        readonly string scheme;
         readonly string server;
 
-        Uri(string server, string port, string index)
+        Uri(string scheme, string server, string port, string index)
         {
+            this.scheme = scheme;
             this.server = server;
             this.port = port;
             this.index = index;
@@ -19,7 +21,7 @@ namespace log4net.ElasticSearch.Models
 
         public static implicit operator System.Uri(Uri uri)
         {
-            return new System.Uri(string.Format("http://{0}:{1}/{2}/logEvent", uri.server, uri.port, uri.index));
+            return new System.Uri(string.Format("{0}://{1}:{2}/{3}/logEvent", uri.scheme, uri.server, uri.port, uri.index));
         }
 
         public static Uri Create(string connectionString)
@@ -27,9 +29,9 @@ namespace log4net.ElasticSearch.Models
             try
             {
                 var builder = new DbConnectionStringBuilder
-                    {
-                        ConnectionString = connectionString.Replace("{", "\"").Replace("}", "\"")
-                    };
+                {
+                    ConnectionString = connectionString.Replace("{", "\"").Replace("}", "\"")
+                };
 
                 var lookup = new StringDictionary();
                 foreach (string key in builder.Keys)
@@ -40,11 +42,16 @@ namespace log4net.ElasticSearch.Models
                 var index = lookup["Index"];
 
                 if (!string.IsNullOrEmpty(lookup["rolling"]))
+                {
                     if (lookup["rolling"] == "true")
+                    {
                         index = string.Format("{0}-{1}", index, DateTime.Now.ToString("yyyy.MM.dd"));
+                    }
+                }
 
-                return
-                    new Uri(lookup["Server"], lookup["Port"], index);
+                var scheme = lookup["Scheme"] ?? "http";
+
+                return new Uri(scheme, lookup["Server"], lookup["Port"], index);
             }
             catch (Exception ex)
             {

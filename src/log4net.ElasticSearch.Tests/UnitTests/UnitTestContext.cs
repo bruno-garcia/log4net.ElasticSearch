@@ -2,7 +2,7 @@
 using log4net.ElasticSearch.Tests.UnitTests.Stubs;
 
 namespace log4net.ElasticSearch.Tests.UnitTests
-{    
+{
     public class UnitTestContext : IDisposable
     {
         const string ConnectionString = "Server=localhost;Index=log_test;Port=9200;rolling=true";
