@@ -9,9 +9,9 @@
             this.repository = repository;
         }
 
-        public bool? FailSend { get; set; }
+        public bool? FailSend { private get; set; }
 
-        public bool? FailClose { get; set; }
+        public bool? FailClose { private get; set; }
 
         protected override IRepository CreateRepository(string connectionString)
         {

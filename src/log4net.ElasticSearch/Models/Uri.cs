@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Specialized;
-using System.Data.Common;
 
 namespace log4net.ElasticSearch.Models
 {

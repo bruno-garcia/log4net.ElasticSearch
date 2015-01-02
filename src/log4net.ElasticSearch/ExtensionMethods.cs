@@ -59,6 +59,16 @@ namespace log4net.ElasticSearch
             return bool.Parse(self);
         }
 
+        public static bool IsNull(this string self)
+        {
+            return self == null;
+        }
+
+        public static bool IsEmpty(this string self)
+        {
+            return self.Length == 0;
+        }
+
         static IEnumerable<KeyValuePair<string, string>> AsPairs(this ReadOnlyPropertiesDictionary self)
         {
             return self.GetKeys().Select(key => Pair.For(key, self[key].ToStringOrNull()));

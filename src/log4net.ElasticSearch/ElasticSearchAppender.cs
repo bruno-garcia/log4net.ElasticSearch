@@ -38,7 +38,7 @@ namespace log4net.ElasticSearch
             }
             catch (Exception ex)
             {
-                HandleError("Failed to validate ConnectionString in ActivateOptions", ex);
+                HandleError("ActivateOptions", "Failed to validate ConnectionString", ex);
                 return;
             }
 
@@ -50,7 +50,7 @@ namespace log4net.ElasticSearch
             BeginAsyncSend();
             if (TryAsyncSend(events)) return;
             EndAsyncSend();
-            HandleError("Failed to async send logging events in SendBuffer");
+            HandleError("SendBuffer", "Failed to async send logging events");
         }
 
         protected override void OnClose()
@@ -58,7 +58,7 @@ namespace log4net.ElasticSearch
             base.OnClose();
 
             if (TryWaitAsyncSendFinish()) return;
-            HandleError("Failed to send all queued events in OnClose");
+            HandleError("OnClose", "Failed to send all queued events");
         }
 
         protected virtual IRepository CreateRepository(string connectionString)
@@ -90,7 +90,7 @@ namespace log4net.ElasticSearch
             }
             catch (Exception ex)
             {
-                HandleError("Failed to addd logEvents to {0} in SendBufferCallback".With(repository.GetType().Name), ex);
+                HandleError("SendBufferCallback", "Failed to addd logEvents to {0}".With(repository.GetType().Name), ex);
             }
             finally
             {
@@ -105,24 +105,24 @@ namespace log4net.ElasticSearch
             workQueueEmptyEvent.Set();
         }
 
-        void HandleError(string message)
+        void HandleError(string method, string message)
         {
-            ErrorHandler.Error("{0} [{1}]: {2}.".With(AppenderType, Name, message));
+            ErrorHandler.Error("{0}.{1} [{2}]: {3}.".With(AppenderType, method, Name, message));
         }
 
-        void HandleError(string message, Exception ex)
+        void HandleError(string method, string message, Exception ex)
         {
-            ErrorHandler.Error("{0} [{1}]: {2}.".With(AppenderType, Name, message), ex, ErrorCode.GenericFailure);
+            ErrorHandler.Error("{0}.{1} [{2}]: {3}.".With(AppenderType, method, Name, message), ex, ErrorCode.GenericFailure);
         }
 
         static void Validate(string connectionString)
         {
-            if (connectionString == null)
+            if (connectionString.IsNull())
             {
                 throw new ArgumentNullException("connectionString");
             }
 
-            if (connectionString.Length == 0)
+            if (connectionString.IsEmpty())
             {
                 throw new ArgumentException("connectionString is empty", "connectionString");
             }

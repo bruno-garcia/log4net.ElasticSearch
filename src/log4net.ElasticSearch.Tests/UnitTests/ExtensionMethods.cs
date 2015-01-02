@@ -7,10 +7,10 @@ namespace log4net.ElasticSearch.Tests.UnitTests
 {
     public static class ExtensionMethods
     {
-         public static int TotalCount<T>(this IEnumerable<IEnumerable<T>> self)
-         {
-             return self.Sum(inner => inner.Count());
-         }
+        public static int TotalCount<T>(this IEnumerable<IEnumerable<T>> self)
+        {
+            return self.Sum(inner => inner.Count());
+        }
 
         public static void AppendAndClose(this IBulkAppender self, IEnumerable<LoggingEvent> events)
         {
