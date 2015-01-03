@@ -61,6 +61,9 @@
     <Compile Include="..\log4net.ElasticSearch\Infrastructure\HttpClient.cs">
       <Link>Infrastructure\HttpClient.cs</Link>
     </Compile>
+    <Compile Include="..\log4net.ElasticSearch\Infrastructure\Pair.cs">
+      <Link>Infrastructure\Pair.cs</Link>
+    </Compile>
     <Compile Include="..\log4net.ElasticSearch\Models\logEvent.cs">
       <Link>Models\logEvent.cs</Link>
     </Compile>

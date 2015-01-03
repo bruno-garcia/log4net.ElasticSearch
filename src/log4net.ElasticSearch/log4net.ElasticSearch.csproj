@@ -50,6 +50,7 @@
     <Compile Include="ElasticSearchAppender.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Infrastructure\HttpClient.cs" />
+    <Compile Include="Infrastructure\Pair.cs" />
     <Compile Include="Repository.cs" />
     <Compile Include="Models\Uri.cs" />
     <Compile Include="Models\logEvent.cs" />

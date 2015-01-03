@@ -5,6 +5,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Web.Script.Serialization;
 using log4net.Core;
+using log4net.ElasticSearch.Infrastructure;
 using log4net.Util;
 
 namespace log4net.ElasticSearch
@@ -74,13 +75,4 @@ namespace log4net.ElasticSearch
             return string.IsNullOrEmpty(self);
         }
     }
-
-    public static class Pair
-    {
-        public static KeyValuePair<TKey, TValue> For<TKey, TValue>(TKey key, TValue value)
-        {
-            return new KeyValuePair<TKey, TValue>(key, value);
-        }
-    }
-
 }
