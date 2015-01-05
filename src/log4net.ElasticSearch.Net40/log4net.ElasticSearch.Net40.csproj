@@ -52,8 +52,17 @@
     <Compile Include="..\log4net.ElasticSearch\ExtensionMethods.cs">
       <Link>ExtensionMethods.cs</Link>
     </Compile>
-    <Compile Include="..\log4net.ElasticSearch\JsonWebRequest.cs">
-      <Link>JsonWebRequest.cs</Link>
+    <Compile Include="..\log4net.ElasticSearch\Infrastructure\AnonymousDisposable.cs">
+      <Link>Infrastructure\AnonymousDisposable.cs</Link>
+    </Compile>
+    <Compile Include="..\log4net.ElasticSearch\Infrastructure\Clock.cs">
+      <Link>Infrastructure\Clock.cs</Link>
+    </Compile>
+    <Compile Include="..\log4net.ElasticSearch\Infrastructure\HttpClient.cs">
+      <Link>Infrastructure\HttpClient.cs</Link>
+    </Compile>
+    <Compile Include="..\log4net.ElasticSearch\Infrastructure\Pair.cs">
+      <Link>Infrastructure\Pair.cs</Link>
     </Compile>
     <Compile Include="..\log4net.ElasticSearch\Models\logEvent.cs">
       <Link>Models\logEvent.cs</Link>
@@ -69,6 +78,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
