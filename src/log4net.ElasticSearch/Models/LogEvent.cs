@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using log4net.Core;
+using log4net.ElasticSearch.Infrastructure;
 
 namespace log4net.ElasticSearch.Models
 {

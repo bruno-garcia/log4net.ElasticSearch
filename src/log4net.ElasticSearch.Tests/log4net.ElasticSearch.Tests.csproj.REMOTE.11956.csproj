@@ -81,7 +81,6 @@
     <Compile Include="Infrastructure\Retry.cs" />
     <Compile Include="UnitTests\Stubs\HttpClientStub.cs" />
     <Compile Include="UnitTests\RepositoryTests.cs" />
-    <Compile Include="UnitTests\SslTests.cs" />
     <Compile Include="UnitTests\Stubs\ErrorHandlerStub.cs" />
     <Compile Include="UnitTests\ExtensionMethods.cs" />
     <Compile Include="UnitTests\Stubs\RepositoryStub.cs" />
@@ -90,9 +89,7 @@
     <Compile Include="UnitTests\UriTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -104,7 +101,6 @@
   <ItemGroup>
     <Content Include="logConfig.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup />
