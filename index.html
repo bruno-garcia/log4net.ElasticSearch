@@ -40,7 +40,7 @@
     <h1 class="font-bree-serif">log4net.Elasticsearch</h1>
     <p class="font-open-sans-normal">Full featured asynchronous Elasticsearch appender for log4net.</p>
     
-    <p class="jumbo"> <a href="https://github.com/jptoto/log4net.ElasticSearch" target="_blank" class="btn btn-inverse btn-large font-open-sans-normal"><strong>View on GitHub</strong></a> <a href="http://www.nuget.org/packages/log4net.ElasticSearch/" target="_blank" class="btn btn-success btn-large font-open-sans-normal"><strong>Nuget Package </strong><small>(v2.0.0)</small></a> </p>
+    <p class="jumbo"> <a href="https://github.com/jptoto/log4net.ElasticSearch" target="_blank" class="btn btn-inverse btn-large font-open-sans-normal"><strong>View on GitHub</strong></a> <a href="http://www.nuget.org/packages/log4net.ElasticSearch/" target="_blank" class="btn btn-success btn-large font-open-sans-normal"><strong>Nuget Package </strong><small>(v2.1.0)</small></a> </p>
     
    
   </div><!--end container-->  
@@ -136,7 +136,7 @@ Install-Package log4net.ElasticSearch</pre>
             &lt;layout type="log4net.Layout.PatternLayout,log4net"&gt;
                 &lt;param name="ConversionPattern" value="%d{ABSOLUTE} %-5p %c{1}:%L - %m%n" /&gt;
             &lt;/layout&gt;
-            &lt;connectionString value="Server=localhost;Index=log;Port=9200;rolling=true"/&gt;
+            &lt;connectionString value="Scheme=https;User=username;Pwd=password;Server=localhost;Index=log;Port=9200;rolling=true"/&gt;
             &lt;lossy value="false" /&gt;
             &lt;bufferSize value="100" /&gt;
             &lt;evaluator type="log4net.Core.LevelEvaluator"&gt;
@@ -153,9 +153,12 @@ Install-Package log4net.ElasticSearch</pre>
 			</section>
             <section class="sec-header">
                 <h3 class="font-bree-serif">An Explanation of Properties</h3>
-                <pre class="prettyprint linenums">&lt;connectionString value="Server=localhost;Index=log;Port=9200;rolling=true"/&gt;</pre>
-                <p>The <strong>connectionString</strong> property contains the 4 important parameters: Server, Index, Port, and rolling.</p>
+                <pre class="prettyprint linenums">&lt;connectionString value="Scheme=https;User=username;Pwd=password;Server=localhost;Index=log;Port=9200;rolling=true"/&gt;</pre>
+                <p>The <strong>connectionString</strong> property contains the 4 important parameters: Server, Index, Port, and rolling as well as 3 optional parameters: Scheme, User, and Pwd.</p>
                 <ul>
+                  <li><strong>Scheme</strong>: (optional) Specifiy https or http, will default to http if not given.</li>
+                  <li><strong>User</strong>: (optional - but must be used with Pwd) If your Elasticsearch cluster or service requires http basic auth, specify the user id here.</li>
+                  <li><strong>Pwd</strong>: (optional -  but must be used with User) If your Elasticsearch cluster or service requires http basic auth, specify the password here.</li>
                   <li><strong>Server</strong>: The host name or IP address of your Elasticsearch server</li>
                   <li><strong>Index</strong>: The name of the index in Elasticsearch you want your logs to go to</li>
                   <li><strong>Port</strong>: The port Elasticsearch is running on, usually 9200</li>
@@ -189,14 +192,31 @@ Install-Package log4net.ElasticSearch</pre>
           <div class="tab-pane" id="roadmap">
             <section class="sec-header">
               <h3 class="font-bree-serif">Changelog</h3>              
-              <div class="accordion" id="changelog-accordion">             
-                    <div class="accordion-group">
+              <div class="accordion" id="changelog-accordion">
+              <div class="accordion-group">
                       <div class="accordion-heading">
                         <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseaa">
-                          <strong>2.0.0  (December 16, 2014)</strong>
+                          <strong>2.1.0  (January 12, 2015)</strong>
                         </a>
                       </div>
                       <div id="collapseaa" class="accordion-body collapse in">
+                        <div class="accordion-inner">
+                           <h5>Feature Release</h5>
+                              <ul>
+                                  <li>Added an internal clocking tracker so that rolling indexes will work even when app domains are not unloaded in a high concurrent application. (Joe Campbell)</li>
+                                  <li>Support for https schemes with http basic auth which will allow log4net.Elasticsearch to work correctly with 3rd party ES hosting services like found.no.</li>
+                                  <li>Bugfixes and added some missing tests back in from a bad commit.</li>
+                              </ul>
+                        </div>
+                      </div>
+                    </div>             
+                    <div class="accordion-group">
+                      <div class="accordion-heading">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseab">
+                          <strong>2.0.0  (December 16, 2014)</strong>
+                        </a>
+                      </div>
+                      <div id="collapseab" class="accordion-body collapse">
                         <div class="accordion-inner">
                            <h5>Feature Release</h5>
                               <ul>
@@ -211,11 +231,11 @@ Install-Package log4net.ElasticSearch</pre>
                     </div>
                     <div class="accordion-group">
                       <div class="accordion-heading">
-                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseab">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseac">
                           <strong>1.2.1  (September 24, 2014)</strong>
                         </a>
                       </div>
-                      <div id="collapseab" class="accordion-body collapse">
+                      <div id="collapseac" class="accordion-body collapse">
                         <div class="accordion-inner">
                            <h5>Bug Fixes</h5>
                               <ul>
@@ -226,11 +246,11 @@ Install-Package log4net.ElasticSearch</pre>
                     </div>
                     <div class="accordion-group">
                       <div class="accordion-heading">
-                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseac">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapsead">
                           <strong>1.2.0  (August 21, 2014)</strong>
                         </a>
                       </div>
-                      <div id="collapseac" class="accordion-body collapse">
+                      <div id="collapsead" class="accordion-body collapse">
                         <div class="accordion-inner">
                            <h5>Feature Release</h5>
                               <ul>
@@ -265,6 +285,7 @@ Install-Package log4net.ElasticSearch</pre>
                   <li><a href="http://github.com/hippasus" target="_blank">Hippasus, Chu</a></li>
                   <li><a href="http://github.com/nickcanz" target="_blank">Nick Canzoneri</a></li>
                   <li><a href="http://github.com/mpdreamz" target="_blank">Martijn Laarman</a></li>
+                  <li><a href="http://github.com/mickdelaney" target="_blank">Mick Delaney</a></li>
                   
                 </ul>
 
