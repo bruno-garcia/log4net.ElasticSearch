@@ -181,6 +181,26 @@ Install-Package log4net.ElasticSearch</pre>
                 <p>For ASP.NET projects, in either <code>ApplicationStart()</code> or other startup task class method, add:</p>
                 <code>log4net.Config.XmlConfigurator.Configure();</code>
 </section>
+
+<section class="sec-header">
+                <h3 class="font-bree-serif">4. Logging Messages and Errors</h3>
+               <pre class="prettyprint linenums">
+using log4net;
+
+namespace ConsoleApplication1
+{
+    class Program
+    {
+        private static readonly ILog _log = LogManager.GetLogger(typeof(Program));
+
+        static void Main(string[] args)
+        {
+            _log.Error("kaboom!", new ApplicationException("shit went down and it wasn't good"));
+        }
+    }
+}
+               </pre>
+</section>
           </div><!--end howtouse-content-->
 
 
