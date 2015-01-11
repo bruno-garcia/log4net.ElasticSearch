@@ -26,6 +26,10 @@ I do my best to reply to issues or questions ASAP. Please use the [ISSUES](https
 - [@kjersti](https://github.com/kjersti)
 - [@hippasus](https://github.com/hippasus)
 - [@jc74](https://github.com/jc74)
+- [@mickdelaney](https://github.com/mickdelaney)
+- [@yavari](https://github.com/yavari)
+- [@nickcanz](https://github.com/nickcanz)
+- [@wallymathieu](https://github.com/mwallymathieu)
 
 ### How to build
 Use the psake.cmd file in the base directory for all build tasks.
