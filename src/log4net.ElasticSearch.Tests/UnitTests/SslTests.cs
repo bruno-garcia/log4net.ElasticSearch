@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Linq;
 using FluentAssertions;
 using log4net.ElasticSearch.Infrastructure;
-using log4net.ElasticSearch.Tests.Infrastructure.Builders;
-using log4net.ElasticSearch.Tests.UnitTests.Stubs;
 using Xunit;
 
 namespace log4net.ElasticSearch.Tests.UnitTests
