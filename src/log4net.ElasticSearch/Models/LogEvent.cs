@@ -14,13 +14,13 @@ namespace log4net.ElasticSearch.Models
         }
 
         public string timeStamp { get; set; }
-  
+
         public string message { get; set; }
-    
+
         public object messageObject { get; set; }
-      
+
         public object exception { get; set; }
-        
+
         public string loggerName { get; set; }
 
         public string domain { get; set; }
@@ -48,7 +48,7 @@ namespace log4net.ElasticSearch.Models
         public string threadName { get; set; }
 
         public string hostName { get; set; }
-                
+
         public static IEnumerable<logEvent> CreateMany(IEnumerable<LoggingEvent> loggingEvents)
         {
             return loggingEvents.Select(@event => Create(@event)).ToArray();
@@ -63,7 +63,7 @@ namespace log4net.ElasticSearch.Models
                 identity = loggingEvent.Identity,
                 threadName = loggingEvent.ThreadName,
                 userName = loggingEvent.UserName,
-                messageObject = loggingEvent.MessageObject ?? new object(),
+                messageObject = loggingEvent.MessageObject != null && loggingEvent.MessageObject.GetType() != typeof(string) ? loggingEvent.MessageObject : new object(),
                 timeStamp = loggingEvent.TimeStamp.ToUniversalTime().ToString("O"),
                 exception = loggingEvent.ExceptionObject ?? new object(),
                 message = loggingEvent.RenderedMessage,
@@ -85,7 +85,7 @@ namespace log4net.ElasticSearch.Models
 
             return logEvent;
         }
-        
+
         static void AddProperties(LoggingEvent loggingEvent, logEvent logEvent)
         {
             loggingEvent.Properties().Union(AppenderPropertiesFor(loggingEvent)).
