@@ -42,7 +42,29 @@ namespace log4net.ElasticSearch.Tests.IntegrationTests
             var message = Faker.Lorem.Words(1).Single();
             try
             {
-                throw new Exception(message);
+                ThrowException();
+            }
+            catch (Exception ex)
+            {
+                _log.Error(message, ex);
+            }
+
+            Retry.Ignoring<AssertException>(() =>
+            {
+                var logEntries =
+                    elasticClient.Search<logEvent>(s => s.Query(qd => qd.Term(le => le.message, message)));
+
+                logEntries.Total.Should().Be(1);
+            });
+        }
+
+        [Fact]
+        public void Can_create_error_event_from_log4net_with_nested_exception()
+        {
+            var message = Faker.Lorem.Words(1).Single();
+            try
+            {
+                ThrowNestedException();
             }
             catch (Exception ex)
             {
@@ -131,6 +153,23 @@ namespace log4net.ElasticSearch.Tests.IntegrationTests
 
                 actualLogEntry.properties[localThreadPropertyName].Should().Be(localTreadProperty);
             });
+        }
+
+        void ThrowException()
+        {
+            throw new InvalidOperationException("thrown from ThrowException.");
+        }
+
+        void ThrowNestedException()
+        {
+            try
+            {
+                ThrowException();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("thrown from ThrowNestedException.", ex);
+            }
         }
 
     }
