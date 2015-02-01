@@ -65,7 +65,7 @@ namespace log4net.ElasticSearch.Models
                 userName = loggingEvent.UserName,
                 messageObject = loggingEvent.MessageObject != null && loggingEvent.MessageObject.GetType() != typeof(string) ? loggingEvent.MessageObject : new object(),
                 timeStamp = loggingEvent.TimeStamp.ToUniversalTime().ToString("O"),
-                exception = loggingEvent.ExceptionObject ?? new object(),
+                exception = loggingEvent.ExceptionObject == null ? new object() : JsonSerializableException.Create(loggingEvent.ExceptionObject),
                 message = loggingEvent.RenderedMessage,
                 fix = loggingEvent.Fix.ToString(),
                 hostName = Environment.MachineName,

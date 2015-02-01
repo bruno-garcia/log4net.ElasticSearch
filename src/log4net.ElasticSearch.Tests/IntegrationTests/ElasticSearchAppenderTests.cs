@@ -37,6 +37,28 @@ namespace log4net.ElasticSearch.Tests.IntegrationTests
         }
 
         [Fact]
+        public void Can_create_error_event_from_log4net()
+        {
+            var message = Faker.Lorem.Words(1).Single();
+            try
+            {
+                throw new Exception(message);
+            }
+            catch (Exception ex)
+            {
+                _log.Error(message, ex);
+            }
+
+            Retry.Ignoring<AssertException>(() =>
+            {
+                var logEntries =
+                    elasticClient.Search<logEvent>(s => s.Query(qd => qd.Term(le => le.message, message)));
+
+                logEntries.Total.Should().Be(1);
+            });
+        }
+
+        [Fact]
         public void Global_context_properties_are_logged()
         {
             const string globalPropertyName = "globalProperty";

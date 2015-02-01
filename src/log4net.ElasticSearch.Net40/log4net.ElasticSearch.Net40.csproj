@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\bin\lib\net40\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NET40</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -27,7 +27,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\bin\lib\net40\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;NET40</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -63,6 +63,9 @@
     </Compile>
     <Compile Include="..\log4net.ElasticSearch\Infrastructure\Pair.cs">
       <Link>Infrastructure\Pair.cs</Link>
+    </Compile>
+    <Compile Include="..\log4net.ElasticSearch\Models\JsonSerializableException.cs">
+      <Link>Models\JsonSerializableException.cs</Link>
     </Compile>
     <Compile Include="..\log4net.ElasticSearch\Models\logEvent.cs">
       <Link>Models\logEvent.cs</Link>
