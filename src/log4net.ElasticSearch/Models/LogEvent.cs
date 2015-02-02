@@ -63,14 +63,31 @@ namespace log4net.ElasticSearch.Models
                 identity = loggingEvent.Identity,
                 threadName = loggingEvent.ThreadName,
                 userName = loggingEvent.UserName,
-                messageObject = loggingEvent.MessageObject != null && loggingEvent.MessageObject.GetType() != typeof(string) ? loggingEvent.MessageObject : new object(),
                 timeStamp = loggingEvent.TimeStamp.ToUniversalTime().ToString("O"),
-                exception = loggingEvent.ExceptionObject ?? new object(),
+                exception = loggingEvent.ExceptionObject == null ? new object() : JsonSerializableException.Create(loggingEvent.ExceptionObject),
                 message = loggingEvent.RenderedMessage,
                 fix = loggingEvent.Fix.ToString(),
                 hostName = Environment.MachineName,
                 level = loggingEvent.Level == null ? null : loggingEvent.Level.DisplayName
             };
+
+            // Added special handling of the MessageObject since it may be an exception. 
+            // Exception Types require specialized serialization to prevent serialization exceptions.
+            if (loggingEvent.MessageObject != null && loggingEvent.MessageObject.GetType() != typeof(string))
+            {
+                if (loggingEvent.MessageObject is Exception)
+                {
+                    logEvent.messageObject = JsonSerializableException.Create((Exception)loggingEvent.MessageObject);
+                }
+                else
+                {
+                    logEvent.messageObject = loggingEvent.MessageObject;
+                }
+            }
+            else
+            {
+                logEvent.messageObject = new object();
+            }
 
             if (loggingEvent.LocationInformation != null)
             {
