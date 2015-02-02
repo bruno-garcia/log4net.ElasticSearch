@@ -1,7 +1,7 @@
 log4net.ElasticSearch
 =====================
 
-[![NuGet Status](http://img.shields.io/badge/nuget-2.1.0-green.svg)](https://www.nuget.org/packages/log4net.ElasticSearch/)
+[![NuGet Status](http://img.shields.io/badge/nuget-2.1.1-green.svg)](https://www.nuget.org/packages/log4net.ElasticSearch/)
 
 [![Build status](https://ci.appveyor.com/api/projects/status/t877sp1e5eleye4n/branch/master)](https://ci.appveyor.com/project/jptoto/log4net-elasticsearch/branch/master)
 
