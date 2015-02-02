@@ -30,6 +30,8 @@ I do my best to reply to issues or questions ASAP. Please use the [ISSUES](https
 - [@yavari](https://github.com/yavari)
 - [@nickcanz](https://github.com/nickcanz)
 - [@wallymathieu](https://github.com/mwallymathieu)
+- [@TheSpy](https://github.com/TheSpy)
+- [@ttingen](https://github.com/ttingen)
 
 ### How to build
 Use the psake.cmd file in the base directory for all build tasks.
