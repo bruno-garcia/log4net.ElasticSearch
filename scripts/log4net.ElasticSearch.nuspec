@@ -2,7 +2,7 @@
 <package >
     <metadata>
         <id>log4net.ElasticSearch</id>
-        <version>2.1.0</version>
+        <version>2.1.1</version>
         <authors>JP Toto</authors>
         <owners>JP Toto</owners>
         <iconUrl>http://nest.azurewebsites.net/images/nuget-icon.png</iconUrl>
@@ -10,7 +10,7 @@
         <projectUrl>https://github.com/jptoto/log4net.ElasticSearch</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>log4net.Elasticsearch is a log4net adapter for easy logging of exceptions and messages to Elasticsearch indices.</description>
-        <releaseNotes>Added internal time tracking so rolling index support works with high concurrent systems, added https and auth (scheme) support to work correctly with 3rd party hosted ES providers</releaseNotes>
+        <releaseNotes>Bug fix for when messageObject is a string</releaseNotes>
         <copyright>Copyright 2015</copyright>
         <tags>log logging exception elasticsearch log4net</tags>
         <dependencies>

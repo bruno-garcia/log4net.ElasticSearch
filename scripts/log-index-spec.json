@@ -19,7 +19,7 @@
                     "type": "object"
                 },
                 "exception": {
-                    "type": "string"
+                    "type": "object"
                 },
                 "loggerName": {
                     "type": "string"
