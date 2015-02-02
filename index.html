@@ -40,7 +40,7 @@
     <h1 class="font-bree-serif">log4net.Elasticsearch</h1>
     <p class="font-open-sans-normal">Full featured asynchronous Elasticsearch appender for log4net.</p>
     
-    <p class="jumbo"> <a href="https://github.com/jptoto/log4net.ElasticSearch" target="_blank" class="btn btn-inverse btn-large font-open-sans-normal"><strong>View on GitHub</strong></a> <a href="http://www.nuget.org/packages/log4net.ElasticSearch/" target="_blank" class="btn btn-success btn-large font-open-sans-normal"><strong>Nuget Package </strong><small>(v2.1.0)</small></a> </p>
+    <p class="jumbo"> <a href="https://github.com/jptoto/log4net.ElasticSearch" target="_blank" class="btn btn-inverse btn-large font-open-sans-normal"><strong>View on GitHub</strong></a> <a href="http://www.nuget.org/packages/log4net.ElasticSearch/" target="_blank" class="btn btn-success btn-large font-open-sans-normal"><strong>Nuget Package </strong><small>(v2.1.1)</small></a> </p>
     
    
   </div><!--end container-->  
@@ -213,13 +213,31 @@ namespace ConsoleApplication1
             <section class="sec-header">
               <h3 class="font-bree-serif">Changelog</h3>              
               <div class="accordion" id="changelog-accordion">
-              <div class="accordion-group">
+
+                    <div class="accordion-group">
                       <div class="accordion-heading">
                         <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseaa">
-                          <strong>2.1.0  (January 12, 2015)</strong>
+                          <strong>2.1.1  (February 2, 2015)</strong>
                         </a>
                       </div>
                       <div id="collapseaa" class="accordion-body collapse in">
+                        <div class="accordion-inner">
+                           <h5>Bug Fixes</h5>
+                              <ul>
+                                  <li>Added a catch for when messageObject is inserted as a string and strict mapping in ES is not used. (Julius Bartkus)</li>
+                                  <li>Updated example mapping script with correct types.</li>
+                              </ul>
+                        </div>
+                      </div>
+                    </div>  
+
+                    <div class="accordion-group">
+                      <div class="accordion-heading">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseab">
+                          <strong>2.1.0  (January 12, 2015)</strong>
+                        </a>
+                      </div>
+                      <div id="collapseab" class="accordion-body collapse">
                         <div class="accordion-inner">
                            <h5>Feature Release</h5>
                               <ul>
@@ -232,11 +250,11 @@ namespace ConsoleApplication1
                     </div>             
                     <div class="accordion-group">
                       <div class="accordion-heading">
-                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseab">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseac">
                           <strong>2.0.0  (December 16, 2014)</strong>
                         </a>
                       </div>
-                      <div id="collapseab" class="accordion-body collapse">
+                      <div id="collapseac" class="accordion-body collapse">
                         <div class="accordion-inner">
                            <h5>Feature Release</h5>
                               <ul>
@@ -251,11 +269,11 @@ namespace ConsoleApplication1
                     </div>
                     <div class="accordion-group">
                       <div class="accordion-heading">
-                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseac">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapsead">
                           <strong>1.2.1  (September 24, 2014)</strong>
                         </a>
                       </div>
-                      <div id="collapseac" class="accordion-body collapse">
+                      <div id="collapsed" class="accordion-body collapse">
                         <div class="accordion-inner">
                            <h5>Bug Fixes</h5>
                               <ul>
@@ -266,11 +284,11 @@ namespace ConsoleApplication1
                     </div>
                     <div class="accordion-group">
                       <div class="accordion-heading">
-                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapsead">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseae">
                           <strong>1.2.0  (August 21, 2014)</strong>
                         </a>
                       </div>
-                      <div id="collapsead" class="accordion-body collapse">
+                      <div id="collapseae" class="accordion-body collapse">
                         <div class="accordion-inner">
                            <h5>Feature Release</h5>
                               <ul>
@@ -306,7 +324,7 @@ namespace ConsoleApplication1
                   <li><a href="http://github.com/nickcanz" target="_blank">Nick Canzoneri</a></li>
                   <li><a href="http://github.com/mpdreamz" target="_blank">Martijn Laarman</a></li>
                   <li><a href="http://github.com/mickdelaney" target="_blank">Mick Delaney</a></li>
-                  
+                  <li><a href="http://github.com/TheSpy" target="_blank">Julius Bartkus</a></li>
                 </ul>
 
             </section>
