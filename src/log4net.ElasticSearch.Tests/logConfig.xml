@@ -13,6 +13,9 @@
       </layout>
       <connectionString value="Server=localhost;Index=log_test;Port=9200;rolling=true"/>
       <lossy value="false" />
+        <evaluator type="log4net.Core.LevelEvaluator">
+            <threshold value="ALL" />
+        </evaluator>
       <bufferSize value="1" />
     </appender>
     <root>
