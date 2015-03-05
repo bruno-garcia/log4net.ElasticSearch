@@ -138,6 +138,9 @@ Install-Package log4net.ElasticSearch</pre>
             &lt;/layout&gt;
             &lt;connectionString value="Scheme=https;User=username;Pwd=password;Server=localhost;Index=log;Port=9200;rolling=true"/&gt;
             &lt;lossy value="false" /&gt;
+            &lt;evaluator type="log4net.Core.LevelEvaluator"&gt;
+                    &lt;threshold value="ALL" /&gt;
+            &lt;/evaluator&gt;
             &lt;bufferSize value="100" /&gt;
             &lt;evaluator type="log4net.Core.LevelEvaluator"&gt;
                 &lt;threshold value="ERROR"/&gt;
@@ -165,7 +168,7 @@ Install-Package log4net.ElasticSearch</pre>
                   <li><strong>rolling</strong>: Set this value to <code>true</code> if you want log4net.ElasticSearch to create a new index for each day</li>
                 </ul>
                 <pre class="prettyprint linenums">&lt;lossy value="false" /&gt;</pre>
-                <p>log4net.ElasticSearch uses a buffer to collect events and then flush them to the Elasticsearch server on a background thread. Setting this value to <code>true</code> will cause log4net.Elasticsearch to begin discarding events if the buffer is full and has not been flushed. This could happen if the Elasticsearch server becomes unresponsive or goes offline. If application performance is paramount, set this to <code>true</code> so that events are discarded from the buffer but the logging is not blocking application performance. If logging each event is more important than application performance, set this to <code>false</code>.</p>
+                <p>log4net.ElasticSearch uses a buffer to collect events and then flush them to the Elasticsearch server on a background thread. Setting this value to <code>true</code> will cause log4net.Elasticsearch to begin discarding events if the buffer is full and has not been flushed. This could happen if the Elasticsearch server becomes unresponsive or goes offline. If application performance is paramount, set this to <code>true</code> so that events are discarded from the buffer but the logging is not blocking application performance. If logging each event is more important than application performance, set this to <code>false</code>. You must have an evaluator block if lossy is set to true.</p>
                 <pre class="prettyprint linenums">&lt;bufferSize value="100" /&gt;</pre>
                 <p>The <strong>bufferSize</strong> tells log4net.ElasticSearch how many events to store before flushing to the Elasticsearch server. You should experiment with this figure but generally if you have a high volume application with lots of logging you can set this figure higher. If you log very infrequently, set this number lower so that the buffer is flushed often enough to see the events show up in Elasticsearch.</p>
                 <pre class="prettyprint linenums">&lt;evaluator type="log4net.Core.LevelEvaluator"&gt;
