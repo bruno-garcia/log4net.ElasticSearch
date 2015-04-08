@@ -1,7 +1,7 @@
 ﻿using System;
 using FluentAssertions;
-using Xunit;
 using log4net.ElasticSearch.Infrastructure;
+using Xunit;
 
 namespace log4net.ElasticSearch.Tests.UnitTests
 {
@@ -10,6 +10,9 @@ namespace log4net.ElasticSearch.Tests.UnitTests
         const string RollingConnectionString = "Server=localhost;Index=log;Port=9200;rolling=true";
         const string ImplicityNonRollingConnectionString = "Server=localhost;Index=log;Port=9200";
         const string ExplicitlyNonRollingConnectionString = "Server=localhost;Index=log;Port=9200;rolling=false";
+        const string RollingPortLessConnectionString = "Server=localhost;Index=log;rolling=true";
+        const string ImplicitlyNonRollingPortLessConnectionString = "Server=localhost;Index=log";
+        const string ExplicitlyNonRollingPortLessConnectionString = "Server=localhost;Index=log;rolling=false";
 
         [Fact]
         public void Implicit_non_rolling_connectionstring_is_parsed_into_index_uri_without_date_suffix()
@@ -52,6 +55,33 @@ namespace log4net.ElasticSearch.Tests.UnitTests
                 UriFor(RollingConnectionString).
                     AbsoluteUri.Should().
                     Be("http://localhost:9200/log-2015.01.06/logEvent");
+            }
+        }
+
+        [Fact]
+        public void Implicit_non_rolling_portless_connectionstring_is_parsed_into_index_uri_without_date_suffix()
+        {
+            UriFor(ImplicitlyNonRollingPortLessConnectionString).
+                AbsoluteUri.Should().
+                Be("http://localhost/log/logEvent");
+        }
+
+        [Fact]
+        public void Explicit_non_rolling_portless_connectionstring_is_parsed_into_index_uri_without_date_suffix()
+        {
+            UriFor(ExplicitlyNonRollingPortLessConnectionString).
+                AbsoluteUri.Should().
+                Be("http://localhost/log/logEvent");
+        }
+
+        [Fact]
+        public void Rolling_portless_connectionstring_is_parsed_into_index_uri_wit_date_suffix()
+        {
+            using (Clock.Freeze(new DateTime(2015,3,31)))
+            {
+                UriFor(RollingPortLessConnectionString).
+                    AbsoluteUri.Should().
+                    Be("http://localhost/log-2015.03.31/logEvent");
             }
         }
 
