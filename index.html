@@ -40,7 +40,7 @@
     <h1 class="font-bree-serif">log4net.Elasticsearch</h1>
     <p class="font-open-sans-normal">Full featured asynchronous Elasticsearch appender for log4net.</p>
     
-    <p class="jumbo"> <a href="https://github.com/jptoto/log4net.ElasticSearch" target="_blank" class="btn btn-inverse btn-large font-open-sans-normal"><strong>View on GitHub</strong></a> <a href="http://www.nuget.org/packages/log4net.ElasticSearch/" target="_blank" class="btn btn-success btn-large font-open-sans-normal"><strong>Nuget Package </strong><small>(v2.1.2)</small></a> </p>
+    <p class="jumbo"> <a href="https://github.com/jptoto/log4net.ElasticSearch" target="_blank" class="btn btn-inverse btn-large font-open-sans-normal"><strong>View on GitHub</strong></a> <a href="http://www.nuget.org/packages/log4net.ElasticSearch/" target="_blank" class="btn btn-success btn-large font-open-sans-normal"><strong>Nuget Package </strong><small>(v2.2.0)</small></a> </p>
     
    
   </div><!--end container-->  
@@ -164,7 +164,7 @@ Install-Package log4net.ElasticSearch</pre>
                   <li><strong>Pwd</strong>: (optional -  but must be used with User) If your Elasticsearch cluster or service requires http basic auth, specify the password here.</li>
                   <li><strong>Server</strong>: The host name or IP address of your Elasticsearch server</li>
                   <li><strong>Index</strong>: The name of the index in Elasticsearch you want your logs to go to</li>
-                  <li><strong>Port</strong>: The port Elasticsearch is running on, usually 9200</li>
+                  <li><strong>Port</strong>: (optional) The port Elasticsearch is running on, usually 9200</li>
                   <li><strong>rolling</strong>: Set this value to <code>true</code> if you want log4net.ElasticSearch to create a new index for each day</li>
                 </ul>
                 <pre class="prettyprint linenums">&lt;lossy value="false" /&gt;</pre>
@@ -219,11 +219,29 @@ namespace ConsoleApplication1
 
                     <div class="accordion-group">
                       <div class="accordion-heading">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapsea1">
+                          <strong>2.2.0  (April 7th, 2015)</strong>
+                        </a>
+                      </div>
+                      <div id="collapsea1" class="accordion-body collapse in">
+                        <div class="accordion-inner">
+                           <h5>Bug Fixes</h5>
+                              <ul>
+                                  <li>Made the port optional for the Elasticsearch url string. Useful for when the ES url is resolved in DNS. (Asad Ateeque)</li>
+                                  <li>Updated test libraries.</li>
+                              </ul>
+                        </div>
+                      </div>
+                    </div>  
+
+
+                    <div class="accordion-group">
+                      <div class="accordion-heading">
                         <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseaa">
                           <strong>2.1.2  (February 2, 2015)</strong>
                         </a>
                       </div>
-                      <div id="collapseaa" class="accordion-body collapse in">
+                      <div id="collapseaa" class="accordion-body collapse">
                         <div class="accordion-inner">
                            <h5>Bug Fixes</h5>
                               <ul>
@@ -330,6 +348,7 @@ namespace ConsoleApplication1
                   <li><a href="http://github.com/mickdelaney" target="_blank">Mick Delaney</a></li>
                   <li><a href="http://github.com/TheSpy" target="_blank">Julius Bartkus</a></li>
                   <li><a href="http://github.com/ttingen" target="_blank">Todd Tingen</a></li>
+                  <li><a href="http://github.com/aateeque" target="_blank">Asad Ateeque</a></li>
                 </ul>
 
             </section>
