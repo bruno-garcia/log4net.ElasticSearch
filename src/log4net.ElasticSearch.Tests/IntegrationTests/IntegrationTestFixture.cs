@@ -25,7 +25,7 @@ namespace log4net.ElasticSearch.Tests.IntegrationTests
 
         static string GetDefaultIndex()
         {
-            return string.Format("{0}-{1}", "log_test", DateTime.Now.ToString("yyyy.MM.dd"));
+            return string.Format("{0}", "log_test");
         }
 
         static ConnectionSettings ConnectionSettings(string index)
