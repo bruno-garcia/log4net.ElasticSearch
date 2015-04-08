@@ -14,11 +14,15 @@ namespace log4net.ElasticSearch.Models
 
         public static implicit operator System.Uri(Uri uri)
         {
-            if (string.IsNullOrWhiteSpace(uri.User()) || string.IsNullOrWhiteSpace(uri.Password()))
+            if (!string.IsNullOrWhiteSpace(uri.User()) && !string.IsNullOrWhiteSpace(uri.Password()))
             {
-                return new System.Uri(string.Format("{0}://{1}:{2}/{3}/logEvent", uri.Scheme(), uri.Server(), uri.Port(), uri.Index()));
+                return
+                    new System.Uri(string.Format("{0}://{1}:{2}@{3}:{4}/{5}/logEvent", uri.Scheme(), uri.User(), uri.Password(),
+                                                 uri.Server(), uri.Port(), uri.Index()));
             }
-            return new System.Uri(string.Format("{0}://{1}:{2}@{3}:{4}/{5}/logEvent", uri.Scheme(), uri.User(), uri.Password(), uri.Server(), uri.Port(), uri.Index()));
+            return string.IsNullOrEmpty(uri.Port())
+                ? new System.Uri(string.Format("{0}://{1}/{2}/logEvent", uri.Scheme(), uri.Server(), uri.Index()))
+                : new System.Uri(string.Format("{0}://{1}:{2}/{3}/logEvent", uri.Scheme(), uri.Server(), uri.Port(), uri.Index()));
         }
 
         public static Uri For(string connectionString)
