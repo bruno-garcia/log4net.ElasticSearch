@@ -44,7 +44,7 @@ namespace log4net.ElasticSearch.Tests.IntegrationTests
 
         static Uri ElasticSearchUri()
         {
-            return new Uri(string.Format("http://{0}:9200", Environment.MachineName));
+            return new Uri(string.Format("http://{0}:9200", "localhost"));
         }
 
         void DeleteDefaultIndex()

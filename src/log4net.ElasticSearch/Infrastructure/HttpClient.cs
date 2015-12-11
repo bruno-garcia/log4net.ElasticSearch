@@ -42,7 +42,7 @@ namespace log4net.ElasticSearch.Infrastructure
             httpWebRequest.ContentType = ContentType;
             httpWebRequest.Method = Method;
             
-            if (uri.Scheme == "https" && !string.IsNullOrWhiteSpace(uri.UserInfo))
+            if (!string.IsNullOrWhiteSpace(uri.UserInfo))
             {
                 httpWebRequest.Headers.Remove(HttpRequestHeader.Authorization);
                 httpWebRequest.Headers.Add(HttpRequestHeader.Authorization, "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(uri.UserInfo)));
