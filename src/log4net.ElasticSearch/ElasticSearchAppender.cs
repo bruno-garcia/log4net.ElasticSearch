@@ -43,6 +43,9 @@ namespace log4net.ElasticSearch
                 return;
             }
 
+            // Artificially add the buffer size to the connection string so it can be parsed
+            // later to decide if we should send a _bulk API call
+            ConnectionString += string.Format(";BufferSize={0}", BufferSize);
             repository = CreateRepository(ConnectionString);            
         }
 
@@ -87,7 +90,7 @@ namespace log4net.ElasticSearch
         {
             try
             {
-                repository.Add((IEnumerable<logEvent>) state);
+                repository.Add((IEnumerable<logEvent>) state, BufferSize);
             }
             catch (Exception ex)
             {

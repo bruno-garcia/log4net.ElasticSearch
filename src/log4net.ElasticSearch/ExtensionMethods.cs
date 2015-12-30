@@ -45,6 +45,11 @@ namespace log4net.ElasticSearch
             return bool.Parse(self);
         }
 
+        /// <summary>
+        /// Take the full connection string and break it into is constituent parts
+        /// </summary>
+        /// <param name="self">The connection string itself</param>
+        /// <returns>A dictionary of all the parts</returns>
         public static StringDictionary ConnectionStringParts(this string self)
         {
             var builder = new DbConnectionStringBuilder

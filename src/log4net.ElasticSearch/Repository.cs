@@ -20,17 +20,25 @@ namespace log4net.ElasticSearch
             this.httpClient = httpClient;
         }
 
+        /// <summary>
+        /// Post the event(s) to the Elasticsearch API. If the bufferSize in the connection
+        /// string is set to more than 1, assume we use the _bulk API for better speed and
+        /// efficiency
+        /// </summary>
+        /// <param name="logEvents">A collection of logEvents</param>
+        /// <param name="bufferSize">The BufferSize as set in the connection string details</param>
         public void Add(IEnumerable<logEvent> logEvents, int bufferSize)
         {
             if (bufferSize <= 1)
             {
+                // Post the logEvents one at a time throught the ES insert API
                 logEvents.Do(logEvent => httpClient.Post(uri, logEvent));
             }
             else
             {
-                //httpClient.PostBulk;
-            }
-            
+                // Post the logEvents all at once using the ES _bulk API
+                httpClient.PostBulk(uri, logEvents);
+            }   
         }
 
         public static IRepository Create(string connectionString)
