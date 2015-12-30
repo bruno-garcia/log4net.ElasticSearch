@@ -1,408 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="utf-8">
-<title>log4net.Elasticsearch</title>
-<meta name="description" content="log4net adapter for Elasticsearch">
-<meta name="author" content="JP Toto">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- Styles -->
-<link href="assets/css/bootstrap.css" rel="stylesheet">
-<link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
-<link href="assets/css/style.css" rel="stylesheet">
-<link href="assets/css/font-awesome.css" rel="stylesheet">
-<link href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300|Bree+Serif" rel="stylesheet" type="text/css">
-<link href="assets/js/google-code-prettify/prettify.css" rel="stylesheet">
-<!--[if IE]>
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300italic" rel="stylesheet" type="text/css">
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic" rel="stylesheet" type="text/css">
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans:600italic" rel="stylesheet" type="text/css">
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans:700italic" rel="stylesheet" type="text/css">
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300" rel="stylesheet" type="text/css">
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400" rel="stylesheet" type="text/css">
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans:600" rel="stylesheet" type="text/css">
-    <link href="http://fonts.googleapis.com/css?family=Bree+Serif:400" rel="stylesheet" type="text/css">
+  <head>
+    <meta charset="utf-8"/>
+    <title>log4net.Elasticsearch</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content="The log4net.Elasticsearch Project Page"/>
+    <meta name="author" content="JP Toto"/>
+
+    <script src="https://code.jquery.com/jquery-1.8.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.8.23/jquery-ui.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
+    <link href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap-combined.min.css" rel="stylesheet"/>
+
+    <link type="text/css" rel="stylesheet" href="content/style.css" />
+    <script type="text/javascript" src="content/tips.js"></script>
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
     <![endif]-->
-<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-<!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-<!--[if IE 7]>
-	  <link rel="stylesheet" href="assets/css/font-awesome-ie7.css">
-	<![endif]-->
-</head>
-<body>
-<header class="masthead">
-	<div class="container">  	
-    
-    <p>&nbsp;</p>
-    <h1 class="font-bree-serif">log4net.Elasticsearch</h1>
-    <p class="font-open-sans-normal">Full featured asynchronous Elasticsearch appender for log4net.</p>
-    
-    <p class="jumbo"> <a href="https://github.com/jptoto/log4net.ElasticSearch" target="_blank" class="btn btn-inverse btn-large font-open-sans-normal"><strong>View on GitHub</strong></a> <a href="http://www.nuget.org/packages/log4net.ElasticSearch/" target="_blank" class="btn btn-success btn-large font-open-sans-normal"><strong>Nuget Package </strong><small>(v2.2.0)</small></a> </p>
-    
-   
-  </div><!--end container-->  
-  </header>
-  <div class="main-content">
-  <div class="container">
-  	<div class="row" id="content">
-    <div class="span12">
-      <div class="tabbable">
-        <ul class="nav nav-tabs" id="pluginTab">
-          <li class="active"><a href="#overview">Overview</a></li>
-          <li><a href="#howtouse">How To Use</a></li>
-          <li><a href="#roadmap">Changelog</a></li>
-          <li><a href="#contributors">Contributors</a></li>
+  </head>
+  <body>
+    <div class="container">
+      <div class="masthead">
+        <ul class="nav nav-pills pull-right">
+          <li><a href="https://www.nuget.org/packages/log4net.ElasticSearch/">Nuget.org</a></li>
+          <li><a href="http://github.com/jptoto/log4net.ElasticSearch">github page</a></li>
         </ul>
-        <div class="tab-content">
-        <!-- 
-          =====================================
-          Overview Tab Content
-          =====================================
-          -->
-          <div class="tab-pane active" id="overview">
-            <h1 class="font-bree-serif align-center">High level feature list</h1>
-            <div class="row features">
-              <div class="span4"> <i class="feature-icon icon-ok"></i>
-                <h3>.NET 4+ &amp; Mono Support</h3>
-                <p>log4net.Elasticsearch supports .NET 4, 4.5.x, and Mono/Xamarin out of the box.</p>
-              </div>
-              <!--end span4-->
-              <div class="span4"> <i class="feature-icon icon-resize-full"></i>
-                <h3>Asynchronous</h3>
-                <p>Fully asynchronous to avoid application slow downs. Buffer size is fully tunable and lossy option will ensure resource consumption constraints.</p>
-              </div>
-              <!--end span4-->
-              <div class="span4"> <i class="feature-icon icon-zoom-in"></i>
-                <h3>Elasticsearch Conventions</h3>
-                <p>Built with Elasticsearch conventions in mind including camelCase types and properties.</p>
-              </div>
-              <!--end span4-->
-            </div>
-            <!--end row-->
-            <div class="row features">
-              <div class="span4"> <i class="feature-icon icon-tasks"></i>
-                <h3>Rolling Indices</h3>
-                <p>Log to one index or create a new index each day and expire as needed.</p>
-              </div>
-              <!--end span4-->
-              <div class="span4"> <i class="feature-icon icon-heart-empty"></i>
-                <h3>Open Source</h3>
-                <p>Licensed under MIT. Contributions are more than welcome!</p>
-              </div>
-              <!--end span4-->
-              <div class="span4"> <i class="feature-icon icon-cog"></i>
-                <h3>Nuget</h3>
-                <p>Latest packages are always available on <a href="http://www.nuget.org/packages/log4net.ElasticSearch/" target="_blank">Nuget</a>. Zero dependencies (besides log4net, of course).</p>
-              </div>
-              <!--end span4-->
-            </div>
-            <!--end row-->
-            <hr class="soften"/>
-     
-          </div>
-          <!--end overview-content-->
-
-          <!-- 
-          =====================================
-          How to Use Tab Content
-          =====================================
-          -->
-          <div class="tab-pane" id="howtouse">
-            <section class="sec-header">
-                <h3 class="font-bree-serif">1. Install from Nuget</h3>
-                <p>In Visual Studio, open the Package Manager console and issue the install command: (If you haven't already installed log4net, Nuget will automatically install it as a dependency)</p>
-<pre class="prettyprint linenums">
-Install-Package log4net.ElasticSearch</pre>
-			     </section>
-            <section class="sec-header">
-                <h3 class="font-bree-serif">2. Configure log4net</h3>
-                <p>log4net has a lot of configuration options and you should read the <a href="http://logging.apache.org/log4net/release/manual/configuration.html"> full documentation at the log4net site</a>. Below will cover what you need to get started using log4net.ElasticSearch today.</p>
-                <p>Using the <strong>App.config</strong> method of configuring log4net, add the below code to your file. (For ASP.NET, edit <strong>web.config</strong>)</p>
-				<pre class="prettyprint linenums">
-&lt;?xml version="1.0"?&gt;
-&lt;configuration&gt;
-    &lt;configSections&gt;
-        &lt;section name="log4net" type="log4net.Config.Log4NetConfigurationSectionHandler, log4net" /&gt;
-    &lt;/configSections&gt;
-    &lt;startup&gt;
-        &lt;supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.0"/&gt;
-    &lt;/startup&gt;
-    &lt;log4net&gt;
-        &lt;appender name="ElasticSearchAppender" type="log4net.ElasticSearch.ElasticSearchAppender, log4net.ElasticSearch"&gt;
-        &lt;!-- for .NET 40 &lt;appender name="ElasticSearchAppender" type="log4net.ElasticSearch.ElasticSearchAppender, log4net.ElasticSearch.Net40"&gt;--&gt;
-            &lt;layout type="log4net.Layout.PatternLayout,log4net"&gt;
-                &lt;param name="ConversionPattern" value="%d{ABSOLUTE} %-5p %c{1}:%L - %m%n" /&gt;
-            &lt;/layout&gt;
-            &lt;connectionString value="Scheme=https;User=username;Pwd=password;Server=localhost;Index=log;Port=9200;rolling=true"/&gt;
-            &lt;lossy value="false" /&gt;
-            &lt;evaluator type="log4net.Core.LevelEvaluator"&gt;
-                    &lt;threshold value="ALL" /&gt;
-            &lt;/evaluator&gt;
-            &lt;bufferSize value="100" /&gt;
-        &lt;/appender&gt;
-        &lt;root&gt;
-            &lt;level value="ALL"/&gt;
-            &lt;appender-ref ref="ElasticSearchAppender" /&gt;
-        &lt;/root&gt;
-    &lt;/log4net&gt;
-&lt;/configuration&gt;
-</pre>
-			</section>
-            <section class="sec-header">
-                <h3 class="font-bree-serif">An Explanation of Properties</h3>
-                <pre class="prettyprint linenums">&lt;connectionString value="Scheme=https;User=username;Pwd=password;Server=localhost;Index=log;Port=9200;rolling=true"/&gt;</pre>
-                <p>The <strong>connectionString</strong> property contains the 4 important parameters: Server, Index, Port, and rolling as well as 3 optional parameters: Scheme, User, and Pwd.</p>
-                <ul>
-                  <li><strong>Scheme</strong>: (optional) Specifiy https or http, will default to http if not given.</li>
-                  <li><strong>User</strong>: (optional - but must be used with Pwd) If your Elasticsearch cluster or service requires http basic auth, specify the user id here.</li>
-                  <li><strong>Pwd</strong>: (optional -  but must be used with User) If your Elasticsearch cluster or service requires http basic auth, specify the password here.</li>
-                  <li><strong>Server</strong>: The host name or IP address of your Elasticsearch server</li>
-                  <li><strong>Index</strong>: The name of the index in Elasticsearch you want your logs to go to</li>
-                  <li><strong>Port</strong>: (optional) The port Elasticsearch is running on, usually 9200</li>
-                  <li><strong>rolling</strong>: Set this value to <code>true</code> if you want log4net.ElasticSearch to create a new index for each day</li>
-                </ul>
-                <pre class="prettyprint linenums">&lt;lossy value="false" /&gt;</pre>
-                <p>log4net.ElasticSearch uses a buffer to collect events and then flush them to the Elasticsearch server on a background thread. Setting this value to <code>true</code> will cause log4net.Elasticsearch to begin discarding events if the buffer is full and has not been flushed. This could happen if the Elasticsearch server becomes unresponsive or goes offline. If application performance is paramount, set this to <code>true</code> so that events are discarded from the buffer but the logging is not blocking application performance. If logging each event is more important than application performance, set this to <code>false</code>. You must have an evaluator block if lossy is set to true.</p>
-                <pre class="prettyprint linenums">&lt;bufferSize value="100" /&gt;</pre>
-                <p>The <strong>bufferSize</strong> tells log4net.ElasticSearch how many events to store before flushing to the Elasticsearch server. You should experiment with this figure but generally if you have a high volume application with lots of logging you can set this figure higher. If you log very infrequently, set this number lower so that the buffer is flushed often enough to see the events show up in Elasticsearch.</p>
-                <pre class="prettyprint linenums">&lt;evaluator type="log4net.Core.LevelEvaluator"&gt;
-  &lt;threshold value="ERROR"/&gt;
-&lt;/evaluator&gt;</pre>
-                <p>The <strong>evaluator</strong> is a final check for events that are about to be discarded in a <strong>lossy</strong> setup. If the level of the event is equal to or greater than the evaluator that is set, the buffer will trigger and an attempt will be made to log it to the Elasticsearch server.</p>
-</section>
-<section class="sec-header">
-                <h3 class="font-bree-serif">3. Configuring Your Project</h3>
-                <p>For non ASP.NET projects, at the end of your AssemblyInfo.cs file, add the following line:</p>
-                <code>[assembly: log4net.Config.XmlConfigurator(Watch = true)]</code>
-                <p />
-                <p>For ASP.NET projects, in either <code>ApplicationStart()</code> or other startup task class method, add:</p>
-                <code>log4net.Config.XmlConfigurator.Configure();</code>
-</section>
-
-<section class="sec-header">
-                <h3 class="font-bree-serif">4. Logging Messages and Errors</h3>
-               <pre class="prettyprint linenums">
-using log4net;
-
-namespace ConsoleApplication1
-{
-    class Program
-    {
-        private static readonly ILog _log = LogManager.GetLogger(typeof(Program));
-
-        static void Main(string[] args)
-        {
-            _log.Error("kaboom!", new ApplicationException("shit went down and it wasn't good"));
-        }
-    }
-}
-               </pre>
-</section>
-          </div><!--end howtouse-content-->
-
-
-           <!-- 
-          =====================================
-          Roadmap and changelog Tab Content
-          =====================================
-          -->
-          <div class="tab-pane" id="roadmap">
-            <section class="sec-header">
-              <h3 class="font-bree-serif">Changelog</h3>              
-              <div class="accordion" id="changelog-accordion">
-
-                    <div class="accordion-group">
-                      <div class="accordion-heading">
-                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapsea1">
-                          <strong>2.2.0  (April 7th, 2015)</strong>
-                        </a>
-                      </div>
-                      <div id="collapsea1" class="accordion-body collapse in">
-                        <div class="accordion-inner">
-                           <h5>Bug Fixes</h5>
-                              <ul>
-                                  <li>Made the port optional for the Elasticsearch url string. Useful for when the ES url is resolved in DNS. (Asad Ateeque)</li>
-                                  <li>Updated test libraries.</li>
-                              </ul>
-                        </div>
-                      </div>
-                    </div>  
-
-
-                    <div class="accordion-group">
-                      <div class="accordion-heading">
-                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseaa">
-                          <strong>2.1.2  (February 2, 2015)</strong>
-                        </a>
-                      </div>
-                      <div id="collapseaa" class="accordion-body collapse">
-                        <div class="accordion-inner">
-                           <h5>Bug Fixes</h5>
-                              <ul>
-                                  <li>Added a catch for when messageObject is inserted as a string and strict mapping in ES is not used. (Julius Bartkus)</li>
-                                  <li>Updated example mapping script with correct types.</li>
-                                  <li>Exception handling for when serialization goes bad. (Todd Tingen)</li>
-                              </ul>
-                        </div>
-                      </div>
-                    </div>  
-
-                    <div class="accordion-group">
-                      <div class="accordion-heading">
-                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseab">
-                          <strong>2.1.0  (January 12, 2015)</strong>
-                        </a>
-                      </div>
-                      <div id="collapseab" class="accordion-body collapse">
-                        <div class="accordion-inner">
-                           <h5>Feature Release</h5>
-                              <ul>
-                                  <li>Added an internal clocking tracker so that rolling indexes will work even when app domains are not unloaded in a high concurrent application. (Joe Campbell)</li>
-                                  <li>Support for https schemes with http basic auth which will allow log4net.Elasticsearch to work correctly with 3rd party ES hosting services like found.no.</li>
-                                  <li>Bugfixes and added some missing tests back in from a bad commit.</li>
-                              </ul>
-                        </div>
-                      </div>
-                    </div>             
-                    <div class="accordion-group">
-                      <div class="accordion-heading">
-                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseac">
-                          <strong>2.0.0  (December 16, 2014)</strong>
-                        </a>
-                      </div>
-                      <div id="collapseac" class="accordion-body collapse">
-                        <div class="accordion-inner">
-                           <h5>Feature Release</h5>
-                              <ul>
-                                  <li>Change to BufferingAppenderSkeleton in log4net</li>
-                                  <li>Full asynchronous support with buffering and lossy options</li>
-                                  <li>camelCase properties for Elasticsearch conventions</li>
-                                  <li>Vagrant build file</li>
-                                  <li>Bugfixes</li>
-                              </ul>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="accordion-group">
-                      <div class="accordion-heading">
-                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapsead">
-                          <strong>1.2.1  (September 24, 2014)</strong>
-                        </a>
-                      </div>
-                      <div id="collapsed" class="accordion-body collapse">
-                        <div class="accordion-inner">
-                           <h5>Bug Fixes</h5>
-                              <ul>
-                                  <li>Close HttpWebRequest explicitly</li>
-                              </ul>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="accordion-group">
-                      <div class="accordion-heading">
-                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseae">
-                          <strong>1.2.0  (August 21, 2014)</strong>
-                        </a>
-                      </div>
-                      <div id="collapseae" class="accordion-body collapse">
-                        <div class="accordion-inner">
-                           <h5>Feature Release</h5>
-                              <ul>
-                                  <li>Remove NEST and Json.NET deps</li>
-                                  <li>Change datetime format to be more consistent with Elasticsearch convention</li>
-                                  <li>Reverted to a strong class type to make searching within Elasticsearch for events easier</li>
-                                  <li>Added a @timestamp field to the extended properties to make searching in Kibana easier</li>
-                                  <li>Modified the rolling timestamp index format to use YYYY.MM.DD instead of YYYY-MM-DD, also to match standard ES/logstash format</li>
-                              </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </div><!--end accordion-->
-            </section>
-          </div><!--end roadmap-content-->
-
-          <!-- 
-          =====================================
-          Contributors
-          =====================================
-          -->
-          <div class="tab-pane" id="contributors">
-            <section class="sec-header">
-                <h3 class="font-bree-serif">Contributors</h3>
-                <ul>
-                  <li><a href="http://github.com/jptoto" target="_blank">JP Toto</a></li>
-                  <li><a href="http://github.com/jc74" target="_blank">Joe Campbell</a></li>
-                  <li><a href="http://github.com/mastoj" target="_blank">Tomas Jansson</a></li>
-                  <li><a href="http://github.com/kjersti" target="_blank">Kjersti Berg</a></li>
-                  <li><a href="http://github.com/wallymathieu" target="_blank">Oskar Gewalli</a></li>
-                  <li><a href="http://github.com/Yavari" target="_blank">Payam Yavari</a></li>
-                  <li><a href="http://github.com/hippasus" target="_blank">Hippasus, Chu</a></li>
-                  <li><a href="http://github.com/nickcanz" target="_blank">Nick Canzoneri</a></li>
-                  <li><a href="http://github.com/mpdreamz" target="_blank">Martijn Laarman</a></li>
-                  <li><a href="http://github.com/mickdelaney" target="_blank">Mick Delaney</a></li>
-                  <li><a href="http://github.com/TheSpy" target="_blank">Julius Bartkus</a></li>
-                  <li><a href="http://github.com/ttingen" target="_blank">Todd Tingen</a></li>
-                  <li><a href="http://github.com/aateeque" target="_blank">Asad Ateeque</a></li>
-                </ul>
-
-            </section>
-          </div><!-- end contributors -->
-            
-          </div><!--end tab-content-->
-      </div><!--end tabbable-->
-      
-      <div class="well align-center">
-        	<h4>For any queries or issues: <a href="https://github.com/jptoto/log4net.ElasticSearch/issues" target="_blanks">Submit issues</a> on github.</h4>
-      </div><!--end well-->
-    </div><!--end span12-->
-  </div><!--end row-->
-  </div><!--end container-->
-  </div><!--end main-content-->
-  <footer>
-      <div class="container">
+        <h3 class="muted"><a href="index.html">log4net.ElasticSearch</a></h3>
+      </div>
+      <hr />
       <div class="row">
-          <div class="span6">
-            <p>&copy; log4net.Elasticsearch</p>
-          </div>
-          <div class="span2 offset4">
-          <p><a href="#" id="top">Go To Top</a></p>
-          </div><!--end span2-->
-      </div><!--end row-->  
-      </div><!--end container-->  
-  </footer>
-<!-- Placed at the end of the document so the pages load faster -->
-<script src="assets/js/jquery.js"></script>
-<script src="assets/js/bootstrap.min.js"></script>
-<script src="assets/js/google-code-prettify/prettify.js"></script>
-<script type="text/javascript" src="assets/js/respond.js"></script>
-<script type="text/javascript">
-$(function(){
-	//Load Goodle Code Pretiffy		   
-	window.prettyPrint && prettyPrint();
-	//Tab function
-	$('#pluginTab a').click(function (e) {
-		e.preventDefault();
-		$(this).tab('show');
-	});
-	//FAQ autosuggest
-	$('.typeahead').typeahead();
-	//tooltip init
-	$("a.tip").tooltip();	
-	//footer link to got top
-	gotoTop();
-	function gotoTop(){
-		 // scroll body to 0px on click
-			$('a#top').on('click',function () {
-				$('body,html').animate({
-					scrollTop: 0
-				}, 800);
-				return false;
-			});
-	 };
-});
-</script>
-</body>
-</html>
+        <div class="span9" id="main">
+
+  <h1><a name="log4net.Elasticsearch" class="anchor" href="#log4net.Elasticsearch">log4net.ElasticSearch</a></h1>
+
+  <p>Documentation</p>
+
+  <div class="row">
+    <div class="span1"></div>
+    <div class="span6">
+      <div class="well well-small" id="nuget">
+        The log4net.ElasticSearch library can be <a href="https://www.nuget.org/packages/log4net.ElasticSearch/">installed from NuGet</a>:
+        <pre>PM> Install-Package log4net.elasticsearch</pre>
+      </div>
+    </div>
+    <div class="span1"></div>
+  </div>
+
+  <h2><a name="Example" class="anchor" href="#Example">Example</a></h2>
+
+  <p>This example demonstrates using a function defined in this sample library.</p>
+
+  <table class="pre"><tr><td class="lines"><pre class="fssnip">
+  <span class="l">1: </span>
+  <span class="l">2: </span>
+  <span class="l">3: </span>
+  <span class="l">4: </span>
+  </pre></td>
+  <td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="prep">#r</span> <span class="s">&quot;log4net.ElasticSearch.dll&quot;</span>
+  <span class="k">open</span> <span class="i">testproject</span>
+
+  <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="f">printfn</span> <span class="s">&quot;hello = </span><span class="pf">%i</span><span class="s">&quot;</span> <span class="o">&lt;|</span> <span class="i">Library</span><span class="o">.</span><span class="i">hello</span> <span class="n">0</span>
+  </code></pre></td>
+  </tr>
+  </table>
+
+  <p>Some more info</p>
+
+  <h2><a name="Samples-amp-documentation" class="anchor" href="#Samples-amp-documentation">Samples &amp; documentation</a></h2>
+
+  <p>The library comes with comprehensible documentation.
+  It can include tutorials automatically generated from <code>*.fsx</code> files in <a href="https://github.com/fsprojects/testproject/tree/master/docs/content">the content folder</a>.
+  The API reference is automatically generated from Markdown comments in the library implementation.</p>
+
+  <ul>
+  <li><p><a href="tutorial.html">Tutorial</a> contains a further explanation of this sample library.</p></li>
+  <li><p><a href="reference/index.html">API Reference</a> contains automatically generated documentation for all types, modules
+  and functions in the library. This includes additional brief samples on using most of the
+  functions.</p></li>
+  </ul>
+
+  <h2><a name="Contributing-and-copyright" class="anchor" href="#Contributing-and-copyright">Contributing and copyright</a></h2>
+
+  <p>The project is hosted on <a href="https://github.com/fsprojects/testproject">GitHub</a> where you can <a href="https://github.com/fsprojects/testproject/issues">report issues</a>, fork
+  the project and submit pull requests. If you're adding a new public API, please also
+  consider adding <a href="https://github.com/fsprojects/testproject/tree/master/docs/content">samples</a> that can be turned into a documentation. You might
+  also want to read the <a href="https://github.com/fsprojects/testproject/blob/master/README.md">library design notes</a> to understand how it works.</p>
+
+  <p>The library is available under Public Domain license, which allows modification and
+  redistribution for both commercial and non-commercial purposes. For more information see the
+  <a href="https://github.com/fsprojects/testproject/blob/master/LICENSE.txt">License file</a> in the GitHub repository.</p>
+
+  <div class="tip" id="fs1">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+
+        </div>
+        <div class="span3">
+          <img src="img/logo_search.png" alt="F# Project" style="width:100px;height:100px;margin:10px" />
+          <ul class="nav nav-list" id="menu" style="margin-top: 20px;">
+            <li class="nav-header">testproject</li>
+            <li><a href="index.html">Home page</a></li>
+            <li class="divider"></li>
+            <li><a href="http://nuget.org/packages/testproject">Get Library via NuGet</a></li>
+            <li><a href="http://github.com/jptoto/testproject">Source Code on GitHub</a></li>
+            <li><a href="license.html">License</a></li>
+            <li><a href="release-notes.html">Release Notes</a></li>
+
+            <li class="nav-header">Getting started</li>
+            <li><a href="tutorial.html">Sample tutorial</a></li>
+
+            <li class="nav-header">Documentation</li>
+            <li><a href="reference/index.html">API Reference</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <a href="http://github.com/jptoto/log4net.Elasticsearch"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"/></a>
+  </body>
+  </html>
