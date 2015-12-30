@@ -20,7 +20,7 @@ namespace log4net.ElasticSearch.Tests.UnitTests.Stubs
             logEntriesByThread = new ConcurrentDictionary<int, IEnumerable<logEvent>>();
         }
 
-        public void Add(IEnumerable<logEvent> logEvents)
+        public void Add(IEnumerable<logEvent> logEvents, int bufferSize)
         {
             if (exception != null)
             {

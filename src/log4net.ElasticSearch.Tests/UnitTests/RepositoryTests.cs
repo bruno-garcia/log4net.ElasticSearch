@@ -24,7 +24,7 @@ namespace log4net.ElasticSearch.Tests.UnitTests
 
                 var repository = Repository.Create("Server=localhost;Index=log;Port=9200;rolling=true", httpClientStub);
 
-                repository.Add(logEvents);
+                repository.Add(logEvents, 0);
 
                 httpClientStub.Items.Count().Should().Be(2);
                 httpClientStub.Items.First().Value.Count.Should().Be(2);

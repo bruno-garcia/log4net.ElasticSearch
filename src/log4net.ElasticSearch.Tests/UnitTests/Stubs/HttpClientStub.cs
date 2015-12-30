@@ -27,6 +27,11 @@ namespace log4net.ElasticSearch.Tests.UnitTests.Stubs
             action();
         }
 
+        public void PostBulk<T>(Uri uri, T items)
+        {
+
+        }
+
         public IEnumerable<KeyValuePair<Uri, IList<object>>> Items { get { return items; } }
     }
 }
