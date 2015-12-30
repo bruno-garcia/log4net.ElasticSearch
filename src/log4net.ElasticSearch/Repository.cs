@@ -6,7 +6,7 @@ namespace log4net.ElasticSearch
 {
     public interface IRepository
     {
-        void Add(IEnumerable<logEvent> logEvents);
+        void Add(IEnumerable<logEvent> logEvents, int bufferSize);
     }
 
     public class Repository : IRepository
@@ -20,9 +20,17 @@ namespace log4net.ElasticSearch
             this.httpClient = httpClient;
         }
 
-        public void Add(IEnumerable<logEvent> logEvents)
+        public void Add(IEnumerable<logEvent> logEvents, int bufferSize)
         {
-            logEvents.Do(logEvent => httpClient.Post(uri, logEvent));
+            if (bufferSize <= 1)
+            {
+                logEvents.Do(logEvent => httpClient.Post(uri, logEvent));
+            }
+            else
+            {
+                //httpClient.PostBulk;
+            }
+            
         }
 
         public static IRepository Create(string connectionString)
