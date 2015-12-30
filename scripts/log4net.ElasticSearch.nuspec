@@ -2,7 +2,7 @@
 <package >
     <metadata>
         <id>log4net.ElasticSearch</id>
-        <version>2.2.1</version>
+        <version>2.3.0</version>
         <authors>JP Toto</authors>
         <owners>JP Toto</owners>
         <iconUrl>http://nest.azurewebsites.net/images/nuget-icon.png</iconUrl>
@@ -10,8 +10,8 @@
         <projectUrl>https://github.com/jptoto/log4net.ElasticSearch</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>log4net.Elasticsearch is a log4net adapter for easy logging of exceptions and messages to Elasticsearch indices.</description>
-        <releaseNotes>Enable authorization with or without https so we can be used with Elasticsearch Shield.</releaseNotes>
-        <copyright>Copyright 2015</copyright>
+        <releaseNotes>Added support for the Elasticsearch bulk API when using a buffered appender.</releaseNotes>
+        <copyright>Copyright 2016</copyright>
         <tags>log logging exception elasticsearch log4net</tags>
         <dependencies>
             <group targetFramework="net45">
