@@ -23,8 +23,8 @@
     <div class="container">
       <div class="masthead">
         <ul class="nav nav-pills pull-right">
-          <li><a href="https://www.nuget.org/packages/log4net.ElasticSearch/">Nuget.org</a></li>
-          <li><a href="http://github.com/jptoto/log4net.ElasticSearch">github page</a></li>
+          <li><a href="https://www.nuget.org/packages/log4net.ElasticSearch/" target="_blank">Nuget</a></li>
+          <li><a href="http://github.com/jptoto/log4net.ElasticSearch" target="_blank">Github page</a></li>
         </ul>
         <h3 class="muted"><a href="index.html">log4net.ElasticSearch</a></h3>
       </div>
@@ -32,9 +32,19 @@
       <div class="row">
         <div class="span9" id="main">
 
-  <h1><a name="log4net.Elasticsearch" class="anchor" href="#log4net.Elasticsearch">log4net.ElasticSearch</a></h1>
 
-  <p>Documentation</p>
+  <p>
+    <ul>
+      <li>Index all <a href="https://logging.apache.org/log4net/" target="_blank">log4net</a> messages directly to <a href="https://www.elastic.co/products/elasticsearch" target="_blank">Elasticsearch</a></li>
+      <li>Compatible with .NET 4+</li>
+      <li>Use either the <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-index_.html" target="_blank">direct insert</a> or <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-bulk.html" target="_blank">bulk</a> Elasticsearch API for improved efficiency and performance</li>      
+      <li>Log to a single index or automatically create rolling daily indices</li>
+      <li>No dependencies (other than log4net)</li>
+      <li>Fully open source, <a href="https://raw.githubusercontent.com/jptoto/log4net.ElasticSearch/master/LICENSE" target="_blank">MIT licensed</a></li>
+      <li>Convenient installation via <a href="https://www.nuget.org/packages/log4net.ElasticSearch/" target="_blank">Nuget (see below)</a></li>
+    </ul>
+
+  </p>
 
   <div class="row">
     <div class="span1"></div>
@@ -47,69 +57,74 @@
     <div class="span1"></div>
   </div>
 
-  <h2><a name="Example" class="anchor" href="#Example">Example</a></h2>
+  <h2>Basic Console Example</h2>
 
-  <p>This example demonstrates using a function defined in this sample library.</p>
+  <p>This example demonstrates using log4net in a basic Windows console application.</p>
 
   <table class="pre"><tr><td class="lines"><pre class="fssnip">
   <span class="l">1: </span>
   <span class="l">2: </span>
   <span class="l">3: </span>
   <span class="l">4: </span>
+  <span class="l">5: </span>
+  <span class="l">6: </span>
+  <span class="l">7: </span>
+  <span class="l">8: </span>
+  <span class="l">9: </span>
   </pre></td>
-  <td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="prep">#r</span> <span class="s">&quot;log4net.ElasticSearch.dll&quot;</span>
-  <span class="k">open</span> <span class="i">testproject</span>
+  <td class="snippet">
+  <pre class="fssnip highlighted"><code lang="csharp"><span class="s">class Program</span>
+<span class="f">{</span>
+    <span class="k">private static readonly</span> <span class="f">ILog <span class="o">_log</span> = LogManager.GetLogger(typeof(</span><span class="k">Program</span><span class="f">));</span>
 
-  <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="f">printfn</span> <span class="s">&quot;hello = </span><span class="pf">%i</span><span class="s">&quot;</span> <span class="o">&lt;|</span> <span class="i">Library</span><span class="o">.</span><span class="i">hello</span> <span class="n">0</span>
+    <span class="k">static void Main</span><span class="f">(string[] args)</span>
+    <span class="f">{</span>
+      <span class="o">_log</span><span class="f">.Info("<span class="s">Logged message!</span>");</span>
+    <span class="f">}</span>
+<span class="f">}</span>
   </code></pre></td>
   </tr>
   </table>
 
-  <p>Some more info</p>
+  <h2>Samples &amp; Documentation</h2>
 
-  <h2><a name="Samples-amp-documentation" class="anchor" href="#Samples-amp-documentation">Samples &amp; documentation</a></h2>
-
-  <p>The library comes with comprehensible documentation.
-  It can include tutorials automatically generated from <code>*.fsx</code> files in <a href="https://github.com/fsprojects/testproject/tree/master/docs/content">the content folder</a>.
-  The API reference is automatically generated from Markdown comments in the library implementation.</p>
+  <p>log4net.ElasticSearch comes with comprehensible <a href="#">documentation</a>, examples, and a <a href="#">sample project</a> which can be downloaded or cloned directly from Github. Check out the <a href="#">GETTING STARTED</a> section to learn about configuration options and performance considerations. Happy logging!</p>
 
   <ul>
-  <li><p><a href="tutorial.html">Tutorial</a> contains a further explanation of this sample library.</p></li>
-  <li><p><a href="reference/index.html">API Reference</a> contains automatically generated documentation for all types, modules
-  and functions in the library. This includes additional brief samples on using most of the
-  functions.</p></li>
+    <li>
+      <p><a href="getting_started.html">Getting Started</a> contains a further explanation of the configuration options.</p>
+    </li>
+    <li>
+      <p>The <a href="examples.html">examples</a> section has several <code>log4net</code> configuration options which you can use to tweak the way messages are logged to Elasticsearch.</p>
+    </li>
   </ul>
 
-  <h2><a name="Contributing-and-copyright" class="anchor" href="#Contributing-and-copyright">Contributing and copyright</a></h2>
+  <h2>Contributing &amp; Copyright</h2>
 
-  <p>The project is hosted on <a href="https://github.com/fsprojects/testproject">GitHub</a> where you can <a href="https://github.com/fsprojects/testproject/issues">report issues</a>, fork
-  the project and submit pull requests. If you're adding a new public API, please also
-  consider adding <a href="https://github.com/fsprojects/testproject/tree/master/docs/content">samples</a> that can be turned into a documentation. You might
-  also want to read the <a href="https://github.com/fsprojects/testproject/blob/master/README.md">library design notes</a> to understand how it works.</p>
+  <p>log4net.ElasticSearch is hosted on <a href="https://github.com/jptoto/log4net.ElasticSearch">GitHub</a> where you can <a href="https://github.com/jptoto/log4net.ElasticSearch/issues">report issues</a>, fork the project and submit pull requests. If you're adding code or functionality, please also add unit and integration tests.</p>
 
-  <p>The library is available under Public Domain license, which allows modification and
-  redistribution for both commercial and non-commercial purposes. For more information see the
-  <a href="https://github.com/fsprojects/testproject/blob/master/LICENSE.txt">License file</a> in the GitHub repository.</p>
+  <p>log4net.ElasticSearch is available under the <a href="https://opensource.org/licenses/MIT" target="_blank">MIT license</a>, which allows modification and redistribution for both commercial and non-commercial purposes. This web site / template is borrowed and modified from the <a href="https://github.com/fsprojects/ProjectScaffold" taget="_blank">FSProjects Scaffolding</a> repository because I find it quite nice and convenient for users. They do some great work over there. Consider using the <a href="https://github.com/fsprojects/Paket" taget="_blank">Paket package manager</a> for some of your work.</p>
 
-  <div class="tip" id="fs1">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
-
-        </div>
+  </div>
         <div class="span3">
-          <img src="img/logo_search.png" alt="F# Project" style="width:100px;height:100px;margin:10px" />
+          <img src="img/logo_search.png" alt="log4net.ElasticSearch" style="width:100px;height:100px;margin:10px" />
           <ul class="nav nav-list" id="menu" style="margin-top: 20px;">
-            <li class="nav-header">testproject</li>
             <li><a href="index.html">Home page</a></li>
             <li class="divider"></li>
-            <li><a href="http://nuget.org/packages/testproject">Get Library via NuGet</a></li>
-            <li><a href="http://github.com/jptoto/testproject">Source Code on GitHub</a></li>
-            <li><a href="license.html">License</a></li>
-            <li><a href="release-notes.html">Release Notes</a></li>
+            <li><a href="http://nuget.org/packages/log4net.ElasticSearch" target="_blank">Get Library via NuGet</a></li>
+            <li><a href="http://github.com/jptoto/log4net.ElasticSearch" target="_blank">Source Code on GitHub</a></li>
+            <li><a href="https://raw.githubusercontent.com/jptoto/log4net.ElasticSearch/master/LICENSE" target="_blank">License</a></li>
+            <li><a href="https://github.com/jptoto/log4net.ElasticSearch/releases" target="_blank">Release Notes</a></li>
 
             <li class="nav-header">Getting started</li>
-            <li><a href="tutorial.html">Sample tutorial</a></li>
+            <li><a href="quick_start.html">Quick Start</a></li>
 
             <li class="nav-header">Documentation</li>
-            <li><a href="reference/index.html">API Reference</a></li>
+            <li><a href="examples.html">Basic Project Setup</a></li>
+            <li><a href="examples.html">Appender Settings</a></li>
+            <li><a href="examples.html">Example Configurations</a></li>
+            <li><a href="examples.html">Performance Considerations</a></li>
+            <li><a href="examples.html">Sample Project</a></li>
           </ul>
         </div>
       </div>
