@@ -61,30 +61,22 @@
 
   <p>This example demonstrates using log4net in a basic Windows console application.</p>
 
-  <table class="pre"><tr><td class="lines"><pre class="fssnip">
-  <span class="l">1: </span>
-  <span class="l">2: </span>
-  <span class="l">3: </span>
-  <span class="l">4: </span>
-  <span class="l">5: </span>
-  <span class="l">6: </span>
-  <span class="l">7: </span>
-  <span class="l">8: </span>
-  <span class="l">9: </span>
-  </pre></td>
-  <td class="snippet">
-  <pre class="fssnip highlighted"><code lang="csharp"><span class="s">class Program</span>
-<span class="f">{</span>
-    <span class="k">private static readonly</span> <span class="f">ILog <span class="o">_log</span> = LogManager.GetLogger(typeof(</span><span class="k">Program</span><span class="f">));</span>
-
-    <span class="k">static void Main</span><span class="f">(string[] args)</span>
-    <span class="f">{</span>
-      <span class="o">_log</span><span class="f">.Info("<span class="s">Logged message!</span>");</span>
-    <span class="f">}</span>
-<span class="f">}</span>
-  </code></pre></td>
-  </tr>
-  </table>
+<pre style="font-family:Consolas;font-size:12;color:white;background:black;"><span style="color:#cc7832;">using</span>&nbsp;System;
+ 
+<span style="color:#cc7832;">namespace</span>&nbsp;log4net.ElasticSearch.Sample
+{
+  <span style="color:#cc7832;">class</span>&nbsp;<span style="color:#ffc66d;">Program</span>
+  {
+    <span style="color:#cc7832;">private</span>&nbsp;<span style="color:#cc7832;">static</span>&nbsp;<span style="color:#cc7832;">readonly</span>&nbsp;<span style="color:#2b91af;">ILog</span>&nbsp;_log&nbsp;=&nbsp;<span style="color:#ffc66d;">LogManager</span>.GetLogger(<span style="color:#cc7832;">typeof</span>(<span style="color:#ffc66d;">Program</span>));
+ 
+    <span style="color:#cc7832;">static</span>&nbsp;<span style="color:#cc7832;">void</span>&nbsp;Main(<span style="color:#cc7832;">string</span>[]&nbsp;args)
+    {
+      _log.Info(<span style="color:#a5c25c;">&quot;logging&nbsp;test&quot;</span>);
+      <span style="color:#ffc66d;">Console</span>.WriteLine(<span style="color:#a5c25c;">&quot;Added&nbsp;a&nbsp;record.&quot;</span>);
+      <span style="color:#ffc66d;">Console</span>.ReadKey();
+    }
+  }
+}</pre>
 
   <h2>Samples &amp; Documentation</h2>
 
