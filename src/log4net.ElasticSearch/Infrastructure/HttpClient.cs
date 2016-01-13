@@ -57,7 +57,7 @@ namespace log4net.ElasticSearch.Infrastructure
             // index and type already specified in the Uri segments
             foreach (var item in (IEnumerable<logEvent>)items)
             {
-                postBody.AppendLine("{\"create\" : {} }");
+                postBody.AppendLine("{\"index\" : {} }");
                 postBody.AppendLine(item.ToJson());
             }
 
