@@ -13,7 +13,7 @@ log4net.ElasticSearch is a module for the [log4net](http://logging.apache.org/lo
 * Full support for the Elasticsearch _bulk API for buffered logging
 
 ### Usage:
-Please see the [DOCUMENTATION](https://github.com/jptoto/log4net.ElasticSearch/wiki/0-Documentation) Wiki page to begin logging errors to ElasticSearch!
+Please see the [DOCUMENTATION](https://github.com/jptoto/log4net.ElasticSearch/wiki) Wiki page to begin logging errors to ElasticSearch!
 
 ### Issues:
 I do my best to reply to issues or questions ASAP. Please use the [ISSUES](https://github.com/jptoto/log4net.ElasticSearch/issues) page to submit questions or errors.
