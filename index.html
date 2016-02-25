@@ -57,25 +57,53 @@
     <div class="span1"></div>
   </div>
 
-  <h2>Basic Console Example</h2>
+  <h2>Elasticsearch Log Document Example</h2>
 
-  <p>This example demonstrates using log4net in a basic Windows console application.</p>
+  
 
-<pre style="font-family:Consolas;font-size:12;color:white;background:black;"><span style="color:#cc7832;">using</span>&nbsp;System;
- 
-<span style="color:#cc7832;">namespace</span>&nbsp;log4net.ElasticSearch.Sample
-{
-  <span style="color:#cc7832;">class</span>&nbsp;<span style="color:#ffc66d;">Program</span>
-  {
-    <span style="color:#cc7832;">private</span>&nbsp;<span style="color:#cc7832;">static</span>&nbsp;<span style="color:#cc7832;">readonly</span>&nbsp;<span style="color:#2b91af;">ILog</span>&nbsp;_log&nbsp;=&nbsp;<span style="color:#ffc66d;">LogManager</span>.GetLogger(<span style="color:#cc7832;">typeof</span>(<span style="color:#ffc66d;">Program</span>));
- 
-    <span style="color:#cc7832;">static</span>&nbsp;<span style="color:#cc7832;">void</span>&nbsp;Main(<span style="color:#cc7832;">string</span>[]&nbsp;args)
-    {
-      _log.Info(<span style="color:#a5c25c;">&quot;logging&nbsp;test&quot;</span>);
-      <span style="color:#ffc66d;">Console</span>.WriteLine(<span style="color:#a5c25c;">&quot;Added&nbsp;a&nbsp;record.&quot;</span>);
-      <span style="color:#ffc66d;">Console</span>.ReadKey();
-    }
-  }
+<pre style="font-family:Consolas;font-size:13;color:white;background:black;">{
+&nbsp;&nbsp;<span style="color:#d7ba7d;">&quot;_index&quot;</span>:&nbsp;<span style="color:#a5c25c;">&quot;log-2016.02.12&quot;</span>,
+&nbsp;&nbsp;<span style="color:#d7ba7d;">&quot;_type&quot;</span>:&nbsp;<span style="color:#a5c25c;">&quot;logEvent&quot;</span>,
+&nbsp;&nbsp;<span style="color:#d7ba7d;">&quot;_id&quot;</span>:&nbsp;<span style="color:#a5c25c;">&quot;AVLXHEwEJfnUYPcgkJ5r&quot;</span>,
+&nbsp;&nbsp;<span style="color:#d7ba7d;">&quot;_version&quot;</span>:&nbsp;<span style="color:#dadada;">1</span>,
+&nbsp;&nbsp;<span style="color:#d7ba7d;">&quot;_score&quot;</span>:&nbsp;<span style="color:#dadada;">1</span>,
+&nbsp;&nbsp;<span style="color:#d7ba7d;">&quot;_source&quot;</span>:&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#d7ba7d;">&quot;timeStamp&quot;</span>:&nbsp;<span style="color:#a5c25c;">&quot;2016-02-12T20:11:41.5864254Z&quot;</span>,
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#d7ba7d;">&quot;message&quot;</span>:&nbsp;<span style="color:#a5c25c;">&quot;Something&nbsp;broke.&quot;</span>,
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#d7ba7d;">&quot;messageObject&quot;</span>:&nbsp;{&nbsp;},
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#d7ba7d;">&quot;exception&quot;</span>:&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#d7ba7d;">&quot;Type&quot;</span>:&nbsp;<span style="color:#a5c25c;">&quot;System.Exception&quot;</span>,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#d7ba7d;">&quot;Message&quot;</span>:&nbsp;<span style="color:#a5c25c;">&quot;There&nbsp;was&nbsp;a&nbsp;system&nbsp;error&quot;</span>,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#d7ba7d;">&quot;HelpLink&quot;</span>:&nbsp;<span style="color:#cc7832;">null</span>,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#d7ba7d;">&quot;Source&quot;</span>:&nbsp;<span style="color:#cc7832;">null</span>,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#d7ba7d;">&quot;HResult&quot;</span>:&nbsp;<span style="color:#dadada;">-2146233088</span>,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#d7ba7d;">&quot;StackTrace&quot;</span>:&nbsp;<span style="color:#cc7832;">null</span>,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#d7ba7d;">&quot;Data&quot;</span>:&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#d7ba7d;">&quot;CustomProperty&quot;</span>:&nbsp;<span style="color:#a5c25c;">&quot;CustomPropertyValue&quot;</span>,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#d7ba7d;">&quot;SystemUserID&quot;</span>:&nbsp;<span style="color:#a5c25c;">&quot;User43&quot;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#d7ba7d;">&quot;InnerException&quot;</span>:&nbsp;<span style="color:#cc7832;">null</span>
+&nbsp;&nbsp;&nbsp;&nbsp;},
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#d7ba7d;">&quot;loggerName&quot;</span>:&nbsp;<span style="color:#a5c25c;">&quot;log4net.ES.Example.Program&quot;</span>,
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#d7ba7d;">&quot;domain&quot;</span>:&nbsp;<span style="color:#a5c25c;">&quot;log4net.ES.Example.vshost.exe&quot;</span>,
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#d7ba7d;">&quot;identity&quot;</span>:&nbsp;<span style="color:#a5c25c;">&quot;&quot;</span>,
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#d7ba7d;">&quot;level&quot;</span>:&nbsp;<span style="color:#a5c25c;">&quot;ERROR&quot;</span>,
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#d7ba7d;">&quot;className&quot;</span>:&nbsp;<span style="color:#a5c25c;">&quot;log4net.ES.Example.Program&quot;</span>,
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#d7ba7d;">&quot;fileName&quot;</span>:&nbsp;<span style="color:#a5c25c;">&quot;C:\\projects\\log4net.ES.Example\\log4net.ES.Example\\Program.cs&quot;</span>,
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#d7ba7d;">&quot;lineNumber&quot;</span>:&nbsp;<span style="color:#a5c25c;">&quot;26&quot;</span>,
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#d7ba7d;">&quot;fullInfo&quot;</span>:&nbsp;<span style="color:#a5c25c;">&quot;log4net.ES.Example.Program.Main(Program.cs:26)&quot;</span>,
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#d7ba7d;">&quot;methodName&quot;</span>:&nbsp;<span style="color:#a5c25c;">&quot;Main&quot;</span>,
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#d7ba7d;">&quot;fix&quot;</span>:&nbsp;<span style="color:#a5c25c;">&quot;LocationInfo,&nbsp;UserName,&nbsp;Identity,&nbsp;Partial&quot;</span>,
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#d7ba7d;">&quot;properties&quot;</span>:&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#d7ba7d;">&quot;log4net:Identity&quot;</span>:&nbsp;<span style="color:#a5c25c;">&quot;&quot;</span>,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#d7ba7d;">&quot;log4net:UserName&quot;</span>:&nbsp;<span style="color:#a5c25c;">&quot;JToto&quot;</span>,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#d7ba7d;">&quot;log4net:HostName&quot;</span>:&nbsp;<span style="color:#a5c25c;">&quot;JToto01&quot;</span>,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#d7ba7d;">&quot;@timestamp&quot;</span>:&nbsp;<span style="color:#a5c25c;">&quot;2016-02-12T20:11:41.5864254Z&quot;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;},
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#d7ba7d;">&quot;userName&quot;</span>:&nbsp;<span style="color:#a5c25c;">&quot;JToto&quot;</span>,
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#d7ba7d;">&quot;threadName&quot;</span>:&nbsp;<span style="color:#a5c25c;">&quot;9&quot;</span>,
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#d7ba7d;">&quot;hostName&quot;</span>:&nbsp;<span style="color:#a5c25c;">&quot;JTOTO01&quot;</span>
+&nbsp;&nbsp;}
 }</pre>
 
   <h2>Samples &amp; Documentation</h2>
