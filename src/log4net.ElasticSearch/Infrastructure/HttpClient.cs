@@ -52,7 +52,7 @@ namespace log4net.ElasticSearch.Infrastructure
             var postBody = new StringBuilder();
 
             // For each logEvent, we build a bulk API request which consists of one line for
-            // the action, one line for the document. In this case "create" and then the doc
+            // the action, one line for the document. In this case "index" (idempotent) and then the doc
             // Since we're appending _bulk to the end of the Uri, ES will default to using the
             // index and type already specified in the Uri segments
             foreach (var item in (IEnumerable<logEvent>)items)
