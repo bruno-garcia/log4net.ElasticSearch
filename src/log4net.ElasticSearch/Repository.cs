@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using log4net.ElasticSearch.Infrastructure;
 using log4net.ElasticSearch.Models;
-using System;
 
 namespace log4net.ElasticSearch
 {
@@ -43,7 +42,7 @@ namespace log4net.ElasticSearch
                     httpClient.PostBulk(uri, logEvents);
                 }   
             }
-            catch(Exception ex)
+            catch(System.Exception ex)
             {
                 //DO NOTHING.
             }
