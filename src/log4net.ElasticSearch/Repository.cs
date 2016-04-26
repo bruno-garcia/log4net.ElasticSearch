@@ -29,23 +29,16 @@ namespace log4net.ElasticSearch
         /// <param name="bufferSize">The BufferSize as set in the connection string details</param>
         public void Add(IEnumerable<logEvent> logEvents, int bufferSize)
         {
-            try
+            if (bufferSize <= 1)
             {
-                if (bufferSize <= 1)
-                {
-                    // Post the logEvents one at a time throught the ES insert API
-                    logEvents.Do(logEvent => httpClient.Post(uri, logEvent));
-                }
-                else
-                {
-                    // Post the logEvents all at once using the ES _bulk API
-                    httpClient.PostBulk(uri, logEvents);
-                }   
+                // Post the logEvents one at a time throught the ES insert API
+                logEvents.Do(logEvent => httpClient.Post(uri, logEvent));
             }
-            catch(System.Exception ex)
+            else
             {
-                //DO NOTHING.
-            }
+                // Post the logEvents all at once using the ES _bulk API
+                httpClient.PostBulk(uri, logEvents);
+            }   
         }
 
         public static IRepository Create(string connectionString)
