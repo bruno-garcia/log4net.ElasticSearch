@@ -61,6 +61,7 @@ namespace log4net.ElasticSearch.Models
 
         static logEvent Create(LoggingEvent loggingEvent)
         {
+            loggingEvent.Fix = FixFlags.All;
             var logEvent = new logEvent
             {
                 loggerName = loggingEvent.LoggerName,
