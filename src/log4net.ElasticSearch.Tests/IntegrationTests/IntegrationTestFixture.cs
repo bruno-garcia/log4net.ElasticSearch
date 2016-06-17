@@ -31,15 +31,15 @@ namespace log4net.ElasticSearch.Tests.IntegrationTests
         static ConnectionSettings ConnectionSettings(string index)
         {
             var defaultConnectionSettings = new ConnectionSettings(ElasticSearchUri()).
-                SetDefaultIndex(index).                
-                SetDefaultTypeNameInferrer(t => t.Name).
-                SetDefaultPropertyNameInferrer(p => p);
+                DefaultIndex(index).                
+                DefaultTypeNameInferrer(t => t.Name).
+                DefaultFieldNameInferrer(p => p);
 
             return !AppSettings.Instance.UseFiddler()
                        ? defaultConnectionSettings
                        : defaultConnectionSettings.
                              DisableAutomaticProxyDetection(false).
-                             SetProxy(new Uri("http://localhost:8888"), "", "");
+                             Proxy(new Uri("http://localhost:8888"), "", "");
         }
 
         static Uri ElasticSearchUri()

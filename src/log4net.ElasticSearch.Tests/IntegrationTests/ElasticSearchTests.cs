@@ -8,13 +8,15 @@ using log4net.ElasticSearch.Tests.Infrastructure.Builders;
 
 namespace log4net.ElasticSearch.Tests.IntegrationTests
 {
-    public class ElasticSearchTests : IUseFixture<IntegrationTestFixture>
+    public class ElasticSearchTests : IClassFixture<IntegrationTestFixture>
     {
         private ElasticClient elasticClient;
+        private IntegrationTestFixture testFixture;
 
-        public void SetFixture(IntegrationTestFixture fixture)
+        public ElasticSearchTests(IntegrationTestFixture testFixture)
         {
-            elasticClient = fixture.Client;
+            this.testFixture = testFixture;
+            elasticClient = testFixture.Client;
         }
 
         [Fact]
@@ -32,7 +34,7 @@ namespace log4net.ElasticSearch.Tests.IntegrationTests
 
             elasticClient.Index(logEvent);            
 
-            Retry.Ignoring<AssertException>(() =>
+            Retry.Ignoring<CollectionException>(() =>
                 {
                     var logEntries =
                         elasticClient.Search<logEvent>(
