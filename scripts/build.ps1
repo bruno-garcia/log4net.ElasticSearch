@@ -4,7 +4,7 @@ properties {
     $sln_path       = "$base_dir\src\log4net.ElasticSearch.sln"
     $config         = "Debug"
     $tests_path     = "$base_dir\src\log4net.ElasticSearch.Tests\bin\$config\log4net.ElasticSearch.Tests.dll"
-    $xunit_path     = "$base_dir\src\packages\xunit.runners.1.9.2\tools\xunit.console.clr4.exe"
+    $xunit_path     = "$base_dir\src\packages\xunit.runner.console.2.1.0\tools\xunit.console.exe"
     $dirs           = @($bin_dir)
     $artefacts      = @("$base_dir\LICENSE", "$base_dir\readme.txt")
     $nuget_path     = "$base_dir\tools\nuget\NuGet.exe"
