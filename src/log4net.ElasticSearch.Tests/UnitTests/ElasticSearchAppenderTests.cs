@@ -32,7 +32,7 @@ namespace log4net.ElasticSearch.Tests.UnitTests
             {
                 context.Appender.DoAppend(LoggingEventsBuilder.OfSize(context.Appender.BufferSize).ToArray());
 
-                Retry.Ignoring<CollectionException>(() => context.Repository.LogEntries.TotalCount()
+                Retry.Ignoring<XunitException>(() => context.Repository.LogEntries.TotalCount()
                                                              .Should()
                                                              .Be(0,
                                                                  "nothing should be logged when the buffer limit hasn't been exceeded"));
@@ -48,7 +48,7 @@ namespace log4net.ElasticSearch.Tests.UnitTests
 
                 context.Appender.DoAppend(loggingEvents);
 
-                Retry.Ignoring<CollectionException>(() => context.Repository.LogEntries.TotalCount()
+                Retry.Ignoring<XunitException>(() => context.Repository.LogEntries.TotalCount()
                                                              .Should()
                                                              .Be(loggingEvents.Count(),
                                                                  "buffer should be sent to ElasticSearch"));
@@ -64,7 +64,7 @@ namespace log4net.ElasticSearch.Tests.UnitTests
 
                 context.Appender.DoAppend(loggingEvents);
 
-                Retry.Ignoring<CollectionException>(() => context.Repository.LogEntries.TotalCount()
+                Retry.Ignoring<XunitException>(() => context.Repository.LogEntries.TotalCount()
                                                              .Should()
                                                              .Be(context.Appender.BufferSize + 1,
                                                                  "buffer should be sent to ElasticSearch"));
@@ -82,7 +82,7 @@ namespace log4net.ElasticSearch.Tests.UnitTests
                 context.Appender.DoAppend(loggingEvents);
                 context.Appender.Close();
 
-                Retry.Ignoring<CollectionException>(() => context.Repository.LogEntries.TotalCount()
+                Retry.Ignoring<XunitException>(() => context.Repository.LogEntries.TotalCount()
                                                              .Should()
                                                              .Be(loggingEvents.Count(),
                                                                  "all events should be logged by the time the buffer closes"));
@@ -99,7 +99,7 @@ namespace log4net.ElasticSearch.Tests.UnitTests
 
                 context.Appender.AppendAndClose(loggingEvents);
 
-                Retry.Ignoring<CollectionException>(() =>
+                Retry.Ignoring<XunitException>(() =>
                 {
                     context.Repository.LogEntries.TotalCount()
                            .Should()
@@ -138,7 +138,7 @@ namespace log4net.ElasticSearch.Tests.UnitTests
 
                 context.Appender.AppendAndClose(LoggingEventsBuilder.MultiplesOf(context.Appender.BufferSize).ToArray());
 
-                Retry.Ignoring<CollectionException>(
+                Retry.Ignoring<XunitException>(
                     () =>
                     context.ErrorHandler.Exceptions.Contains(socketException)
                            .Should()
@@ -153,7 +153,7 @@ namespace log4net.ElasticSearch.Tests.UnitTests
             {
                 context.Appender.AppendAndClose(LoggingEventsBuilder.MultiplesOf(context.Appender.BufferSize).ToArray());
 
-                Retry.Ignoring<CollectionException>(
+                Retry.Ignoring<XunitException>(
                     () =>
                     context.ErrorHandler.Messages.Any()
                            .Should()
@@ -168,7 +168,7 @@ namespace log4net.ElasticSearch.Tests.UnitTests
             {
                 context.Appender.AppendAndClose(LoggingEventsBuilder.MultiplesOf(context.Appender.BufferSize).ToArray());
 
-                Retry.Ignoring<CollectionException>(
+                Retry.Ignoring<XunitException>(
                     () =>
                     context.ErrorHandler.Messages.Any()
                            .Should()

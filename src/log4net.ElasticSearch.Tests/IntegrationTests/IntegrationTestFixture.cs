@@ -1,5 +1,6 @@
 ﻿using System;
 using Nest;
+using Xunit;
 
 namespace log4net.ElasticSearch.Tests.IntegrationTests
 {
@@ -51,5 +52,13 @@ namespace log4net.ElasticSearch.Tests.IntegrationTests
         {
             Client.DeleteIndex(new DeleteIndexRequest(defaultIndex));
         }
+    }
+
+    [CollectionDefinition("IndexCollection")]
+    public class DatabaseCollection : ICollectionFixture<IntegrationTestFixture>
+    {
+        // This class has no code, and is never created. Its purpose is simply
+        // to be the place to apply [CollectionDefinition] and all the
+        // ICollectionFixture<> interfaces.
     }
 }
