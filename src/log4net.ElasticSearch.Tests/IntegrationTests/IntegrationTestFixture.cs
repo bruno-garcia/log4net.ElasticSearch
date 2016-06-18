@@ -1,5 +1,6 @@
 ﻿using System;
 using Nest;
+using Xunit;
 
 namespace log4net.ElasticSearch.Tests.IntegrationTests
 {
@@ -31,15 +32,15 @@ namespace log4net.ElasticSearch.Tests.IntegrationTests
         static ConnectionSettings ConnectionSettings(string index)
         {
             var defaultConnectionSettings = new ConnectionSettings(ElasticSearchUri()).
-                SetDefaultIndex(index).                
-                SetDefaultTypeNameInferrer(t => t.Name).
-                SetDefaultPropertyNameInferrer(p => p);
+                DefaultIndex(index).                
+                DefaultTypeNameInferrer(t => t.Name).
+                DefaultFieldNameInferrer(p => p);
 
             return !AppSettings.Instance.UseFiddler()
                        ? defaultConnectionSettings
                        : defaultConnectionSettings.
                              DisableAutomaticProxyDetection(false).
-                             SetProxy(new Uri("http://localhost:8888"), "", "");
+                             Proxy(new Uri("http://localhost:8888"), "", "");
         }
 
         static Uri ElasticSearchUri()
@@ -51,5 +52,13 @@ namespace log4net.ElasticSearch.Tests.IntegrationTests
         {
             Client.DeleteIndex(new DeleteIndexRequest(defaultIndex));
         }
+    }
+
+    [CollectionDefinition("IndexCollection")]
+    public class DatabaseCollection : ICollectionFixture<IntegrationTestFixture>
+    {
+        // This class has no code, and is never created. Its purpose is simply
+        // to be the place to apply [CollectionDefinition] and all the
+        // ICollectionFixture<> interfaces.
     }
 }
