@@ -1,4 +1,12 @@
+install:
+ - choco install 7zip.commandline
 before_build:
  - nuget restore src\log4net.ElasticSearch.sln
-on_success:
- - ps: '.\before_test.ps1'
+ - ps: $url = "https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/zip/elasticsearch/2.3.4/elasticsearch-2.3.4.zip"
+ - ps: $output = "c:\Windows\temp\es.zip"
+ - ps: Invoke-WebRequest -Uri $url -OutFile $output
+ - ps: Remove-Item 'c:\Elasticsearch' -Force -Recurse
+ - ps: New-Item -ItemType 'Directory' -Path 'c:\Elasticsearch' -Force
+ - ps: 7z x C:\Windows\Temp\es.zip -oC:\Elasticsearch
+ - ps: $env:JAVA_HOME = Get-ChildItem -Path 'C:\Program Files\Java\jdk1.8.0' | Select -ExpandProperty FullName
+ - ps: Start-Process -FilePath 'C:\Elasticsearch\elasticsearch-2.3.4\bin\elasticsearch.bat' -WorkingDirectory 'c:\Elasticsearch\elasticsearch-2.3.4\bin'
