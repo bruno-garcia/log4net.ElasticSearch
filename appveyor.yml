@@ -1,5 +1,4 @@
 install:
- - choco install 7zip.commandline
  - ps: $url = "https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/zip/elasticsearch/2.3.4/elasticsearch-2.3.4.zip"
  - ps: $output = "c:\Windows\temp\es.zip"
  - ps: Invoke-WebRequest -Uri $url -OutFile $output
