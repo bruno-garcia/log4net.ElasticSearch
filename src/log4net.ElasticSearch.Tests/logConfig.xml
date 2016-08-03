@@ -11,7 +11,7 @@
       <layout type="log4net.Layout.PatternLayout,log4net">
         <param name="ConversionPattern" value="%d{ABSOLUTE} %-5p %c{1}:%L - %m%n" />
       </layout>
-      <connectionString value="Server=localhost;Index=log_test;Port=9200;rolling=false"/>
+      <connectionString value="Server=127.0.0.1;Index=log_test;Port=9200;rolling=false"/>
       <lossy value="false" />
         <evaluator type="log4net.Core.LevelEvaluator">
             <threshold value="ALL" />
