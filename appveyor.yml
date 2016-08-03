@@ -6,6 +6,6 @@ install:
  - ps: 7z x C:\Windows\Temp\es.zip -oC:\Elasticsearch
  - ps: $env:JAVA_HOME = 'C:\Program Files\Java\jdk1.8.0'
  - ps: Start-Process -FilePath 'C:\Elasticsearch\elasticsearch-2.3.4\bin\elasticsearch.bat' -WorkingDirectory 'c:\Elasticsearch\elasticsearch-2.3.4\bin'
- - ps: Start-Sleep -s 10
+ - ps: Start-Sleep -s 5
 before_build:
  - nuget restore src\log4net.ElasticSearch.sln
