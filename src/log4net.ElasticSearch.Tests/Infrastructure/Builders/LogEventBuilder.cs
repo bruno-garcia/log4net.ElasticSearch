@@ -8,7 +8,7 @@ namespace log4net.ElasticSearch.Tests.Infrastructure.Builders
     {
         string className;
         string domain;
-        string exception;
+        object exception;
         string fileName;
         string fix;
         string fullInfo;
@@ -16,7 +16,7 @@ namespace log4net.ElasticSearch.Tests.Infrastructure.Builders
         string level;
         string lineNumber;
         string message;
-        DateTime timeStamp;
+        string timeStamp;
 
         LogEventBuilder() {}
 
@@ -34,14 +34,14 @@ namespace log4net.ElasticSearch.Tests.Infrastructure.Builders
         {            
             className = Faker.Lorem.Words(1).Single();
             domain = Faker.Lorem.Words(1).Single();
-            exception = Faker.Lorem.Sentence(50);
+            exception = new object();
             fileName = Faker.Lorem.Sentence(5);
             fix = Faker.Lorem.Words(1).Single();
             fullInfo = Faker.Lorem.Sentence(100);
             identity = Faker.Lorem.Sentence(2);
             level = Faker.RandomNumber.Next(10).ToString(CultureInfo.InvariantCulture);
             lineNumber = Faker.RandomNumber.Next(1000).ToString(CultureInfo.InvariantCulture);
-            timeStamp = DateTime.UtcNow;
+            timeStamp = DateTime.UtcNow.ToString("O");
             message = Faker.Lorem.Sentence(20);
 
             return this;

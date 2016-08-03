@@ -10,8 +10,8 @@ namespace log4net.ElasticSearch.Infrastructure
 {
     public interface IHttpClient
     {
-        void Post<T>(Uri uri, T item);
-        void PostBulk<T>(Uri uri, T items);
+        void Post(Uri uri, logEvent item);
+        void PostBulk(Uri uri, IEnumerable<logEvent> items);
     }
 
     public class HttpClient : IHttpClient
@@ -19,7 +19,7 @@ namespace log4net.ElasticSearch.Infrastructure
         const string ContentType = "text/json";
         const string Method = "POST";
 
-        public void Post<T>(Uri uri, T item)
+        public void Post(Uri uri, logEvent item)
         {
             var httpWebRequest = RequestFor(uri);
 
@@ -45,7 +45,7 @@ namespace log4net.ElasticSearch.Infrastructure
         /// <typeparam name="T">Type/item being inserted. Should be a list of events</typeparam>
         /// <param name="uri">Fully formed URI to the ES endpoint</param>
         /// <param name="items">List of logEvents</param>
-        public void PostBulk<T>(Uri uri, T items)
+        public void PostBulk(Uri uri, IEnumerable<logEvent> items)
         {
             var httpWebRequest = RequestFor(uri);
 
@@ -55,7 +55,7 @@ namespace log4net.ElasticSearch.Infrastructure
             // the action, one line for the document. In this case "index" (idempotent) and then the doc
             // Since we're appending _bulk to the end of the Uri, ES will default to using the
             // index and type already specified in the Uri segments
-            foreach (var item in (IEnumerable<logEvent>)items)
+            foreach (var item in items)
             {
                 postBody.AppendLine("{\"index\" : {} }");
                 postBody.AppendLine(item.ToJson());

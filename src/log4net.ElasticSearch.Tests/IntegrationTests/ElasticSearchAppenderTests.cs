@@ -3,21 +3,24 @@ using System.Linq;
 using FluentAssertions;
 using Nest;
 using Xunit;
-using Xunit.Sdk;
 using log4net.ElasticSearch.Models;
 using log4net.ElasticSearch.Tests.Infrastructure;
+using Xunit.Sdk;
 
 namespace log4net.ElasticSearch.Tests.IntegrationTests
 {
-    public class ElasticSearchAppenderTests : IUseFixture<IntegrationTestFixture>
+    [Collection("IndexCollection")]
+    public class ElasticSearchAppenderTests
     {
         private static readonly ILog _log = LogManager.GetLogger(typeof(ElasticSearchAppenderTests));
 
+        private IntegrationTestFixture testFixture;
         private ElasticClient elasticClient;
 
-        public void SetFixture(IntegrationTestFixture fixture)
+        public ElasticSearchAppenderTests(IntegrationTestFixture testFixture)
         {
-            elasticClient = fixture.Client;
+            this.testFixture = testFixture;
+            elasticClient = testFixture.Client;
         }
 
         [Fact]
@@ -27,7 +30,7 @@ namespace log4net.ElasticSearch.Tests.IntegrationTests
 
             _log.Info(message, new ApplicationException(Faker.Lorem.Words(1).Single()));
 
-            Retry.Ignoring<AssertException>(() =>
+            Retry.Ignoring<XunitException>(() =>
             {
                 var logEntries =
                     elasticClient.Search<logEvent>(s => s.Query(qd => qd.Term(le => le.message, message)));
@@ -49,7 +52,7 @@ namespace log4net.ElasticSearch.Tests.IntegrationTests
                 _log.Error(message, ex);
             }
 
-            Retry.Ignoring<AssertException>(() =>
+            Retry.Ignoring<XunitException>(() =>
             {
                 var logEntries =
                     elasticClient.Search<logEvent>(s => s.Query(qd => qd.Term(le => le.message, message)));
@@ -71,7 +74,7 @@ namespace log4net.ElasticSearch.Tests.IntegrationTests
                 _log.Error(message, ex);
             }
 
-            Retry.Ignoring<AssertException>(() =>
+            Retry.Ignoring<XunitException>(() =>
             {
                 var logEntries =
                     elasticClient.Search<logEvent>(s => s.Query(qd => qd.Term(le => le.message, message)));
@@ -92,7 +95,7 @@ namespace log4net.ElasticSearch.Tests.IntegrationTests
 
             _log.Info(message);
 
-            Retry.Ignoring<AssertException>(() =>
+            Retry.Ignoring<XunitException>(() =>
                 {
                     var logEntries =
                         elasticClient.Search<logEvent>(sd => sd.Query(qd => qd.Term(le => le.message, message)));
@@ -117,7 +120,7 @@ namespace log4net.ElasticSearch.Tests.IntegrationTests
 
             _log.Info(message);
 
-            Retry.Ignoring<AssertException>(() =>
+            Retry.Ignoring<XunitException>(() =>
                 {
                     var logEntries =
                         elasticClient.Search<logEvent>(sd => sd.Query(qd => qd.Term(le => le.message, message)));
@@ -127,7 +130,7 @@ namespace log4net.ElasticSearch.Tests.IntegrationTests
                     var actualLogEntry = logEntries.Documents.First();
 
                     actualLogEntry.properties[threadPropertyName].Should().Be(threadProperty);
-                });
+                }, 20, 1000);
         }
 
         [Fact(Skip = "LogicalThreadContext properties cause SerializationException")]
@@ -142,7 +145,7 @@ namespace log4net.ElasticSearch.Tests.IntegrationTests
 
             _log.Info(message);
 
-            Retry.Ignoring<AssertException>(() =>
+            Retry.Ignoring<XunitException>(() =>
                 {
                     var logEntries =
                         elasticClient.Search<logEvent>(sd => sd.Query(qd => qd.Term(le => le.message, message)));
