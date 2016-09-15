@@ -12,6 +12,8 @@ namespace log4net.ElasticSearch
 {
     public static class ExtensionMethods
     {
+        private static readonly JavaScriptSerializer serializer = new JavaScriptSerializer();
+
         public static void Do<T>(this IEnumerable<T> self, Action<T> action)
         {
             foreach (var item in self)
@@ -32,7 +34,7 @@ namespace log4net.ElasticSearch
 
         public static string ToJson<T>(this T self)
         {
-            return new JavaScriptSerializer().Serialize(self);
+            return serializer.Serialize(self);
         }
 
         public static bool Contains(this StringDictionary self, string key)
