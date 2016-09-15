@@ -70,15 +70,49 @@ namespace log4net.ElasticSearch.Models
         string Index()
         {
             var index = connectionStringParts[Keys.Index];
+            if (IsRollingIndex(connectionStringParts))
+            {
+                index = "{0}-{1}".With(index, Clock.Date.ToString("yyyy.MM.dd"));
+            }
+            else if (IsWeeklyIndex(connectionStringParts))
+            {
+                index = "{0}-{1}.{2}".With(index, Clock.Date.ToString("yyyy"), GetIso8601WeekOfYear(Clock.Date) );
+            }
+            else if (IsMonthlyIndex(connectionStringParts))
+            {
+                index = "{0}-{1}".With(index, Clock.Date.ToString("yyyy.MM"));
+            }
 
-            return IsRollingIndex(connectionStringParts)
-                       ? "{0}-{1}".With(index, Clock.Date.ToString("yyyy.MM.dd"))
-                       : index;
+            return index;
+        }
+        // This presumes that weeks start with Monday.
+        // Week 1 is the 1st week of the year with a Thursday in it.
+        static int GetIso8601WeekOfYear(DateTime time)
+        {
+            // Seriously cheat.  If its Monday, Tuesday or Wednesday, then it'll 
+            // be the same week# as whatever Thursday, Friday or Saturday are,
+            // and we always get those right
+            DayOfWeek day = CultureInfo.InvariantCulture.Calendar.GetDayOfWeek(time);
+            if (day >= DayOfWeek.Monday && day <= DayOfWeek.Wednesday)
+            {
+                time = time.AddDays(3);
+            }
+
+            // Return the week of our adjusted day
+            return CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(time, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
         }
 
         static bool IsRollingIndex(StringDictionary parts)
         {
             return parts.Contains(Keys.Rolling) && parts[Keys.Rolling].ToBool();
+        }
+        static bool IsWeeklyIndex(StringDictionary parts)
+        {
+            return parts.Contains(Keys.Weekly) && parts[Keys.Weekly].ToBool();
+        }
+        static bool IsMonthlyIndex(StringDictionary parts)
+        {
+            return parts.Contains(Keys.Monthly) && parts[Keys.Monthly].ToBool();
         }
 
         private static class Keys
@@ -90,6 +124,8 @@ namespace log4net.ElasticSearch.Models
             public const string Port = "Port";
             public const string Index = "Index";
             public const string Rolling = "Rolling";
+            public const string Weekly = "Rolling";
+            public const string Monthly = "Rolling";
             public const string BufferSize = "BufferSize";
         }
     }
