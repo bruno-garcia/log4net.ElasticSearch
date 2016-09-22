@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using Nest;
@@ -58,6 +59,9 @@ namespace log4net.ElasticSearch.Tests.IntegrationTests
                     elasticClient.Search<logEvent>(s => s.Query(qd => qd.Term(le => le.message, message)));
 
                 logEntries.Total.Should().Be(1);
+                dynamic x = logEntries.Documents.First().exception;
+                string value = x.Data.some_key.ToString();
+                value.Should().Be("10");
             });
         }
 
@@ -160,7 +164,9 @@ namespace log4net.ElasticSearch.Tests.IntegrationTests
 
         void ThrowException()
         {
-            throw new InvalidOperationException("thrown from ThrowException.");
+            var exception = new InvalidOperationException("thrown from ThrowException.");
+            exception.Data["some.key"] = 10;
+            throw exception;
         }
 
         void ThrowNestedException()

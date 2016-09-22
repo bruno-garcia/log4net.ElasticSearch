@@ -13,7 +13,7 @@ namespace log4net.ElasticSearch.Models
         public string Source { get; set; }
         public int HResult { get; set; }
         public string StackTrace { get; set; }
-        public System.Collections.IDictionary Data { get; set; }
+        public System.Collections.Generic.Dictionary<string, string> Data { get; set; }
         public JsonSerializableException InnerException { get; set; }
 
         public static JsonSerializableException Create(Exception ex)
@@ -31,7 +31,7 @@ namespace log4net.ElasticSearch.Models
                 HResult = ex.HResult,
 #endif
                 StackTrace = ex.StackTrace,
-                Data = ex.Data
+                Data = ToStringDictionary(ex.Data)
             };
 
             if (ex.InnerException != null)
@@ -39,6 +39,11 @@ namespace log4net.ElasticSearch.Models
                 serializable.InnerException = JsonSerializableException.Create(ex.InnerException);
             }
             return serializable;
+        }
+
+        private static Dictionary<string, string> ToStringDictionary(System.Collections.IDictionary source)
+        {
+            return source.Keys.Cast<object>().ToDictionary(x => x.ToString().Replace('.', '_'), x => source[x].ToString());
         }
     }
 }
