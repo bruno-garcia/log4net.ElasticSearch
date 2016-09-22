@@ -43,7 +43,7 @@ namespace log4net.ElasticSearch.Models
 
         private static Dictionary<string, string> ToStringDictionary(System.Collections.IDictionary source)
         {
-            return source.Keys.Cast<object>().ToDictionary(x => x.ToString().Replace('.', '_'), x => source[x].ToString());
+            return source.Keys.Cast<object>().ToDictionary(x => x.ToString().ReplaceDots(), x => source[x].ToString());
         }
     }
 }

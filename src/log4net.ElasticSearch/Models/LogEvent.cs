@@ -111,12 +111,17 @@ namespace log4net.ElasticSearch.Models
         static void AddProperties(LoggingEvent loggingEvent, logEvent logEvent)
         {
             loggingEvent.Properties().Union(AppenderPropertiesFor(loggingEvent)).
-                         Do(pair => logEvent.properties.Add(pair));
+                         Do(pair => logEvent.properties.Add(ReplaceDot(pair)));
         }
 
         static IEnumerable<KeyValuePair<string, string>> AppenderPropertiesFor(LoggingEvent loggingEvent)
         {
             yield return Pair.For("@timestamp", loggingEvent.TimeStamp.ToUniversalTime().ToString("O"));
+        }
+
+        static KeyValuePair<string, string> ReplaceDot(KeyValuePair<string, string> pair)
+        {
+            return pair.Key.Contains(".") ? new KeyValuePair<string, string>(pair.Key.ReplaceDots(), pair.Value) : pair;
         }
     }
 }
