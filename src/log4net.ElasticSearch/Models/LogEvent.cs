@@ -15,7 +15,7 @@ namespace log4net.ElasticSearch.Models
     {
         public logEvent()
         {
-            properties = new Dictionary<string, string>();
+            properties = new Dictionary<string, object>();
         }
 
         public string timeStamp { get; set; }
@@ -46,7 +46,7 @@ namespace log4net.ElasticSearch.Models
 
         public string fix { get; set; }
 
-        public IDictionary<string, string> properties { get; set; }
+        public IDictionary<string, object> properties { get; set; }
 
         public string userName { get; set; }
 
@@ -114,9 +114,9 @@ namespace log4net.ElasticSearch.Models
                          Do(pair => logEvent.properties.Add(pair));
         }
 
-        static IEnumerable<KeyValuePair<string, string>> AppenderPropertiesFor(LoggingEvent loggingEvent)
+        static IEnumerable<KeyValuePair<string, object>> AppenderPropertiesFor(LoggingEvent loggingEvent)
         {
-            yield return Pair.For("@timestamp", loggingEvent.TimeStamp.ToUniversalTime().ToString("O"));
+            yield return Pair.For("@timestamp", (object)loggingEvent.TimeStamp.ToUniversalTime().ToString("O"));
         }
     }
 }

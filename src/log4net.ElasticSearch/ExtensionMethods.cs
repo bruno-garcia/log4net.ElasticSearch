@@ -25,7 +25,7 @@ namespace log4net.ElasticSearch
             return string.Format(self, args);
         }
 
-        public static IEnumerable<KeyValuePair<string, string>> Properties(this LoggingEvent self)
+        public static IEnumerable<KeyValuePair<string, object>> Properties(this LoggingEvent self)
         {
             return self.GetProperties().AsPairs();
         }
@@ -65,14 +65,9 @@ namespace log4net.ElasticSearch
             return parts;
         }
 
-        static IEnumerable<KeyValuePair<string, string>> AsPairs(this ReadOnlyPropertiesDictionary self)
+        static IEnumerable<KeyValuePair<string, object>> AsPairs(this ReadOnlyPropertiesDictionary self)
         {
-            return self.GetKeys().Select(key => Pair.For(key, self[key].ToStringOrNull()));
-        }
-
-        static string ToStringOrNull(this object self)
-        {
-            return self != null ? self.ToString() : null;
+            return self.GetKeys().Select(key => Pair.For(key, self[key]));
         }
 
         static bool IsNullOrEmpty(this string self)
