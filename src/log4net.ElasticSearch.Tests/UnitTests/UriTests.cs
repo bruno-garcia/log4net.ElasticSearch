@@ -34,7 +34,7 @@ namespace log4net.ElasticSearch.Tests.UnitTests
         [Fact]
         public void Rolling_connectionstring_is_parsed_into_index_uri_with_date_suffix()
         {
-            using (Clock.Freeze(new DateTime(2015, 1, 5)))
+            using (Clock.Freeze(new DateTime(2015, 01, 05)))
             {
                 UriFor(RollingConnectionString).
                     AbsoluteUri.Should().
