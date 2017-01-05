@@ -18,7 +18,7 @@ namespace log4net.ElasticSearch.Tests.UnitTests
                         new logEvent(), new logEvent(), new logEvent(), new logEvent()
                     };
 
-            using (Clock.Freeze(new DateTime(2015, 1, 1, 23, 59, 58)))
+            using (Clock.Freeze(new DateTime(2015, 01, 01, 23, 59, 58)))
             {
                 var httpClientStub = new HttpClientStub(() => Clock.Freeze(Clock.Now.AddSeconds(1)));
 

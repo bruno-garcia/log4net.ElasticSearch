@@ -45,13 +45,13 @@ namespace log4net.ElasticSearch.Tests.UnitTests
         [Fact]
         public void Subsequent_calls_for_rolling_connection_string_over_two_days_creates_different_indexes()
         {
-            using (Clock.Freeze(new DateTime(2015, 1, 5)))
+            using (Clock.Freeze(new DateTime(2015, 01, 05)))
             {
                 UriFor(RollingConnectionString).
                     AbsoluteUri.Should().
                     Be("http://localhost:9200/log-2015.01.05/logEvent");
             }
-            using (Clock.Freeze(new DateTime(2015, 1, 6)))
+            using (Clock.Freeze(new DateTime(2015, 01, 06)))
             {
                 UriFor(RollingConnectionString).
                     AbsoluteUri.Should().
