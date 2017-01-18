@@ -30,12 +30,6 @@ namespace log4net.ElasticSearch.Infrastructure
 
                 var httpResponse = (HttpWebResponse) httpWebRequest.GetResponse();
                 httpResponse.Close();
-
-                if (httpResponse.StatusCode != HttpStatusCode.Created)
-                {
-                    throw new WebException(
-                        "Failed to post {0} to {1}.".With(item.GetType().Name, uri));
-                }
             }
         }
 
@@ -68,12 +62,6 @@ namespace log4net.ElasticSearch.Infrastructure
 
                 var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
                 httpResponse.Close();
-
-                if (httpResponse.StatusCode != HttpStatusCode.Created && httpResponse.StatusCode != HttpStatusCode.OK)
-                {
-                    throw new WebException(
-                        "Failed to post {0} to {1}.".With(postBody.ToString(), uri));
-                }
             }
         }
 
