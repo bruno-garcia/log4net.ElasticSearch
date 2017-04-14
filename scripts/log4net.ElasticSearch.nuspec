@@ -2,16 +2,16 @@
 <package >
     <metadata>
         <id>log4net.ElasticSearch</id>
-        <version>2.3.3</version>
+        <version>2.3.4</version>
         <authors>JP Toto</authors>
         <owners>JP Toto</owners>
         <iconUrl>http://nest.azurewebsites.net/images/nuget-icon.png</iconUrl>
         <licenseUrl>https://github.com/jptoto/log4net.ElasticSearch/blob/master/LICENSE</licenseUrl>
         <projectUrl>https://github.com/jptoto/log4net.ElasticSearch</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>log4net.Elasticsearch is a log4net adapter for easy logging of exceptions and messages to Elasticsearch indices.</description>
-        <releaseNotes>Alter error handling so if the Elasticsearch server isn't available, we don't wait for a timeout.</releaseNotes>
-        <copyright>Copyright 2016</copyright>
+        <description>log4net.Elasticsearch is a log4net adapter for easy logging of exceptions and messages to Elasticsearch indices. Tested through Elasticsearch 5.3.0</description>
+        <releaseNotes>Modify Content-Type header to propertly use application/json so the ES deprecatio log doesn't complain.</releaseNotes>
+        <copyright>Copyright 2017</copyright>
         <tags>log logging exception elasticsearch log4net</tags>
         <dependencies>
             <group targetFramework="net45">
