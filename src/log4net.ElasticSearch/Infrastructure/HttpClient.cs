@@ -16,7 +16,7 @@ namespace log4net.ElasticSearch.Infrastructure
 
     public class HttpClient : IHttpClient
     {
-        const string ContentType = "text/json";
+        const string ContentType = "application/json";
         const string Method = "POST";
 
         public void Post(Uri uri, logEvent item)
