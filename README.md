@@ -83,6 +83,7 @@ I do my best to reply to issues or questions ASAP. Please use the [ISSUES](https
 - [@TheSpy](https://github.com/TheSpy)
 - [@ttingen](https://github.com/ttingen)
 - [@aateeque](https://github.com/aateeque)
+- [@moconnell](https://github.com/moconnell)
 
 ### How to build
 Use the psake.cmd file in the base directory for all build tasks.
