@@ -32,7 +32,9 @@ namespace log4net.ElasticSearch
 
         public static string ToJson<T>(this T self)
         {
-            return new JavaScriptSerializer().Serialize(self);
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            serializer.MaxJsonLength = Int32.MaxValue;
+            return serializer.Serialize(self);
         }
 
         public static bool Contains(this StringDictionary self, string key)
