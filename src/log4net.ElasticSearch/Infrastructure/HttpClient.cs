@@ -27,15 +27,13 @@ namespace log4net.ElasticSearch.Infrastructure
             {
                 streamWriter.Write(item.ToJson());
                 streamWriter.Flush();
-
                 var httpResponse = (HttpWebResponse) httpWebRequest.GetResponse();
-                httpResponse.Close();
-
                 if (httpResponse.StatusCode != HttpStatusCode.Created)
                 {
                     throw new WebException(
                         "Failed to post {0} to {1}.".With(item.GetType().Name, uri));
                 }
+                httpResponse.Close();
             }
         }
 
