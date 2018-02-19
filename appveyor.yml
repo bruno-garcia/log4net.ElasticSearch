@@ -1,11 +1,11 @@
 install:
- - ps: $url = "https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/zip/elasticsearch/2.3.4/elasticsearch-2.3.4.zip"
+ - ps: $url = "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.2.1.zip"
  - ps: $output = "c:\Windows\temp\es.zip"
  - ps: Invoke-WebRequest -Uri $url -OutFile $output
  - ps: New-Item -ItemType 'Directory' -Path 'c:\Elasticsearch' -Force
  - ps: 7z x C:\Windows\Temp\es.zip -oC:\Elasticsearch
  - ps: $env:JAVA_HOME = 'C:\Program Files\Java\jdk1.8.0'
- - ps: Start-Process -FilePath 'C:\Elasticsearch\elasticsearch-2.3.4\bin\elasticsearch.bat' -WorkingDirectory 'c:\Elasticsearch\elasticsearch-2.3.4\bin'
+ - ps: Start-Process -FilePath 'C:\Elasticsearch\elasticsearch-6.2.1\bin\elasticsearch.bat' -WorkingDirectory 'c:\Elasticsearch\elasticsearch-6.2.1\bin'
  - ps: Start-Sleep -s 5
 before_build:
  - nuget restore src\log4net.ElasticSearch.sln

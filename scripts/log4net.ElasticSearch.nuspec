@@ -7,7 +7,7 @@
         <owners>JP Toto</owners>
         <iconUrl>http://nest.azurewebsites.net/images/nuget-icon.png</iconUrl>
         <licenseUrl>https://github.com/jptoto/log4net.ElasticSearch/blob/master/LICENSE</licenseUrl>
-        <projectUrl>https://github.com/jptoto/log4net.ElasticSearch</projectUrl>
+        <projectUrl>http://jptoto.github.io/log4net.ElasticSearch/</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>log4net.Elasticsearch is a log4net adapter for easy logging of exceptions and messages to Elasticsearch indices. Tested through Elasticsearch 5.6.3</description>
         <releaseNotes>Fix maxJsonLength.</releaseNotes>
