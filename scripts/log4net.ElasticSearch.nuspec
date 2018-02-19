@@ -15,10 +15,10 @@
         <tags>log logging exception elasticsearch log4net</tags>
         <dependencies>
             <group targetFramework="net45">
-                <dependency id="log4net" version="2.0.3.0" />
+                <dependency id="log4net" version="2.0.5.0" />
             </group>
             <group targetFramework="net40">
-                <dependency id="log4net" version="2.0.3.0" />
+                <dependency id="log4net" version="2.0.5.0" />
             </group>
         </dependencies>
     </metadata>
