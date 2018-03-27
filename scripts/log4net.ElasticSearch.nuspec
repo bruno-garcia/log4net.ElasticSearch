@@ -2,7 +2,7 @@
 <package >
     <metadata>
         <id>log4net.ElasticSearch</id>
-        <version>2.3.6</version>
+        <version>2.3.7</version>
         <authors>JP Toto</authors>
         <owners>JP Toto</owners>
         <iconUrl>http://nest.azurewebsites.net/images/nuget-icon.png</iconUrl>
@@ -15,10 +15,14 @@
         <tags>log logging exception elasticsearch log4net</tags>
         <dependencies>
             <group targetFramework="net45">
-                <dependency id="log4net" version="2.0.5.0" />
+                <dependency id="log4net" version="2.0.8.0" />
             </group>
             <group targetFramework="net40">
-                <dependency id="log4net" version="2.0.5.0" />
+                <dependency id="log4net" version="2.0.8.0" />
+            </group>
+            <group targetFramework="netstandard2.0">
+                <dependency id="log4net" version="2.0.8.0" />
+                <dependency id="Newtonsoft.Json" version="10.0.3" />
             </group>
         </dependencies>
     </metadata>

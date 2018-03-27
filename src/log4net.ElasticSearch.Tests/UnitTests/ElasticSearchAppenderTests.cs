@@ -120,11 +120,8 @@ namespace log4net.ElasticSearch.Tests.UnitTests
             {
                 context.Repository.OnAddThrow<SocketException>();
 
-                Action logErrorWhenElasticSearch =
-                    () =>
-                    context.Appender.AppendAndClose(LoggingEventsBuilder.MultiplesOf(context.Appender.BufferSize).ToArray());
-
-                logErrorWhenElasticSearch.ShouldNotThrow();
+                context.Appender.AppendAndClose(LoggingEventsBuilder.MultiplesOf(context.Appender.BufferSize)
+                    .ToArray());
             }
         }
 

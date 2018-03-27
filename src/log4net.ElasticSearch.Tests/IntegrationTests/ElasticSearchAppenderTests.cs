@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Bogus;
 using FluentAssertions;
 using Nest;
 using Xunit;
@@ -26,14 +27,16 @@ namespace log4net.ElasticSearch.Tests.IntegrationTests
         [Fact]
         public void Can_create_an_event_from_log4net()
         {
-            var message = Faker.Lorem.Words(1).Single();
+            var faker = new Faker();
+            var message = faker.Lorem.Words(1).Single();
 
-            _log.Info(message, new ApplicationException(Faker.Lorem.Words(1).Single()));
+            _log.Info(message, new ApplicationException(faker.Lorem.Words(1).Single()));
 
             Retry.Ignoring<XunitException>(() =>
             {
                 var logEntries =
-                    elasticClient.Search<logEvent>(s => s.Query(qd => qd.Term(le => le.message, message)));
+                    elasticClient.Search<
+                        logEvent>(s => s.Query(qd => qd.Term(le => le.message, message)));
 
                 logEntries.Total.Should().Be(1);
             });
@@ -42,7 +45,9 @@ namespace log4net.ElasticSearch.Tests.IntegrationTests
         [Fact]
         public void Can_create_error_event_from_log4net()
         {
-            var message = Faker.Lorem.Words(1).Single();
+            var faker = new Faker();
+
+            var message = faker.Lorem.Words(1).Single();
             try
             {
                 ThrowException();
@@ -64,7 +69,8 @@ namespace log4net.ElasticSearch.Tests.IntegrationTests
         [Fact]
         public void Can_create_error_event_from_log4net_with_nested_exception()
         {
-            var message = Faker.Lorem.Words(1).Single();
+            var faker = new Faker();
+            var message = faker.Lorem.Words(1).Single();
             try
             {
                 ThrowNestedException();
@@ -88,8 +94,9 @@ namespace log4net.ElasticSearch.Tests.IntegrationTests
         {
             const string globalPropertyName = "globalProperty";
 
-            var globalProperty = Faker.Lorem.Sentence(2);
-            var message = Faker.Lorem.Words(1).Single();
+            var faker = new Faker();
+            var globalProperty = faker.Lorem.Sentence(2);
+            var message = faker.Lorem.Words(1).Single();
 
             GlobalContext.Properties[globalPropertyName] = globalProperty;
 
@@ -113,8 +120,9 @@ namespace log4net.ElasticSearch.Tests.IntegrationTests
         {
             const string threadPropertyName = "threadProperty";
 
-            var threadProperty = Faker.Lorem.Sentence(2);
-            var message = Faker.Lorem.Words(1).Single();
+            var faker = new Faker();
+            var threadProperty = faker.Lorem.Sentence(2);
+            var message = faker.Lorem.Words(1).Single();
 
             ThreadContext.Properties[threadPropertyName] = threadProperty;
 
@@ -138,8 +146,9 @@ namespace log4net.ElasticSearch.Tests.IntegrationTests
         {
             const string localThreadPropertyName = "logicalThreadProperty";
 
-            var localTreadProperty = Faker.Lorem.Sentence(2);
-            var message = Faker.Lorem.Words(1).Single();
+            var faker = new Faker();
+            var localTreadProperty = faker.Lorem.Sentence(2);
+            var message = faker.Lorem.Words(1).Single();
 
             LogicalThreadContext.Properties[localThreadPropertyName] = localTreadProperty;
 
