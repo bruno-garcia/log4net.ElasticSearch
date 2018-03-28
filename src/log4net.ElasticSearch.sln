@@ -3,14 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2005
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log4net.ElasticSearch", "log4net.ElasticSearch\log4net.ElasticSearch.csproj", "{22964CB0-8A39-41EA-807D-B5216D27DF70}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "log4net.ElasticSearch", "log4net.ElasticSearch\log4net.ElasticSearch.csproj", "{22964CB0-8A39-41EA-807D-B5216D27DF70}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log4net.ElasticSearch.Tests", "log4net.ElasticSearch.Tests\log4net.ElasticSearch.Tests.csproj", "{2F7D7AD4-2DA0-430A-9E90-9D0E398D590C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "log4net.ElasticSearch.Tests", "log4net.ElasticSearch.Tests\log4net.ElasticSearch.Tests.csproj", "{2F7D7AD4-2DA0-430A-9E90-9D0E398D590C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{462F257B-5EDE-4409-9982-AFA7B17BDFF8}"
 	ProjectSection(SolutionItems) = preProject
 		..\scripts\build.ps1 = ..\scripts\build.ps1
-		..\scripts\log4net.ElasticSearch.nuspec = ..\scripts\log4net.ElasticSearch.nuspec
 		..\readme.txt = ..\readme.txt
 	EndProjectSection
 EndProject
