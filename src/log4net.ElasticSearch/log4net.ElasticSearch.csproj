@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <Title>log4net.ElasticSearch</Title>
     <AssemblyName>log4net.ElasticSearch</AssemblyName>
     <Version>2.3.7</Version>
     <TargetFrameworks>net40;net45;netstandard2.0</TargetFrameworks>
     <RootNamespace>log4net.ElasticSearch</RootNamespace>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <Platforms>AnyCPU</Platforms>
 
     <!-- Properties for nuget packing -->
@@ -42,6 +42,10 @@
   <ItemGroup>
     <PackageReference Include="log4net" Version="2.0.8" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
 
 </Project>
