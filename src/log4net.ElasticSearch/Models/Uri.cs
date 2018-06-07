@@ -61,7 +61,7 @@ namespace log4net.ElasticSearch.Models
             var routing = connectionStringParts[Keys.Routing];
             if (!string.IsNullOrWhiteSpace(routing))
             {
-                return $"?routing={routing}";
+                return string.Format("?routing={0}", routing);
             }
 
             return string.Empty;
