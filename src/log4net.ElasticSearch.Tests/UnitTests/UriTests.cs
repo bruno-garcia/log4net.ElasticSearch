@@ -14,6 +14,7 @@ namespace log4net.ElasticSearch.Tests.UnitTests
         const string ImplicitlyNonRollingPortLessConnectionString = "Server=localhost;Index=log";
         const string ExplicitlyNonRollingPortLessConnectionString = "Server=localhost;Index=log;rolling=false";
         const string BulkConnectionString = "Server=localhost;Index=log;BufferSize=10";
+        const string RoutingConnectionString = "Server=localhost;Index=log;BufferSize=10;Routing=foo";
 
         [Fact]
         public void Implicit_non_rolling_connectionstring_is_parsed_into_index_uri_without_date_suffix()
@@ -92,6 +93,14 @@ namespace log4net.ElasticSearch.Tests.UnitTests
                     AbsoluteUri.Should().
                     Be("http://localhost/log-2015.03.31/logEvent");
             }
+        }
+
+        [Fact]
+        public void Routing_connection_string_is_appended_as_query_string_parameter()
+        {
+            UriFor(RoutingConnectionString).
+                AbsoluteUri.Should().
+                Be("http://localhost/log/logEvent?routing=foo/_bulk");
         }
 
         static Uri UriFor(string connectionString)
