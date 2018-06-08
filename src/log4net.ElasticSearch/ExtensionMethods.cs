@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data.Common;
 using System.Linq;
-using System.Web.Script.Serialization;
 using log4net.Core;
 using log4net.ElasticSearch.Infrastructure;
 using log4net.Util;
+using Newtonsoft.Json;
 
 namespace log4net.ElasticSearch
 {
@@ -32,9 +32,7 @@ namespace log4net.ElasticSearch
 
         public static string ToJson<T>(this T self)
         {
-            JavaScriptSerializer serializer = new JavaScriptSerializer();
-            serializer.MaxJsonLength = Int32.MaxValue;
-            return serializer.Serialize(self);
+            return JsonConvert.SerializeObject(self);
         }
 
         public static bool Contains(this StringDictionary self, string key)

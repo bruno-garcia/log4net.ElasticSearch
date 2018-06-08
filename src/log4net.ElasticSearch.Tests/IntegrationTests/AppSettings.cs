@@ -1,6 +1,5 @@
 ﻿using System.Collections.Specialized;
 using System.Configuration;
-using log4net.ElasticSearch.Tests.Infrastructure;
 
 namespace log4net.ElasticSearch.Tests.IntegrationTests
 {

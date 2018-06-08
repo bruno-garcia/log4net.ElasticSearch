@@ -1,4 +1,7 @@
 ﻿using System;
+using System.IO;
+using System.Reflection;
+using log4net.Config;
 using Nest;
 using Xunit;
 
@@ -10,6 +13,17 @@ namespace log4net.ElasticSearch.Tests.IntegrationTests
 
         public IntegrationTestFixture()
         {
+            //for some reason log4net initialization using the AssemblyInfo attribute
+            //is not always working as expected, so let's initialize it here
+            var assembly = Assembly.GetExecutingAssembly();
+            var logRepository = LogManager.GetRepository(assembly);
+            var fi = new FileInfo("logConfig.xml");
+            if (!fi.Exists)
+            {
+                throw new FileNotFoundException("Cannot find log4net configuration.");
+            }
+            XmlConfigurator.Configure(logRepository, fi);
+
             defaultIndex = GetDefaultIndex();
 
             Client = new ElasticClient(ConnectionSettings(defaultIndex));

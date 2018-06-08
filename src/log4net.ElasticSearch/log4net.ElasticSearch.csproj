@@ -1,72 +1,51 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{22964CB0-8A39-41EA-807D-B5216D27DF70}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>log4net.ElasticSearch</RootNamespace>
+    <Title>log4net.ElasticSearch</Title>
     <AssemblyName>log4net.ElasticSearch</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>79e53313</NuGetPackageImportStamp>
+    <Version>2.3.7</Version>
+    <TargetFrameworks>net40;net45;netstandard2.0</TargetFrameworks>
+    <RootNamespace>log4net.ElasticSearch</RootNamespace>
+    <Platforms>AnyCPU</Platforms>
+
+    <!-- Properties for nuget packing -->
+    <PackageId>log4net.ElasticSearch</PackageId>
+    <Authors>JP Toto</Authors>
+    <PackageIconUrl>http://nest.azurewebsites.net/images/nuget-icon.png</PackageIconUrl>
+    <PackageLicenseUrl>https://github.com/jptoto/log4net.ElasticSearch/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>http://jptoto.github.io/log4net.ElasticSearch/</PackageProjectUrl>
+    <Description>log4net.Elasticsearch is a log4net adapter for easy logging of exceptions and messages to Elasticsearch indices. Tested through Elasticsearch 5.6.3</Description>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Copyright>Copyright 2018</Copyright>
+    <PackageReleaseNotes>
+      Add support for netstandard2.0
+    </PackageReleaseNotes>
+    <PackageTags>log logging exception elasticsearch log4net</PackageTags>
+    <PackageOutputPath>..\..\bin</PackageOutputPath>
+    <IncludeContentInPack>true</IncludeContentInPack>
+    <IncludeSymbols>true</IncludeSymbols>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\..\bin\lib\net45\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NET45</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
+
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\..\bin\lib\net45\</OutputPath>
-    <DefineConstants>TRACE;NET45</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Net" />
-    <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Data" />
+    <Content Include="..\..\readme.txt" Link="readme.txt" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="Infrastructure\AnonymousDisposable.cs" />
-    <Compile Include="AssemblyVersionInfo.cs" />
-    <Compile Include="Infrastructure\Clock.cs" />
-    <Compile Include="ElasticSearchAppender.cs" />
-    <Compile Include="ExtensionMethods.cs" />
-    <Compile Include="Infrastructure\HttpClient.cs" />
-    <Compile Include="Infrastructure\Pair.cs" />
-    <Compile Include="Models\JsonSerializableException.cs" />
-    <Compile Include="Repository.cs" />
-    <Compile Include="Models\Uri.cs" />
-    <Compile Include="Models\logEvent.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="..\..\LICENSE" Link="LICENSE" />
   </ItemGroup>
+
   <ItemGroup>
-    <None Include="packages.config" />
+    <PackageReference Include="log4net" Version="2.0.8" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+
 </Project>

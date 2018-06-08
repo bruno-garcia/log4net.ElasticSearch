@@ -31,18 +31,19 @@ namespace log4net.ElasticSearch.Tests.Infrastructure.Builders
         }
 
         LogEventBuilder WithDefaults()
-        {            
-            className = Faker.Lorem.Words(1).Single();
-            domain = Faker.Lorem.Words(1).Single();
+        {
+            var faker = new Bogus.Faker();
+            className = faker.Lorem.Words(1).Single();
+            domain = faker.Lorem.Words(1).Single();
             exception = new object();
-            fileName = Faker.Lorem.Sentence(5);
-            fix = Faker.Lorem.Words(1).Single();
-            fullInfo = Faker.Lorem.Sentence(100);
-            identity = Faker.Lorem.Sentence(2);
-            level = Faker.RandomNumber.Next(10).ToString(CultureInfo.InvariantCulture);
-            lineNumber = Faker.RandomNumber.Next(1000).ToString(CultureInfo.InvariantCulture);
+            fileName = faker.Lorem.Sentence(5);
+            fix = faker.Lorem.Words(1).Single();
+            fullInfo = faker.Lorem.Sentence(100);
+            identity = faker.Lorem.Sentence(2);
+            level = faker.Random.Number(10).ToString(CultureInfo.InvariantCulture);
+            lineNumber = faker.Random.Number(1000).ToString(CultureInfo.InvariantCulture);
             timeStamp = DateTime.UtcNow.ToString("O");
-            message = Faker.Lorem.Sentence(20);
+            message = faker.Lorem.Sentence(20);
 
             return this;
         }

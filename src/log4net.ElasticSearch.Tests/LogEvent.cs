@@ -4,7 +4,7 @@ using Nest;
 
 namespace log4net.ElasticSearch.Tests
 {
-    [ElasticType(Name = "LogEvent")]
+    [ElasticsearchType(Name = "LogEvent")]
     public class LogEvent
     {
         public LogEvent()
@@ -12,61 +12,61 @@ namespace log4net.ElasticSearch.Tests
             Properties = new Dictionary<string, string>();
         }
 
-        [ElasticProperty(Name = "_id")]
+        [Nest.Text]
         public string Id { get; set; }
 
-        [ElasticProperty(Name = "TimeStamp")]
+        [Nest.Date]
         public DateTime TimeStamp { get; set; }
 
-        [ElasticProperty(Name = "Message")]
+        [Nest.Text]
         public string Message { get; set; }
 
-        [ElasticProperty(Name = "MessageObject")]
+        [Nest.Nested]
         public object MessageObject { get; set; }
 
-        [ElasticProperty(Name = "Exception")]
+        [Nest.Text]
         public string Exception { get; set; }
 
-        [ElasticProperty(Name = "LoggerName")]
+        [Nest.Text]
         public string LoggerName { get; set; }
 
-        [ElasticProperty(Name = "Domain")]
+        [Nest.Text]
         public string Domain { get; set; }
 
-        [ElasticProperty(Name = "Identity")]
+        [Nest.Text]
         public string Identity { get; set; }
 
-        [ElasticProperty(Name = "Level")]
+        [Nest.Text]
         public string Level { get; set; }
 
-        [ElasticProperty(Name = "ClassName")]
+        [Nest.Text]
         public string ClassName { get; set; }
 
-        [ElasticProperty(Name = "FileName")]
+        [Nest.Text]
         public string FileName { get; set; }
 
-        [ElasticProperty(Name = "Name")]
+        [Nest.Text]
         public string LineNumber { get; set; }
 
-        [ElasticProperty(Name = "FullInfo")]
+        [Nest.Text]
         public string FullInfo { get; set; }
 
-        [ElasticProperty(Name = "MethodName")]
+        [Nest.Text]
         public string MethodName { get; set; }
 
-        [ElasticProperty(Name = "Fix")]
+        [Nest.Text]
         public string Fix { get; set; }
 
-        [ElasticProperty(Name = "Properties")]
+        [Nest.Nested]
         public IDictionary<string, string> Properties { get; set; }
 
-        [ElasticProperty(Name = "UserName")]
+        [Nest.Text]
         public string UserName { get; set; }
 
-        [ElasticProperty(Name = "ThreadName")]
+        [Nest.Text]
         public string ThreadName { get; set; }
 
-        [ElasticProperty(Name = "HostName")]
+        [Nest.Text]
         public string HostName { get; set; }
 
 
