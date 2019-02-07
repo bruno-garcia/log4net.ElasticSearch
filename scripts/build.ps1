@@ -2,7 +2,7 @@ properties {
     $base_dir       = (Get-Item (Resolve-Path .)).Parent.FullName
     $bin_dir        = "$base_dir\bin"
     $sln_path       = "$base_dir\src\log4net.ElasticSearch.sln"
-    $config         = "Debug"
+    $config         = "Release"
     
 	$nuget_csproj_path = "$base_dir\src\log4net.ElasticSearch\log4net.ElasticSearch.csproj"
 
