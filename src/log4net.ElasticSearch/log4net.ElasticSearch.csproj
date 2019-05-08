@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Title>log4net.ElasticSearch</Title>
     <AssemblyName>log4net.ElasticSearch</AssemblyName>
-    <Version>2.4.1-beta</Version>
+    <Version>2.5.0</Version>
     <TargetFrameworks>net40;net45;netstandard2.0</TargetFrameworks>
     <RootNamespace>log4net.ElasticSearch</RootNamespace>
     <Platforms>AnyCPU</Platforms>
@@ -17,9 +17,8 @@
     <Description>log4net.Elasticsearch is a log4net adapter for easy logging of exceptions and messages to Elasticsearch indices. Tested through Elasticsearch 6.2</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Copyright>Copyright 2019</Copyright>
-    <PackageReleaseNotes>
-      Add support for netstandard2.0
-    </PackageReleaseNotes>
+    <PackageReleaseNotes>Add support for netstandard2.0
+</PackageReleaseNotes>
     <PackageTags>log logging exception elasticsearch log4net</PackageTags>
     <PackageOutputPath>..\..\bin</PackageOutputPath>
     <IncludeContentInPack>true</IncludeContentInPack>
@@ -29,8 +28,8 @@
   <PropertyGroup>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
-    <AssemblyVersion>2.4.1.0</AssemblyVersion>
-    <FileVersion>2.4.1.0</FileVersion>
+    <AssemblyVersion>2.5.0.0</AssemblyVersion>
+    <FileVersion>2.5.0.0</FileVersion>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
