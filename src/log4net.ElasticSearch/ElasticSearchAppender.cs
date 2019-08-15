@@ -94,7 +94,7 @@ namespace log4net.ElasticSearch
             }
             catch (Exception ex)
             {
-                HandleError("Failed to addd logEvents to {0} in SendBufferCallback".With(repository.GetType().Name), ex);
+                HandleError("Failed to add logEvents to {0} in SendBufferCallback".With(repository.GetType().Name), ex);
             }
             finally
             {
