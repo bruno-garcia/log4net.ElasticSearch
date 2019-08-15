@@ -6,7 +6,6 @@
     <Version>2.5.0</Version>
     <TargetFrameworks>net40;net45;netstandard2.0</TargetFrameworks>
     <RootNamespace>log4net.ElasticSearch</RootNamespace>
-    <Platforms>AnyCPU</Platforms>
 
     <!-- Properties for nuget packing -->
     <PackageId>log4net.ElasticSearch</PackageId>
@@ -17,10 +16,8 @@
     <Description>log4net.Elasticsearch is a log4net adapter for easy logging of exceptions and messages to Elasticsearch indices. Tested through Elasticsearch 6.2</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Copyright>Copyright 2019</Copyright>
-    <PackageReleaseNotes>Add support for netstandard2.0
-</PackageReleaseNotes>
+    <PackageReleaseNotes>Please refer to https://github.com/bruno-garcia/log4net.ElasticSearch/releases</PackageReleaseNotes>
     <PackageTags>log logging exception elasticsearch log4net</PackageTags>
-    <PackageOutputPath>..\..\bin</PackageOutputPath>
     <IncludeContentInPack>true</IncludeContentInPack>
     <IncludeSymbols>true</IncludeSymbols>
   </PropertyGroup>
@@ -44,10 +41,6 @@
   <ItemGroup>
     <PackageReference Include="log4net" Version="2.0.8" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Properties\" />
   </ItemGroup>
 
 </Project>

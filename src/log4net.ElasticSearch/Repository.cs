@@ -42,7 +42,7 @@ namespace log4net.ElasticSearch
                     httpClient.PostBulk(uri, logEvents);
                 }   
             }
-            catch(System.Exception ex)
+            catch
             {
                 //DO NOTHING.
             }
