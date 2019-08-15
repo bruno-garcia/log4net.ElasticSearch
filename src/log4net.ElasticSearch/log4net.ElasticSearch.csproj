@@ -11,7 +11,7 @@
     <PackageId>log4net.ElasticSearch</PackageId>
     <Authors>JP Toto</Authors>
     <PackageIconUrl>http://nest.azurewebsites.net/images/nuget-icon.png</PackageIconUrl>
-    <PackageLicenseUrl>https://github.com/jptoto/log4net.ElasticSearch/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicense>MIT</PackageLicense>
     <PackageProjectUrl>http://jptoto.github.io/log4net.ElasticSearch/</PackageProjectUrl>
     <Description>log4net.Elasticsearch is a log4net adapter for easy logging of exceptions and messages to Elasticsearch indices. Tested through Elasticsearch 6.2</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
