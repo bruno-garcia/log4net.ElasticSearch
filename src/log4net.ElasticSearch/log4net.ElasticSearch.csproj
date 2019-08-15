@@ -16,8 +16,7 @@
     <Description>log4net.Elasticsearch is a log4net adapter for easy logging of exceptions and messages to Elasticsearch indices. Tested through Elasticsearch 6.2</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Copyright>Copyright 2019</Copyright>
-    <PackageReleaseNotes>Add support for netstandard2.0
-</PackageReleaseNotes>
+    <PackageReleaseNotes>Please refer to https://github.com/bruno-garcia/log4net.ElasticSearch/releases</PackageReleaseNotes>
     <PackageTags>log logging exception elasticsearch log4net</PackageTags>
     <IncludeContentInPack>true</IncludeContentInPack>
     <IncludeSymbols>true</IncludeSymbols>
