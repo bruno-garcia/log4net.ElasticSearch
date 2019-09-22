@@ -12,7 +12,7 @@ log4net.ElasticSearch is a module for the [log4net](http://logging.apache.org/lo
 * Full support for the Elasticsearch _bulk API for buffered logging
 
 ### Usage:
-Please see the [DOCUMENTATION](https://github.com/jptoto/log4net.ElasticSearch/wiki) Wiki page to begin logging errors to ElasticSearch!
+Please see the [DOCUMENTATION](https://github.com/bruno-garcia/log4net.ElasticSearch/wiki) Wiki page to begin logging errors to ElasticSearch!
 
 ### Example log4net Document in Elasticsearch
 
@@ -64,10 +64,10 @@ Please see the [DOCUMENTATION](https://github.com/jptoto/log4net.ElasticSearch/w
 ```
 
 ### Issues:
-I do my best to reply to issues or questions ASAP. Please use the [ISSUES](https://github.com/jptoto/log4net.ElasticSearch/issues) page to submit questions or errors.
+I do my best to reply to issues or questions ASAP. Please use the [ISSUES](https://github.com/bruno-garcia/log4net.ElasticSearch/issues) page to submit questions or errors.
 
 ### License:
-[MIT License](https://github.com/jptoto/log4net.ElasticSearch/blob/master/LICENSE)
+[MIT License](https://github.com/bruno-garcia/log4net.ElasticSearch/blob/master/LICENSE)
 
 ### Thanks:
 - [@mpdreamz](https://github.com/Mpdreamz) and the team for their great work on the NEST library!
