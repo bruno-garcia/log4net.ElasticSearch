@@ -31,14 +31,22 @@ namespace log4net.ElasticSearch.Tests.UnitTests
             var errorHandler = new ErrorHandlerStub();
 
             var appender = new TestableAppender(repository)
+            {
+                Lossy = false,
+                BufferSize = bufferSize,
+                ConnectionString = ConnectionString,
+                ErrorHandler = errorHandler,
+                FailSend = failSend,
+                FailClose = failClose,
+                RollingIndexNameDateFormat = "yyyy-MM-dd"
+            };
+
+            appender.AddFieldNameOverride(new FieldNameOverride
                 {
-                    Lossy = false,
-                    BufferSize = bufferSize, 
-                    ConnectionString = ConnectionString, 
-                    ErrorHandler = errorHandler, 
-                    FailSend = failSend, 
-                    FailClose = failClose
-                };
+                    Original = "timeStamp",
+                    Replacement = "@timestamp"
+                }
+            );
 
             appender.ActivateOptions();
 

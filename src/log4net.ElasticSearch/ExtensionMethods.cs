@@ -30,9 +30,9 @@ namespace log4net.ElasticSearch
             return self.GetProperties().AsPairs();
         }
 
-        public static string ToJson<T>(this T self)
+        public static string ToJson<T>(this T self, CustomDataContractResolver resolver)
         {
-            return JsonConvert.SerializeObject(self);
+            return JsonConvert.SerializeObject(self, new JsonSerializerSettings { ContractResolver = resolver });
         }
 
         public static bool Contains(this StringDictionary self, string key)

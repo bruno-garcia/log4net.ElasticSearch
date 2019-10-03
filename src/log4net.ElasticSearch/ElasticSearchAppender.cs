@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using log4net.Appender;
@@ -17,6 +18,7 @@ namespace log4net.ElasticSearch
 
         int queuedCallbackCount;
         IRepository repository;
+        List<FieldNameOverride> fieldNameOverrides = new List<FieldNameOverride>();
 
         public ElasticSearchAppender()
         {
@@ -25,8 +27,11 @@ namespace log4net.ElasticSearch
         }
 
         public string ConnectionString { get; set; }
+        
         public int OnCloseTimeout { get; set; }
 
+        public string RollingIndexNameDateFormat { get; set; } = "yyyy.MM.dd";
+        
         public override void ActivateOptions()
         {
             base.ActivateOptions();
@@ -49,6 +54,11 @@ namespace log4net.ElasticSearch
             repository = CreateRepository(ConnectionString);            
         }
 
+        public void AddFieldNameOverride(FieldNameOverride fieldNameOverride)
+        {
+            fieldNameOverrides.Add(fieldNameOverride);
+        }
+
         protected override void SendBuffer(LoggingEvent[] events)
         {
             BeginAsyncSend();
@@ -67,7 +77,11 @@ namespace log4net.ElasticSearch
 
         protected virtual IRepository CreateRepository(string connectionString)
         {
-            return Repository.Create(connectionString);
+            var overrides = fieldNameOverrides.ToDictionary(x => x.Original, x => x.Replacement);
+
+            var resolver = new CustomDataContractResolver { FieldNameChanges = overrides };
+            
+            return Repository.Create(connectionString, resolver, RollingIndexNameDateFormat);
         }
 
         protected virtual bool TryAsyncSend(IEnumerable<LoggingEvent> events)
@@ -131,5 +145,16 @@ namespace log4net.ElasticSearch
                 throw new ArgumentException("connectionString is empty", "connectionString");
             }
         }
-    }    
+    }
+    
+    public class FieldNameOverride : IOptionHandler
+    {
+        public string Original {get; set;}
+	
+        public string Replacement {get; set;}
+
+        public void ActivateOptions()
+        {
+        }
+    }
 }

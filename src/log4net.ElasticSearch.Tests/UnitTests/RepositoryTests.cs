@@ -22,7 +22,7 @@ namespace log4net.ElasticSearch.Tests.UnitTests
             {
                 var httpClientStub = new HttpClientStub(() => Clock.Freeze(Clock.Now.AddSeconds(1)));
 
-                var repository = Repository.Create("Server=localhost;Index=log;Port=9200;rolling=true", httpClientStub);
+                var repository = Repository.Create("Server=localhost;Index=log;Port=9200;rolling=true", httpClientStub, "yyyy.MM.dd");
 
                 repository.Add(logEvents, 0);
 
