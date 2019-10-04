@@ -10,7 +10,7 @@
       </layout>
       <connectionString value="Server=127.0.0.1;Index=log_test;Port=9200;rolling=false"/>
       <lossy value="false" />
-      <fieldNameOverride type="log4net.ElasticSearch.FieldNameOverride">
+      <fieldNameOverride type="log4net.ElasticSearch.FieldNameOverride, log4net.ElasticSearch">
         <original value="timeStamp" />
         <replacement value="@timestamp" />
       </fieldNameOverride>

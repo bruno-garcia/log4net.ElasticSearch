@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using System.Text;
 using log4net.ElasticSearch.Models;
 using Uri = System.Uri;
+#if NETFRAMEWORK
+    using System.Web;
+    using System.Net;
+#else
+    using System.Net;
+#endif
 
 namespace log4net.ElasticSearch.Infrastructure
 {
@@ -94,7 +99,14 @@ namespace log4net.ElasticSearch.Infrastructure
             if (!string.IsNullOrWhiteSpace(uri.UserInfo))
             {
                 httpWebRequest.Headers.Remove(HttpRequestHeader.Authorization);
-                httpWebRequest.Headers.Add(HttpRequestHeader.Authorization, "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(uri.UserInfo)));
+
+                #if NETFRAMEWORK
+                    var uriUserInfo = HttpUtility.UrlDecode(uri.UserInfo);
+                #else
+                    var uriUserInfo = WebUtility.UrlDecode(uri.UserInfo);
+                #endif
+
+                httpWebRequest.Headers.Add(HttpRequestHeader.Authorization, "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(uriUserInfo)));
             }
 
             return httpWebRequest;

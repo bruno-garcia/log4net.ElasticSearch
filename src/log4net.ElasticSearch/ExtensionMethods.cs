@@ -54,7 +54,7 @@ namespace log4net.ElasticSearch
         {
             var builder = new DbConnectionStringBuilder
             {
-                ConnectionString = self.Replace("{", "\"").Replace("}", "\"")
+                ConnectionString = self//.Replace("{", "\"").Replace("}", "\"")
             };
 
             var parts = new StringDictionary();
