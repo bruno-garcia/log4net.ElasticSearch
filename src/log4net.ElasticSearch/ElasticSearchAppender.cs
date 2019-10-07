@@ -6,6 +6,7 @@ using System.Threading;
 using log4net.Appender;
 using log4net.Core;
 using log4net.ElasticSearch.Models;
+using Uri = System.Uri;
 
 namespace log4net.ElasticSearch
 {
@@ -27,11 +28,13 @@ namespace log4net.ElasticSearch
         }
 
         public string ConnectionString { get; set; }
-        
+
         public int OnCloseTimeout { get; set; }
 
         public string RollingIndexNameDateFormat { get; set; } = "yyyy.MM.dd";
-        
+
+        public string IndexTypeName { get; set; } = "logEvent";
+
         public override void ActivateOptions()
         {
             base.ActivateOptions();
@@ -77,11 +80,11 @@ namespace log4net.ElasticSearch
 
         protected virtual IRepository CreateRepository(string connectionString)
         {
-            var overrides = fieldNameOverrides.ToDictionary(x => x.Original, x => x.Replacement);
-
-            var resolver = new CustomDataContractResolver { FieldNameChanges = overrides };
+            log4net.ElasticSearch.Models.Uri.Init(RollingIndexNameDateFormat, IndexTypeName);
             
-            return Repository.Create(connectionString, resolver, RollingIndexNameDateFormat);
+            var overrides = fieldNameOverrides.ToDictionary(x => x.Original, x => x.Replacement);
+            var resolver = new CustomDataContractResolver { FieldNameChanges = overrides };
+            return Repository.Create(connectionString, resolver);
         }
 
         protected virtual bool TryAsyncSend(IEnumerable<LoggingEvent> events)

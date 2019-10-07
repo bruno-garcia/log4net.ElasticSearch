@@ -23,7 +23,7 @@ namespace log4net.ElasticSearch.Tests.UnitTests
             {
                 var httpClientStub = new HttpClientStub(() => Clock.Freeze(Clock.Now.AddSeconds(1)));
 
-                var repository = Repository.Create("Server=localhost;Index=log;Port=9200;rolling=true", httpClientStub, "yyyy.MM.dd");
+                var repository = Repository.Create("Server=localhost;Index=log;Port=9200;rolling=true", httpClientStub);
 
                 repository.Add(logEvents, 0);
 
@@ -53,6 +53,43 @@ namespace log4net.ElasticSearch.Tests.UnitTests
             
             var header = request.Headers["Authorization"];
             header.Should().Be("Basic IUAjPD4sLi9cfCQlPyYqKCk6IUAjJCU9XiYqPSgpX3t9Oj4/Pjw=");
+        }
+        
+        [Fact]
+        public void Should_make_use_of_rolling_index_name_datetime_format_if_provided()
+        {
+            var indexTypeName = "my-type-name";
+            var rollingIndexNameDateFormat = "yyyy-MM-dd";
+
+            Uri.Init(rollingIndexNameDateFormat, indexTypeName);
+            
+            var connectionString = ";Server=127.0.0.1;Index=log_test;Port=9200;rolling=true";
+            
+            var uriBuilder = Uri.For(connectionString);
+            var uri = uriBuilder;
+
+            var request = HttpClient.RequestFor(uri);
+
+            //var dateTime = new DateTime(2015, 01, 05).ToString(rollingIndexNameDateFormat);
+            var dateTime = DateTime.Now.ToString(rollingIndexNameDateFormat);
+            request.Address.ToString().Should().Contain(dateTime);
+        }
+        
+        [Fact]
+        public void Should_make_use_of_index_type_name_if_provided()
+        {
+            var indexTypeName = "my-type-name";
+            var rollingIndexNameDateFormat = "yyyy-MM-dd";
+
+            Uri.Init(rollingIndexNameDateFormat, indexTypeName);
+            
+            var connectionString = ";Server=127.0.0.1;Index=log_test;Port=9200;rolling=true";
+            
+            var uriBuilder = Uri.For(connectionString);
+            var uri = uriBuilder;
+
+            var request = HttpClient.RequestFor(uri);
+            request.Address.ToString().Should().Contain(indexTypeName);
         }
     }
 }

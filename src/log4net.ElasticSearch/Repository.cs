@@ -41,14 +41,14 @@ namespace log4net.ElasticSearch
             }
         }
 
-        public static IRepository Create(string connectionString, CustomDataContractResolver resolver, string rollingIndexNameDateFormat)
+        public static IRepository Create(string connectionString, CustomDataContractResolver resolver)
         {
-            return Create(connectionString, new HttpClient(resolver), rollingIndexNameDateFormat);
+            return Create(connectionString, new HttpClient(resolver));
         }
 
-        public static IRepository Create(string connectionString, IHttpClient httpClient, string rollingIndexNameDateFormat)
+        public static IRepository Create(string connectionString, IHttpClient httpClient)
         {
-            return new Repository(Uri.For(connectionString, rollingIndexNameDateFormat), httpClient);
+            return new Repository(Uri.For(connectionString), httpClient);
         }
     }
 }
