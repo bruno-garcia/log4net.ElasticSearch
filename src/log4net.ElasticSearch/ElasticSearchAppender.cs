@@ -17,9 +17,10 @@ namespace log4net.ElasticSearch
         const int DefaultOnCloseTimeout = 30000;
         readonly ManualResetEvent workQueueEmptyEvent;
 
-        int queuedCallbackCount;
         IRepository repository;
+        int queuedCallbackCount;
         List<FieldNameOverride> fieldNameOverrides = new List<FieldNameOverride>();
+        List<FieldValueReplica> fieldValueReplicas = new List<FieldValueReplica>();
 
         public ElasticSearchAppender()
         {
@@ -62,6 +63,11 @@ namespace log4net.ElasticSearch
             fieldNameOverrides.Add(fieldNameOverride);
         }
 
+        public void AddFieldValueReplica(FieldValueReplica fieldValueReplica)
+        {
+            fieldValueReplicas.Add(fieldValueReplica);
+        }
+
         protected override void SendBuffer(LoggingEvent[] events)
         {
             BeginAsyncSend();
@@ -83,7 +89,11 @@ namespace log4net.ElasticSearch
             log4net.ElasticSearch.Models.Uri.Init(RollingIndexNameDateFormat, IndexTypeName);
             
             var overrides = fieldNameOverrides.ToDictionary(x => x.Original, x => x.Replacement);
-            var resolver = new CustomDataContractResolver { FieldNameChanges = overrides };
+            var resolver = new CustomDataContractResolver
+            {
+                FieldNameChanges = overrides,
+                FieldValueReplica = fieldValueReplicas,
+            };
             return Repository.Create(connectionString, resolver);
         }
 
@@ -149,12 +159,23 @@ namespace log4net.ElasticSearch
             }
         }
     }
-    
+
     public class FieldNameOverride : IOptionHandler
     {
         public string Original {get; set;}
 	
         public string Replacement {get; set;}
+
+        public void ActivateOptions()
+        {
+        }
+    }
+
+    public class FieldValueReplica : IOptionHandler
+    {
+        public string Original {get; set;}
+	
+        public string Replica {get; set;}
 
         public void ActivateOptions()
         {

@@ -12,8 +12,12 @@
       <lossy value="false" />
       <fieldNameOverride type="log4net.ElasticSearch.FieldNameOverride, log4net.ElasticSearch">
         <original value="timeStamp" />
-        <replacement value="@timestamp" />
+        <replacement value="timestamp" />
       </fieldNameOverride>
+      <fieldValueReplica type="log4net.ElasticSearch.FieldValueReplica, log4net.ElasticSearch">
+        <original value="timeStamp" />
+        <replica value="@timestamp" />
+      </fieldValueReplica>
       <rollingIndexNameDateFormat value="yyyy-MM-dd" />
       <evaluator type="log4net.Core.LevelEvaluator">
         <threshold value="ALL" />

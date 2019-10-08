@@ -43,8 +43,15 @@ namespace log4net.ElasticSearch.Tests.UnitTests
 
             appender.AddFieldNameOverride(new FieldNameOverride
                 {
+                    Original = "timetamp",
+                    Replacement = "timestamp"
+                }
+            );
+
+            appender.AddFieldValueReplica(new FieldValueReplica
+                {
                     Original = "timeStamp",
-                    Replacement = "@timestamp"
+                    Replica = "@timestamp"
                 }
             );
 

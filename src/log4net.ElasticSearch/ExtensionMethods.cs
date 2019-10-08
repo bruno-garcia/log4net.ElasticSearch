@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data.Common;
+using System.Dynamic;
 using System.Linq;
 using log4net.Core;
 using log4net.ElasticSearch.Infrastructure;
@@ -32,7 +33,20 @@ namespace log4net.ElasticSearch
 
         public static string ToJson<T>(this T self, CustomDataContractResolver resolver)
         {
-            return JsonConvert.SerializeObject(self, new JsonSerializerSettings { ContractResolver = resolver });
+            var json = JsonConvert.SerializeObject(self, new JsonSerializerSettings { ContractResolver = resolver });
+
+            if (resolver.FieldValueReplica != null && resolver.FieldValueReplica.Count > 0)
+            {
+                resolver.FieldValueReplica.ForEach(x =>
+                {
+                    var originalValue = self.GetType().GetProperty(x.Original)?.GetValue(self, null);
+                    var obj = JsonConvert.DeserializeObject<ExpandoObject>(json) as IDictionary<string, Object>;
+                    obj.Add(x.Replica, originalValue);
+                    json = JsonConvert.SerializeObject(obj);
+                });
+            }
+            
+            return json;
         }
 
         public static bool Contains(this StringDictionary self, string key)

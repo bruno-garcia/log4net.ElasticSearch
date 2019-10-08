@@ -10,6 +10,7 @@ namespace log4net.ElasticSearch
     public class CustomDataContractResolver : DefaultContractResolver
     {
         public Dictionary<string, string> FieldNameChanges { get; set; }
+        public List<FieldValueReplica> FieldValueReplica { get; set; }
 
         protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
         {
@@ -21,5 +22,5 @@ namespace log4net.ElasticSearch
             
             return property;
         }
-    }
+   }
 }
