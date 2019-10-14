@@ -43,4 +43,8 @@
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="System.Web" Condition="'$(TargetFramework)' == 'net40' OR '$(TargetFramework)' == 'net45'" />
+  </ItemGroup>
+
 </Project>

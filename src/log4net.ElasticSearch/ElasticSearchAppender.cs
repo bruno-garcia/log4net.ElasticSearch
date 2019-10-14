@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using log4net.Appender;
 using log4net.Core;
 using log4net.ElasticSearch.Models;
+using Uri = System.Uri;
 
 namespace log4net.ElasticSearch
 {
@@ -15,8 +17,10 @@ namespace log4net.ElasticSearch
         const int DefaultOnCloseTimeout = 30000;
         readonly ManualResetEvent workQueueEmptyEvent;
 
-        int queuedCallbackCount;
         IRepository repository;
+        int queuedCallbackCount;
+        List<FieldNameOverride> fieldNameOverrides = new List<FieldNameOverride>();
+        List<FieldValueReplica> fieldValueReplicas = new List<FieldValueReplica>();
 
         public ElasticSearchAppender()
         {
@@ -25,7 +29,12 @@ namespace log4net.ElasticSearch
         }
 
         public string ConnectionString { get; set; }
+
         public int OnCloseTimeout { get; set; }
+
+        public string RollingIndexNameDateFormat { get; set; } = "yyyy.MM.dd";
+
+        public string IndexTypeName { get; set; } = "logEvent";
 
         public override void ActivateOptions()
         {
@@ -49,6 +58,16 @@ namespace log4net.ElasticSearch
             repository = CreateRepository(ConnectionString);            
         }
 
+        public void AddFieldNameOverride(FieldNameOverride fieldNameOverride)
+        {
+            fieldNameOverrides.Add(fieldNameOverride);
+        }
+
+        public void AddFieldValueReplica(FieldValueReplica fieldValueReplica)
+        {
+            fieldValueReplicas.Add(fieldValueReplica);
+        }
+
         protected override void SendBuffer(LoggingEvent[] events)
         {
             BeginAsyncSend();
@@ -67,7 +86,15 @@ namespace log4net.ElasticSearch
 
         protected virtual IRepository CreateRepository(string connectionString)
         {
-            return Repository.Create(connectionString);
+            log4net.ElasticSearch.Models.Uri.Init(RollingIndexNameDateFormat, IndexTypeName);
+            
+            var overrides = fieldNameOverrides.ToDictionary(x => x.Original, x => x.Replacement);
+            var resolver = new CustomDataContractResolver
+            {
+                FieldNameChanges = overrides,
+                FieldValueReplica = fieldValueReplicas,
+            };
+            return Repository.Create(connectionString, resolver);
         }
 
         protected virtual bool TryAsyncSend(IEnumerable<LoggingEvent> events)
@@ -131,5 +158,27 @@ namespace log4net.ElasticSearch
                 throw new ArgumentException("connectionString is empty", "connectionString");
             }
         }
-    }    
+    }
+
+    public class FieldNameOverride : IOptionHandler
+    {
+        public string Original {get; set;}
+	
+        public string Replacement {get; set;}
+
+        public void ActivateOptions()
+        {
+        }
+    }
+
+    public class FieldValueReplica : IOptionHandler
+    {
+        public string Original {get; set;}
+	
+        public string Replica {get; set;}
+
+        public void ActivateOptions()
+        {
+        }
+    }
 }

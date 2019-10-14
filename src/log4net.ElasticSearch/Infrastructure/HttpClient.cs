@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using System.Text;
 using log4net.ElasticSearch.Models;
 using Uri = System.Uri;
+#if NETFRAMEWORK
+    using System.Web;
+    using System.Net;
+#else
+    using System.Net;
+#endif
 
 namespace log4net.ElasticSearch.Infrastructure
 {
@@ -16,6 +21,13 @@ namespace log4net.ElasticSearch.Infrastructure
 
     public class HttpClient : IHttpClient
     {
+        private readonly CustomDataContractResolver resolver;
+
+        public HttpClient(CustomDataContractResolver resolver)
+        {
+            this.resolver = resolver;
+        }
+
         const string ContentType = "application/json";
         const string Method = "POST";
 
@@ -25,7 +37,7 @@ namespace log4net.ElasticSearch.Infrastructure
 
             using (var streamWriter = GetRequestStream(httpWebRequest))
             {
-                streamWriter.Write(item.ToJson());
+                streamWriter.Write(item.ToJson(resolver));
                 streamWriter.Flush();
 
                 var httpResponse = (HttpWebResponse) httpWebRequest.GetResponse();
@@ -58,7 +70,7 @@ namespace log4net.ElasticSearch.Infrastructure
             foreach (var item in items)
             {
                 postBody.AppendLine("{\"index\" : {} }");
-                postBody.AppendLine(item.ToJson());
+                postBody.AppendLine(item.ToJson(resolver));
             }
 
             using (var streamWriter = GetRequestStream(httpWebRequest))
@@ -87,7 +99,14 @@ namespace log4net.ElasticSearch.Infrastructure
             if (!string.IsNullOrWhiteSpace(uri.UserInfo))
             {
                 httpWebRequest.Headers.Remove(HttpRequestHeader.Authorization);
-                httpWebRequest.Headers.Add(HttpRequestHeader.Authorization, "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(uri.UserInfo)));
+
+                #if NETFRAMEWORK
+                    var uriUserInfo = HttpUtility.UrlDecode(uri.UserInfo);
+                #else
+                    var uriUserInfo = WebUtility.UrlDecode(uri.UserInfo);
+                #endif
+
+                httpWebRequest.Headers.Add(HttpRequestHeader.Authorization, "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(uriUserInfo)));
             }
 
             return httpWebRequest;

@@ -2,12 +2,33 @@
 using System.Collections.Specialized;
 using log4net.ElasticSearch.Infrastructure;
 
+#if NETFRAMEWORK
+    using System.Web;
+#else
+    using System.Net;
+#endif          
+
 namespace log4net.ElasticSearch.Models
 {
     public class Uri
     {
+        private static string typeName;
+        private static string indexNameDateFormat;
+        
         readonly StringDictionary connectionStringParts;
 
+        static Uri()
+        {
+            typeName = "logEvent";
+            indexNameDateFormat = "yyyy.MM.dd";
+        }
+
+        public static void Init(string rollingIndexNameDateFormat, string indexTypeName)
+        {
+            typeName = indexTypeName;
+            indexNameDateFormat = rollingIndexNameDateFormat;
+        }
+        
         Uri(StringDictionary connectionStringParts)
         {
             this.connectionStringParts = connectionStringParts;
@@ -17,13 +38,20 @@ namespace log4net.ElasticSearch.Models
         {
             if (!string.IsNullOrWhiteSpace(uri.User()) && !string.IsNullOrWhiteSpace(uri.Password()))
             {
+                #if NETFRAMEWORK
+                    var user = HttpUtility.UrlEncode(uri.User());
+                    var password = HttpUtility.UrlEncode(uri.Password());
+                #else
+                    var user = WebUtility.UrlEncode(uri.User());
+                    var password = WebUtility.UrlEncode(uri.Password());
+                #endif
+
                 return
-                    new System.Uri(string.Format("{0}://{1}:{2}@{3}:{4}/{5}/logEvent{6}{7}", uri.Scheme(), uri.User(), uri.Password(),
-                                                 uri.Server(), uri.Port(), uri.Index(), uri.Routing(), uri.Bulk()));
+                    new System.Uri($"{uri.Scheme()}://{user}:{password}@{uri.Server()}:{uri.Port()}/{uri.Index()}/{typeName}{uri.Routing()}{uri.Bulk()}");
             }
             return string.IsNullOrEmpty(uri.Port())
-                ? new System.Uri(string.Format("{0}://{1}/{2}/logEvent{3}{4}", uri.Scheme(), uri.Server(), uri.Index(), uri.Routing(), uri.Bulk()))
-                : new System.Uri(string.Format("{0}://{1}:{2}/{3}/logEvent{4}{5}", uri.Scheme(), uri.Server(), uri.Port(), uri.Index(), uri.Routing(), uri.Bulk()));
+                ? new System.Uri($"{uri.Scheme()}://{uri.Server()}/{uri.Index()}/{typeName}{uri.Routing()}{uri.Bulk()}")
+                : new System.Uri($"{uri.Scheme()}://{uri.Server()}:{uri.Port()}/{uri.Index()}/{typeName}{uri.Routing()}{uri.Bulk()}");
         }
 
         public static Uri For(string connectionString)
@@ -83,7 +111,7 @@ namespace log4net.ElasticSearch.Models
             var index = connectionStringParts[Keys.Index];
 
             return IsRollingIndex(connectionStringParts)
-                       ? "{0}-{1}".With(index, Clock.Date.ToString("yyyy.MM.dd"))
+                       ? "{0}-{1}".With(index, Clock.Date.ToString(indexNameDateFormat))
                        : index;
         }
 

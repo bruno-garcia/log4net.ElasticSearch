@@ -41,9 +41,9 @@ namespace log4net.ElasticSearch
             }
         }
 
-        public static IRepository Create(string connectionString)
+        public static IRepository Create(string connectionString, CustomDataContractResolver resolver)
         {
-            return Create(connectionString, new HttpClient());
+            return Create(connectionString, new HttpClient(resolver));
         }
 
         public static IRepository Create(string connectionString, IHttpClient httpClient)

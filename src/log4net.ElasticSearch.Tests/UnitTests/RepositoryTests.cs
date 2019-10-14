@@ -5,6 +5,7 @@ using Xunit;
 using log4net.ElasticSearch.Infrastructure;
 using log4net.ElasticSearch.Models;
 using log4net.ElasticSearch.Tests.UnitTests.Stubs;
+using Uri = log4net.ElasticSearch.Models.Uri;
 
 namespace log4net.ElasticSearch.Tests.UnitTests
 {
@@ -30,6 +31,65 @@ namespace log4net.ElasticSearch.Tests.UnitTests
                 httpClientStub.Items.First().Value.Count.Should().Be(2);
                 httpClientStub.Items.Second().Value.Count.Should().Be(2);
             }
+        }
+
+        [Fact]
+        public void When_a_user_or_password_have_special_characters_it_should_still_work()
+        {
+            const string user = "!@#<>,./\\|$%?&*()";
+            const string password = "!@#$%=^&*=()_{}:>?><";
+
+            const string encodedUser = "!%40%23%3C%3E%2C.%2F%5C%7C%24%25%3F%26*()";
+            const string encodedPass = "!%40%23%24%25%3d%5e%26*%3d()_%7b%7d%3a%3e%3f%3e%3c";
+            
+            var connectionString = $"User={user};Pwd={password};Server=127.0.0.1;Index=log_test;Port=9200;rolling=false";
+            
+            var uriBuilder = Uri.For(connectionString);
+            var uri = uriBuilder;
+
+            var request = HttpClient.RequestFor(uri);
+            request.Address.ToString().Should().ContainEquivalentOf(encodedUser);
+            request.Address.ToString().Should().ContainEquivalentOf(encodedPass);
+            
+            var header = request.Headers["Authorization"];
+            header.Should().Be("Basic IUAjPD4sLi9cfCQlPyYqKCk6IUAjJCU9XiYqPSgpX3t9Oj4/Pjw=");
+        }
+        
+        [Fact]
+        public void Should_make_use_of_rolling_index_name_datetime_format_if_provided()
+        {
+            var indexTypeName = "my-type-name";
+            var rollingIndexNameDateFormat = "yyyy-MM-dd";
+
+            Uri.Init(rollingIndexNameDateFormat, indexTypeName);
+            
+            var connectionString = ";Server=127.0.0.1;Index=log_test;Port=9200;rolling=true";
+            
+            var uriBuilder = Uri.For(connectionString);
+            var uri = uriBuilder;
+
+            var request = HttpClient.RequestFor(uri);
+
+            //var dateTime = new DateTime(2015, 01, 05).ToString(rollingIndexNameDateFormat);
+            var dateTime = DateTime.Now.ToString(rollingIndexNameDateFormat);
+            request.Address.ToString().Should().Contain(dateTime);
+        }
+        
+        [Fact]
+        public void Should_make_use_of_index_type_name_if_provided()
+        {
+            var indexTypeName = "my-type-name";
+            var rollingIndexNameDateFormat = "yyyy-MM-dd";
+
+            Uri.Init(rollingIndexNameDateFormat, indexTypeName);
+            
+            var connectionString = ";Server=127.0.0.1;Index=log_test;Port=9200;rolling=true";
+            
+            var uriBuilder = Uri.For(connectionString);
+            var uri = uriBuilder;
+
+            var request = HttpClient.RequestFor(uri);
+            request.Address.ToString().Should().Contain(indexTypeName);
         }
     }
 }
