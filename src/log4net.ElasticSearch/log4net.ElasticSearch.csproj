@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Title>log4net.ElasticSearch</Title>
     <AssemblyName>log4net.ElasticSearch</AssemblyName>
-    <Version>2.6.0-preview</Version>
+    <Version>2.6.0-preview2</Version>
     <TargetFrameworks>net40;net45;netstandard2.0</TargetFrameworks>
     <RootNamespace>log4net.ElasticSearch</RootNamespace>
 
