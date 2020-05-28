@@ -3,7 +3,7 @@ using System.Collections.Specialized;
 using log4net.ElasticSearch.Infrastructure;
 
 #if NETFRAMEWORK
-    using System.Web;
+using System.Web;
 #else
     using System.Net;
 #endif          
@@ -14,7 +14,7 @@ namespace log4net.ElasticSearch.Models
     {
         private static string typeName;
         private static string indexNameDateFormat;
-        
+
         readonly StringDictionary connectionStringParts;
 
         static Uri()
@@ -25,10 +25,13 @@ namespace log4net.ElasticSearch.Models
 
         public static void Init(string rollingIndexNameDateFormat, string indexTypeName)
         {
-            typeName = indexTypeName;
+            typeName = string.IsNullOrWhiteSpace(indexTypeName)
+                ? string.Empty
+                : $"/{indexTypeName.Trim()}";
+
             indexNameDateFormat = rollingIndexNameDateFormat;
         }
-        
+
         Uri(StringDictionary connectionStringParts)
         {
             this.connectionStringParts = connectionStringParts;
@@ -38,20 +41,20 @@ namespace log4net.ElasticSearch.Models
         {
             if (!string.IsNullOrWhiteSpace(uri.User()) && !string.IsNullOrWhiteSpace(uri.Password()))
             {
-                #if NETFRAMEWORK
-                    var user = HttpUtility.UrlEncode(uri.User());
-                    var password = HttpUtility.UrlEncode(uri.Password());
-                #else
+#if NETFRAMEWORK
+                var user = HttpUtility.UrlEncode(uri.User());
+                var password = HttpUtility.UrlEncode(uri.Password());
+#else
                     var user = WebUtility.UrlEncode(uri.User());
                     var password = WebUtility.UrlEncode(uri.Password());
-                #endif
-
+#endif
                 return
-                    new System.Uri($"{uri.Scheme()}://{user}:{password}@{uri.Server()}:{uri.Port()}/{uri.Index()}/{typeName}{uri.Routing()}{uri.Bulk()}");
+                    new System.Uri($"{uri.Scheme()}://{user}:{password}@{uri.Server()}:{uri.Port()}/{uri.Index()}{typeName}{uri.Routing()}{uri.Bulk()}");
             }
+
             return string.IsNullOrEmpty(uri.Port())
-                ? new System.Uri($"{uri.Scheme()}://{uri.Server()}/{uri.Index()}/{typeName}{uri.Routing()}{uri.Bulk()}")
-                : new System.Uri($"{uri.Scheme()}://{uri.Server()}:{uri.Port()}/{uri.Index()}/{typeName}{uri.Routing()}{uri.Bulk()}");
+                ? new System.Uri($"{uri.Scheme()}://{uri.Server()}/{uri.Index()}{typeName}{uri.Routing()}{uri.Bulk()}")
+                : new System.Uri($"{uri.Scheme()}://{uri.Server()}:{uri.Port()}/{uri.Index()}{typeName}{uri.Routing()}{uri.Bulk()}");
         }
 
         public static Uri For(string connectionString)

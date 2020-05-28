@@ -9,7 +9,7 @@ namespace log4net.ElasticSearch.Models
     /// <summary>
     /// Primary object which will get serialized into a json object to pass to ES. Deviating from CamelCase
     /// class members so that we can stick with the build in serializer and not take a dependency on another lib. ES
-    /// exepects fields to start with lowercase letters.
+    /// expects fields to start with lowercase letters.
     /// </summary>
     public class logEvent
     {
