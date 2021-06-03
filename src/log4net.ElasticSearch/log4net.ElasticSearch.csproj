@@ -3,14 +3,13 @@
   <PropertyGroup>
     <Title>log4net.ElasticSearch</Title>
     <AssemblyName>log4net.ElasticSearch</AssemblyName>
-    <Version>2.6.0-preview2</Version>
+    <Version>2.6.0-preview3</Version>
     <TargetFrameworks>net40;net45;netstandard2.0</TargetFrameworks>
     <RootNamespace>log4net.ElasticSearch</RootNamespace>
 
     <!-- Properties for nuget packing -->
     <PackageId>log4net.ElasticSearch</PackageId>
     <Authors>JP Toto</Authors>
-    <PackageIconUrl>http://nest.azurewebsites.net/images/nuget-icon.png</PackageIconUrl>
     <PackageLicense>MIT</PackageLicense>
     <PackageProjectUrl>https://bruno-garcia.github.io/log4net.ElasticSearch/</PackageProjectUrl>
     <Description>log4net.Elasticsearch is a log4net adapter for easy logging of exceptions and messages to Elasticsearch indices. Tested through Elasticsearch 6.2</Description>
