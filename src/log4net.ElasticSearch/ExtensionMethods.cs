@@ -93,5 +93,10 @@ namespace log4net.ElasticSearch
         {
             return string.IsNullOrEmpty(self);
         }
+
+        public static string ReplaceDots(this string source)
+        {
+            return source?.Replace('.', '_');
+        }
     }
 }
