@@ -46,8 +46,9 @@ namespace log4net.ElasticSearch.Models
                     var password = WebUtility.UrlEncode(uri.Password());
                 #endif
 
-                return
-                    new System.Uri($"{uri.Scheme()}://{user}:{password}@{uri.Server()}:{uri.Port()}/{uri.Index()}/{typeName}{uri.Routing()}{uri.Bulk()}");
+                return string.IsNullOrEmpty(uri.Port())?
+                    new System.Uri($"{uri.Scheme()}://{user}:{password}@{uri.Server()}:{uri.Port()}/{uri.Index()}/{typeName}{uri.Routing()}{uri.Bulk()}"):
+                    new System.Uri($"{uri.Scheme()}://{user}:{password}@{uri.Server()}/{uri.Index()}/{typeName}{uri.Routing()}{uri.Bulk()}");
             }
             return string.IsNullOrEmpty(uri.Port())
                 ? new System.Uri($"{uri.Scheme()}://{uri.Server()}/{uri.Index()}/{typeName}{uri.Routing()}{uri.Bulk()}")
